@@ -1,0 +1,47 @@
+<!--
+    Copyright (C) 2013 CAS / FAMU
+
+    This file is part of Narra Core.
+
+    Narra Core is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Narra Core is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+
+    Authors: Michal Mocnak <michal@marigan.net>, Krystof Pesek <krystof.pesek@gmail.com>
+-->
+
+<div class="page-header">
+    <h1>Settings
+        <small>editor</small>
+    </h1>
+</div>
+
+<div class="form-horizontal">
+    <div ng-repeat="item in settings | orderBy:'name'" class="control-group offset2">
+        <label class="control-label muted">{{item.name}}</label>
+
+        <div class="controls">
+            <input type="text" ng-hide="editable.name == item.name" ui-event="{ focus : 'edit(item)' }" value="{{item.value}}"
+                   class=" row-fluid"/>
+
+            <span ng-show="editable.name == item.name">
+                <input type="text" ng-model="editable.value" class=" row-fluid" ng-focus="editable.name == item.name"/>
+
+                <div class="row-fluid">
+                    <span ng-show="changed" class="btn btn-mini btn-success top-buffer-10" ng-click="update()">Save</span>
+                    <span ng-show="changed" class="btn btn-mini btn-danger top-buffer-10" ng-click="cancel()">Cancel</span>
+                    <span ng-show="resetable" class="btn btn-mini btn-inverse top-buffer-10" ng-click="default()" ng-show="defaults[item.name]">Default</span>
+                </div>
+            </span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+<!--
+    Copyright (C) 2013 CAS / FAMU
+
+    This file is part of Narra Core.
+
+    Narra Core is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Narra Core is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+
+    Authors: Michal Mocnak <michal@marigan.net>, Krystof Pesek <krystof.pesek@gmail.com>
+-->
+
+<!doctype html>
+<html lang="en" ng-app="narra.ui.app">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <title>narra</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/app.css"/>
+    <link rel="stylesheet" href="css/select2/select2.css"/>
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="/">narra</a>
+
+            <navigation></navigation>
+
+            <user class="pull-right"></user>
+        </div>
+    </div>
+</div>
+
+<login></login>
+
+<div class="container">
+
+    <messages></messages>
+
+    <div ng-view></div>
+
+    <hr>
+
+    <footer>
+        <ul class="unstyled pull-right" style="text-align: right;">
+            <li>
+                <small class="text-info">narra ui <span versionui>{{versionUi}}</span></small>
+            </li>
+            <li>
+                <small class="text-info">narra core <span versioncore>{{versionCore}}</span></small>
+            </li>
+        </ul>
+    </footer>
+</div>
+
+<script src="lib/vendor/jquery.min.js"></script>
+<script src="lib/vendor/jquery.maskedinput.min.js"></script>
+<script src="lib/vendor/select2.min.js"></script>
+<script src="lib/vendor/lodash.min.js"></script>
+<script src="lib/angular/angular.js"></script>
+<script src="lib/angular/angular-resource.js"></script>
+<script src="lib/angular/angular-sanitize.js"></script>
+<script src="lib/angular/angular-cookies.js"></script>
+<script src="lib/angular-ui-utils/ui-utils.min.js"></script>
+<script src="lib/angular-ui-utils/ui-utils-ieshiv.min.js"></script>
+<script src="lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.3.0.min.js"></script>
+<script src="lib/angular-ui-modules/select2.js"></script>
+<script src="js/narra.core.api.js"></script>
+<script src="js/narra.ui.app.js"></script>
+<script src="js/narra.ui.services.js"></script>
+<script src="js/narra.ui.controllers.js"></script>
+<script src="js/narra.ui.filters.js"></script>
+<script src="js/narra.ui.directives.js"></script>
+</body>
+</html>

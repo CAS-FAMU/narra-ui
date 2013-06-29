@@ -1,0 +1,61 @@
+<!--
+    Copyright (C) 2013 CAS / FAMU
+
+    This file is part of Narra Core.
+
+    Narra Core is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Narra Core is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+
+    Authors: Michal Mocnak <michal@marigan.net>, Krystof Pesek <krystof.pesek@gmail.com>
+-->
+
+<div class="page-header" xmlns="http://www.w3.org/1999/html">
+    <h1>User
+        <small>profile</small>
+        <span ng-hide="me" class="pull-right"><a href="/users" class="btn btn-success">Back to Users</a></span>
+    </h1>
+</div>
+
+<div class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label muted" >name</label>
+        <div class="controls">
+            <span class="lead">{{user.name}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label muted" >email</label>
+        <div class="controls">
+            <span class="lead">{{user.email}}</span>
+        </div>
+    </div>
+    <div class="control-group" access="admin,production">
+        <div class="controls">
+            <span ng-show="deletable"><span ng-click="open()" class="btn btn-danger">Delete User</span></span>
+        </div>
+    </div>
+</div>
+
+<div modal="shouldBeOpen" close="close()" options="opts">
+    <div class="modal-header">
+        <h4>Delete the user</h4>
+    </div>
+    <div class="modal-body">
+        <p>You are about to delete the user <strong>{{user.name}}</strong>, this procedure is irreversible.</p>
+        <p>Do you want to proceed?</p>
+    </div>
+    <div class="modal-footer">
+        <span class="btn btn-inverse" ng-click="close()">No</span>
+        <button class="btn btn-danger" ng-click="delete()">Yes</button>
+    </div>
+</div>

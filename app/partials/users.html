@@ -1,0 +1,52 @@
+<!--
+    Copyright (C) 2013 CAS / FAMU
+
+    This file is part of Narra Core.
+
+    Narra Core is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Narra Core is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+
+    Authors: Michal Mocnak <michal@marigan.net>, Krystof Pesek <krystof.pesek@gmail.com>
+-->
+
+<div class="page-header">
+    <h1>Users
+        <small>management</small>
+    </h1>
+</div>
+
+<div ng-show="empty" class="alert lead" style="text-align: center;">
+    You have no users registered
+</div>
+
+<div ng-hide="empty">
+    <input type="text" ng-model="search" placeholder="Search">
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr>
+            <th>name</th>
+            <th>email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="user in users | filter:search | orderBy:'name'"  ng-click="detail(user)">
+            <td>
+                <span class="lead">{{user.name}}</span>
+            </td>
+            <td style="vertical-align:middle">
+                <small class="muted">{{user.email}}</small>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
