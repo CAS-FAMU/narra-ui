@@ -217,7 +217,7 @@ function ComponentsLoginCtrl($scope, $window, api_Authentication) {
         $scope.open();
 
         api_Authentication.active(function (data) {
-            $window.location.href = 'http://api.narra.dev/auth/' + data.provider.name;
+            $window.location.href = 'http://api.narra.eu/auth/' + data.provider.name;
         });
     });
 }
