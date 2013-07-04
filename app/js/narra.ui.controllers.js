@@ -4,20 +4,20 @@
  #
  # Copyright (C) 2013 CAS / FAMU
  #
- # This file is part of Narra Core.
+ # This file is part of Narra UI.
  #
- # Narra Core is free software: you can redistribute it and/or modify
+ # Narra UI is free software: you can redistribute it and/or modify
  # it under the terms of the GNU General Public License as published by
  # the Free Software Foundation, either version 3 of the License, or
  # (at your option) any later version.
  #
- # Narra Core is distributed in the hope that it will be useful,
+ # Narra UI is distributed in the hope that it will be useful,
  # but WITHOUT ANY WARRANTY; without even the implied warranty of
  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  # GNU General Public License for more details.
  #
  # You should have received a copy of the GNU General Public License
- # along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+ # along with Narra UI. If not, see <http://www.gnu.org/licenses/>.
  #
  # Authors: Michal Mocnak <michal@marigan.net>, Krystof Pesek <krystof.pesek@gmail.com>
  #
@@ -28,16 +28,16 @@ function DashboardCtrl($scope) {
 
 }
 
-function SystemSettingsCtrl($scope, messages, Settings) {
+function SystemSettingsCtrl($scope, service_Messages, api_Settings) {
     // refresh function
     $scope.refresh = function () {
         // get all settings and get back to view
-        Settings.all(function(data) {
+        api_Settings.all(function (data) {
             $scope.settings = data.settings;
         });
 
         // get default values
-        Settings.defaults(function(data) {
+        api_Settings.defaults(function (data) {
             $scope.defaults = data.defaults;
         });
 
@@ -71,7 +71,7 @@ function SystemSettingsCtrl($scope, messages, Settings) {
 
     // update values
     $scope.update = function () {
-        Settings.update({name: String($scope.editable.name), value: String($scope.editable.value)}, function () {
+        api_Settings.update({name: String($scope.editable.name), value: String($scope.editable.value)}, function () {
             // update collection just for view
             $.grep($scope.settings, function (item) {
                 if (_.isEqual(item.name, $scope.editable.name)) {
@@ -80,7 +80,7 @@ function SystemSettingsCtrl($scope, messages, Settings) {
             });
 
             // fire message
-            messages.send('success', 'Success!', 'Property ' + $scope.editable.name + ' was successfully updated.');
+            service_Messages.send('success', 'Success!', 'Property ' + $scope.editable.name + ' was successfully updated.');
 
             // end up edit mode
             $scope.cancel();
@@ -91,14 +91,14 @@ function SystemSettingsCtrl($scope, messages, Settings) {
     $scope.refresh();
 }
 
-function UsersCtrl($scope, $location, User) {
+function UsersCtrl($scope, $location, api_User) {
     // initial value
     $scope.empty = true;
 
     // refresh function
     $scope.refresh = function () {
         // get all projects and get back to view
-        User.all(function (data) {
+        api_User.all(function (data) {
             $scope.users = data.users;
             $scope.empty = (data.users.length < 1);
         });
@@ -113,7 +113,7 @@ function UsersCtrl($scope, $location, User) {
     $scope.refresh();
 }
 
-function UsersDetailCtrl($scope, user, $routeParams, User, messages, $location) {
+function UsersDetailCtrl($scope, $location, $routeParams, service_User, api_User, service_Messages ) {
     // if me
     $scope.me = _.isEqual($routeParams.id, 'me');
 
@@ -121,12 +121,12 @@ function UsersDetailCtrl($scope, user, $routeParams, User, messages, $location) 
     $scope.refresh = function () {
         // get user data
         if (!$scope.me) {
-            User.get($scope.me ? {id: user.current().id} : {id: $routeParams.id}, function (data) {
+            api_User.get($scope.me ? {id: service_User.current().id} : {id: $routeParams.id}, function (data) {
                 $scope.user = data.user;
-                $scope.deletable = !_.isEqual(data.user, user.current());
+                $scope.deletable = !_.isEqual(data.user, service_User.current());
             });
         } else {
-            $scope.user = user.current();
+            $scope.user = service_User.current();
             $scope.deletable = false;
         }
     };
@@ -149,11 +149,11 @@ function UsersDetailCtrl($scope, user, $routeParams, User, messages, $location) 
         // close dialog
         $scope.close();
         // delete storage and its projects
-        User.delete({id: $scope.user.id});
+        api_User.delete({id: $scope.user.id});
         // get back to the overview
         $location.path('/users');
         // fire alert
-        messages.send('success', 'Success!', 'User ' + $scope.user.name + ' was successfully deleted.');
+        service_Messages.send('success', 'Success!', 'User ' + $scope.user.name + ' was successfully deleted.');
     };
 
     // initial data
@@ -175,10 +175,10 @@ function ComponentsNavigationCtrl($scope, $location) {
     ];
 }
 
-function ComponentsUserCtrl($scope, $rootScope, $window, User, user) {
+function ComponentsUserCtrl($scope, $rootScope, $window, api_User, service_User) {
     // refresh function
     $scope.refresh = function () {
-        User.me(function (data) {
+        api_User.me(function (data) {
             if (data != null) {
                 $scope.user = data.user;
                 // fire user_auth
@@ -190,7 +190,7 @@ function ComponentsUserCtrl($scope, $rootScope, $window, User, user) {
     // signout method
     $scope.signout = function () {
         // signout
-        User.signout(function () {
+        api_User.signout(function () {
             // redirect
             $window.location.href = '/';
         });
@@ -200,7 +200,7 @@ function ComponentsUserCtrl($scope, $rootScope, $window, User, user) {
     $scope.refresh();
 }
 
-function ComponentsLoginCtrl($scope, $window, Authentication) {
+function ComponentsLoginCtrl($scope, $window, api_Authentication) {
     $scope.opts = {
         backdrop: true,
         backdropFade: false,
@@ -216,15 +216,15 @@ function ComponentsLoginCtrl($scope, $window, Authentication) {
     $scope.$on('event:auth_unauthenticated', function () {
         $scope.open();
 
-        Authentication.active(function (data) {
-            $window.location.href = '/api/auth/' + data.provider.name;
+        api_Authentication.active(function (data) {
+            $window.location.href = 'http://api.narra.dev/auth/' + data.provider.name;
         });
     });
 }
 
 function ComponentsMessagesCtrl($scope, $timeout) {
     // initial alerts array
-    $scope.alerts = []
+    $scope.alerts = [];
 
     $scope.close = function (index) {
         $scope.alerts.splice(index, 1);
