@@ -34,7 +34,15 @@ angular.module('narra.core.api', ['ngResource']).
             get: {method: 'GET', params: {action: ''}, isArray: false },
             me: {method: 'GET', params: {id: 'me', action: ''}, isArray: false},
             signout: {method: 'GET', params: {id: 'me', action: 'signout'}, isArray: false},
-            delete: {method: 'GET', params: {id: '@id', action: 'delete'}}});
+            delete: {method: 'GET', params: {action: 'delete'}}});
+    }).
+    factory('api_Project', function ($resource, service_Server, service_Token) {
+        return $resource(service_Server.url() + '/v1/projects/:name/:action', { token: service_Token.current() }, {
+            all: {method: 'GET', params: {object_id: '', action: ''}, isArray: false},
+            get: {method: 'GET', isArray: false },
+            new: {method: 'POST', params: {action: 'new'}, isArray: false},
+            update: {method: 'POST', params: {name: '@name', action: 'update'}, isArray: false},
+            delete: {method: 'GET', params: {action: 'delete'}}});
     }).
     factory('api_System',function ($resource, service_Server, service_Token) {
         return $resource(service_Server.url() + '/v1/system/:prefix', { token: service_Token.current() }, {
@@ -45,5 +53,5 @@ angular.module('narra.core.api', ['ngResource']).
             all: {method: 'GET', params: {name: ''}, isArray: false},
             get: {method: 'GET', isArray: false},
             defaults: {method: 'GET', params: {name: 'defaults'}, isArray: false},
-            update: {method: 'GET', params: {action: 'update'}}});
+            update: {method: 'POST', params: {name: '@name', action: 'update'}}});
     });

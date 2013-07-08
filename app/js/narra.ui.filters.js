@@ -25,8 +25,11 @@
 
 // filters
 angular.module('narra.ui.filters', []).
-    filter('guest',function () {
-        return function (user) {
-            return !_.isUndefined(user) ? user.name : 'Guest';
+    filter('filter_Projectname',function () {
+        return function (text) {
+            // check whether the text is defined
+            (_.isUndefined(text) ? text = "" : text);
+            // return properly formated project name
+            return angular.lowercase(String(text).replace(/\W+/g, "_").replace(/_{2,}/g, "_").replace(/(^_+|_+$)/g, ""));
         }
     });

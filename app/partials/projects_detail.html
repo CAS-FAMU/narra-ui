@@ -1,0 +1,67 @@
+<!--
+	This code and everything else included with the R.U.R UI is
+	Copyright (c) 2013 rur.cz. All rights reserved. Redistribution of this
+	code is prohibited!
+-->
+
+<div class="page-header">
+    <h1>Project
+        <small>detail</small>
+        <span class="pull-right"><a href="/projects" class="btn btn-success">Back to Projects</a></span>
+    </h1>
+</div>
+
+<div class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label muted">name</label>
+
+        <div class="controls">
+            <span class="lead">{{project.name}}</span>
+        </div>
+    </div>
+    <div class="control-group" ng-mouseenter="edit_title = true" ng-mouseleave="edit_title = false">
+        <label class="control-label muted">title</label>
+
+        <div class="controls" ng-hide="editable['title']">
+            <span class="lead">{{project.title}}</span>
+            <span ng-show="edit_title" class="btn btn-mini left-buffer-10" style="margin-top: -8px;"
+                  ng-click="edit('title')">Edit</span>
+        </div>
+
+        <div class="controls" ng-show="editable['title']">
+            <input ng-model="editable['model'].title" type="text"
+                   placeholder="Enter a title here" class="width-300"/>
+
+            <div class="row-fluid">
+                <span class="btn btn-mini btn-success top-buffer-10" ng-click="update()">Save</span>
+                <span class="btn btn-mini btn-danger top-buffer-10" ng-click="cancel()">Cancel</span>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label muted">owner</label>
+
+        <div class="controls">
+            <span class="lead">{{project.owner.name}}</span>
+        </div>
+    </div>
+    <div class=" control-group">
+        <div class="controls">
+            <span ng-click="open()" class="btn btn-danger">Delete Project</span>
+        </div>
+    </div>
+</div>
+
+<div modal="shouldBeOpen" close="close()" options="opts">
+    <div class="modal-header">
+        <h4>Delete the project</h4>
+    </div>
+    <div class="modal-body">
+        <p>You are about to delete the project <strong>{{project.name}}</strong>, this procedure is irreversible.</p>
+        <p>Do you want to proceed?</p>
+    </div>
+    <div class="modal-footer">
+        <span class="btn btn-inverse" ng-click="close()">No</span>
+        <button class="btn btn-danger" ng-click="delete()">Yes</button>
+    </div>
+</div>

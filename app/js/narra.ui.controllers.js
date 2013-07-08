@@ -161,6 +161,138 @@ function UsersDetailCtrl($scope, $location, $routeParams, service_User, api_User
     $scope.refresh();
 }
 
+function ProjectsCtrl($scope, $location, $filter, service_Messages, api_Project) {
+    // initial value
+    $scope.empty = true;
+
+    // refresh function
+    $scope.refresh = function () {
+        // get all projects and get back to view
+        api_Project.all(function (data) {
+            $scope.empty = (data.projects.length < 1);
+            $scope.projects = data.projects;
+        });
+    };
+
+    // click functionfor detail view
+    $scope.detail = function (project) {
+        $location.path('/projects/' + project.name);
+    };
+
+    $scope.open = function () {
+        $scope.shouldBeOpen = true;
+    };
+
+    $scope.close = function () {
+        $scope.shouldBeOpen = false;
+        $scope.project.name = null;
+        $scope.project.title = null;
+    };
+
+    $scope.opts = {
+        backdropFade: true,
+        dialogFade: true
+    };
+
+    $scope.change = function () {
+        $scope.project.name = $filter('filter_Projectname')($scope.project.name);
+    };
+
+    // save action
+    $scope.new = function () {
+        // create a new project
+        api_Project.new({name: $scope.project.name, title: $scope.project.title}, function () {
+            // redirect
+            $location.path('/projects/' + $scope.project.name);
+            // fire message
+            service_Messages.send('success', 'Success!', 'Project ' + $scope.project.name + ' was successfully created.');
+        });
+    }
+
+    $scope.validate = function () {
+        // check for undefined
+        if (_.isUndefined($scope.project)) {
+            return false;
+        }
+
+        // exists flag
+        $scope.exists = false;
+
+        // check if already exists
+        _.forEach($scope.projects, function (item) {
+            if (_.isEqual(item.name, $scope.project.name)) {
+                $scope.exists = true;
+            }
+        });
+
+        // return validation
+        return !_.isUndefined($scope.project.title) && !_.isUndefined($scope.project.name) && !$scope.exists;
+    }
+
+    // initial data
+    $scope.refresh();
+}
+
+function ProjectsDetailCtrl($scope, $routeParams, $location, service_Messages, api_Project) {
+    // refresh function
+    $scope.refresh = function () {
+        // get selected project
+        api_Project.get({name: $routeParams.name}, function (data) {
+            $scope.project = data.project;
+            $scope.editable = {};
+        });
+    };
+
+    $scope.edit = function (type) {
+        // cancel other edits
+        $scope.cancel();
+        // prepare new one
+        $scope.editable[type] = true;
+        $scope.editable['model'] = angular.copy($scope.project);
+    };
+
+    $scope.cancel = function () {
+        $scope.editable = {};
+    };
+
+    $scope.open = function () {
+        $scope.shouldBeOpen = true;
+    };
+
+    $scope.close = function () {
+        $scope.shouldBeOpen = false;
+    };
+
+    $scope.opts = {
+        backdropFade: true,
+        dialogFade: true
+    };
+
+    $scope.delete = function () {
+        // delete project
+        api_Project.delete({name: $scope.project.name}, function() {
+            // close dialog
+            $scope.close();
+            // fire alert
+            service_Messages.send('success', 'Success!', 'Project ' + $scope.project.name + ' was successfully deleted.');
+            // get back to the overview
+            $location.path('/projects');
+        });
+    }
+
+    $scope.update = function () {
+        api_Project.update({name: $scope.project.name, title: $scope.editable['model'].title}, function (data) {
+            // refresh
+            $scope.refresh();
+            // fire message
+            service_Messages.send('success', 'Success!', 'Project ' + data.project.name + ' was successfully updated.');
+        });
+    };
+
+    // initial data
+    $scope.refresh();
+}
+
 function ComponentsNavigationCtrl($scope, $location) {
     // Help function for selection identification
     $scope.selected = function (item) {
@@ -169,6 +301,7 @@ function ComponentsNavigationCtrl($scope, $location) {
 
     // navigation initial array
     $scope.navigation = [
+        {name: "projects", title: "Projects", url: "/projects", items: []},
         {name: "users", title: "Users", url: "/users", items: []},
         {name: "system", title: "System", url: "/system", items: [
             {name: "settings", title: "Settings", url: "/system/settings"}
