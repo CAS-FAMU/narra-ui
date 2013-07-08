@@ -25,6 +25,11 @@
 
 // services
 angular.module('narra.ui.services', []).
+    service('service_Server', function () {
+        this.url = function () {
+            return 'http://api.narra.dev';
+        };
+    }).
     service('service_Messages', function ($rootScope) {
         this.send = function (type, title, message) {
             $rootScope.$broadcast('event:alert', {type: type, title: title, message: message});
@@ -32,7 +37,7 @@ angular.module('narra.ui.services', []).
     }).
     service('service_User', ['$rootScope', function($rootScope) {
         // empty user object
-        var current_user = {name:'Guest', email: 'Unregistered'};
+        var current_user = {name:'Guest', email: 'Guest'};
 
         $rootScope.$on('event:auth_user', function(event, user) {
             // setup current user

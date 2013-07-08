@@ -48,27 +48,4 @@ angular.module('narra.ui.app', ['narra.core.api', 'narra.ui.filters', 'narra.ui.
                 templateUrl: '/partials/system_settings.html',
                 controller: SystemSettingsCtrl
             });
-
-        var interceptor = ['$q', '$rootScope', '$location', function ($q, $rootScope, $locationz) {
-            function success(response) {
-                return response;
-            }
-
-            function error(response) {
-                // handle response
-                if (response.status === 401) {
-                    // fire login required event
-                    $rootScope.$broadcast('event:auth_unauthenticated');
-                    return $q.reject(response);
-                } else {
-                    return $q.reject(response);
-                }
-            }
-
-            return function (promise) {
-                return promise.then(success, error);
-            }
-        }];
-
-        $httpProvider.responseInterceptors.push(interceptor);
     });

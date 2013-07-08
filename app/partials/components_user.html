@@ -20,12 +20,15 @@
 -->
 
 <div class="nav-collapse collapse">
-    <div class="btn-group">
-        <a class="btn btn-inverse" href="/users/me"><i class="icon-user icon-white"></i> {{user|guest}}</a>
-        <span ng-show="user" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></span>
-        <ul ng-show="user" class="dropdown-menu pull-right">
+    <div ng-show="!guest" class="btn-group">
+        <a class="btn btn-inverse" href="/users/me"><i class="icon-user icon-white"></i> {{user.name}}</a>
+        <span class="btn btn-inverse dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></span>
+        <ul class="dropdown-menu pull-right">
             <li><a href="/users/me"><i class="icon-user"></i> Profile</a></li>
             <li><a href="#" ng-click="signout()"><i class="icon-off"></i> Signout</a></li>
         </ul>
+    </div>
+    <div ng-show="guest" class="btn-group">
+        <span class="btn btn-inverse" ng-click="signin()">Sign In</span>
     </div>
 </div>

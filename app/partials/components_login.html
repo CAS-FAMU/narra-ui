@@ -21,9 +21,12 @@
 
 <div modal="shouldBeOpen" options="opts">
     <div class="modal-header">
-        <h1>Authentication in progress</h1>
+        <h4>Sign In</h4>
     </div>
     <div class="modal-body">
-        <p>You are being authenticated right now. Please wait.</p>
+        <span ng-click="signin('google')" class="row-fluid offset1"><img src="/img/signin/google.png" width="350"/></span>
+    </div>
+    <div class="modal-footer">
+        <span class="btn btn-inverse" ng-click="close()">Close</span>
     </div>
 </div>

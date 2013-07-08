@@ -146,14 +146,15 @@ function UsersDetailCtrl($scope, $location, $routeParams, service_User, api_User
 
     // delete user
     $scope.delete = function () {
-        // close dialog
-        $scope.close();
         // delete storage and its projects
-        api_User.delete({id: $scope.user.id});
-        // get back to the overview
-        $location.path('/users');
-        // fire alert
-        service_Messages.send('success', 'Success!', 'User ' + $scope.user.name + ' was successfully deleted.');
+        api_User.delete({id: $scope.user.id}, function() {
+            // close dialog
+            $scope.close();
+            // get back to the overview
+            $location.path('/users');
+            // fire alert
+            service_Messages.send('success', 'Success!', 'User ' + $scope.user.name + ' was successfully deleted.');
+        });
     };
 
     // initial data
@@ -176,6 +177,9 @@ function ComponentsNavigationCtrl($scope, $location) {
 }
 
 function ComponentsUserCtrl($scope, $rootScope, $window, api_User, service_User) {
+    // default user
+    $scope.guest = true;
+
     // refresh function
     $scope.refresh = function () {
         api_User.me(function (data) {
@@ -183,8 +187,16 @@ function ComponentsUserCtrl($scope, $rootScope, $window, api_User, service_User)
                 $scope.user = data.user;
                 // fire user_auth
                 $rootScope.$broadcast('event:auth_user', data.user);
+                // user logged in
+                $scope.guest = false;
             }
         });
+    }
+
+    // signin method
+    $scope.signin = function () {
+        // fire signin
+        $rootScope.$broadcast('event:auth_signin');
     }
 
     // signout method
@@ -200,7 +212,7 @@ function ComponentsUserCtrl($scope, $rootScope, $window, api_User, service_User)
     $scope.refresh();
 }
 
-function ComponentsLoginCtrl($scope, $window, api_Authentication) {
+function ComponentsLoginCtrl($scope, $window, service_Server) {
     $scope.opts = {
         backdrop: true,
         backdropFade: false,
@@ -213,12 +225,16 @@ function ComponentsLoginCtrl($scope, $window, api_Authentication) {
         $scope.shouldBeOpen = true;
     };
 
-    $scope.$on('event:auth_unauthenticated', function () {
-        $scope.open();
+    $scope.close = function() {
+        $scope.shouldBeOpen = false;
+    }
 
-        api_Authentication.active(function (data) {
-            $window.location.href = 'http://api.narra.eu/auth/' + data.provider.name;
-        });
+    $scope.signin = function(provider) {
+        $window.location.href = service_Server.url() + '/auth/' + provider;
+    }
+
+    $scope.$on('event:auth_signin', function () {
+        $scope.open();
     });
 }
 

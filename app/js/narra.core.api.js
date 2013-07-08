@@ -24,24 +24,24 @@
  */
 
 angular.module('narra.core.api', ['ngResource']).
-    factory('api_Authentication', function ($resource) {
-        return $resource('http://api.narra.eu/auth/:prefix', {}, {
+    factory('api_Authentication', function ($resource, service_Server) {
+        return $resource(service_Server.url() + '/auth/:prefix', {}, {
             active: {method: 'GET', params: {prefix: 'providers/active'}, isArray: false}});
     }).
-    factory('api_User', function ($resource, service_Token) {
-        return $resource('http://api.narra.eu/v1/users/:id/:action', { token: service_Token.current() }, {
+    factory('api_User', function ($resource, service_Server, service_Token) {
+        return $resource(service_Server.url() + '/v1/users/:id/:action', { token: service_Token.current() }, {
             all: {method: 'GET', params: {id: '', action: ''}, isArray: false},
             get: {method: 'GET', params: {action: ''}, isArray: false },
             me: {method: 'GET', params: {id: 'me', action: ''}, isArray: false},
             signout: {method: 'GET', params: {id: 'me', action: 'signout'}, isArray: false},
             delete: {method: 'GET', params: {id: '@id', action: 'delete'}}});
     }).
-    factory('api_System',function ($resource, service_Token) {
-        return $resource('http://api.narra.eu/v1/system/:prefix', { token: service_Token.current() }, {
+    factory('api_System',function ($resource, service_Server, service_Token) {
+        return $resource(service_Server.url() + '/v1/system/:prefix', { token: service_Token.current() }, {
             version: {method: 'GET', params: {prefix: 'version'}, isArray: false}});
     }).
-    factory('api_Settings', function ($resource, service_Token) {
-        return $resource('http://api.narra.eu/v1/settings/:name/:action', { token: service_Token.current() }, {
+    factory('api_Settings', function ($resource, service_Server, service_Token) {
+        return $resource(service_Server.url() + '/v1/settings/:name/:action', { token: service_Token.current() }, {
             all: {method: 'GET', params: {name: ''}, isArray: false},
             get: {method: 'GET', isArray: false},
             defaults: {method: 'GET', params: {name: 'defaults'}, isArray: false},
