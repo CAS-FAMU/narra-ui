@@ -25,7 +25,7 @@
 
 // filters
 angular.module('narra.ui.filters', []).
-    filter('filter_Projectname',function () {
+    filter('filter_LowercaseNoWhite',function () {
         return function (text) {
             // check whether the text is defined
             (_.isUndefined(text) ? text = "" : text);

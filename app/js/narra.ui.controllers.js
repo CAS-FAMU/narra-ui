@@ -195,7 +195,7 @@ function ProjectsCtrl($scope, $location, $filter, service_Messages, api_Project)
     };
 
     $scope.change = function () {
-        $scope.project.name = $filter('filter_Projectname')($scope.project.name);
+        $scope.project.name = $filter('filter_LowercaseNoWhite')($scope.project.name);
     };
 
     // save action
@@ -233,13 +233,22 @@ function ProjectsCtrl($scope, $location, $filter, service_Messages, api_Project)
     $scope.refresh();
 }
 
-function ProjectsDetailCtrl($scope, $routeParams, $location, service_Messages, api_Project) {
+function ProjectsDetailCtrl($scope, $filter, $routeParams, $location, service_Messages, api_Project, api_Collection) {
     // refresh function
     $scope.refresh = function () {
         // get selected project
-        api_Project.get({name: $routeParams.name}, function (data) {
-            $scope.project = data.project;
+        api_Project.get({name: $routeParams.name}, function (data_x) {
+            $scope.project = data_x.project;
             $scope.editable = {};
+
+            // get all collections
+            api_Collection.all(function(data_y) {
+                // all collections
+                $scope.collections = data_y.collections;
+                $scope.collections_selected = _.reject($scope.collections, function(collection) {
+                    return !_.isEmpty(_.where($scope.project.collections, {name: collection.name}))
+                });
+            });
         });
     };
 
@@ -255,18 +264,84 @@ function ProjectsDetailCtrl($scope, $routeParams, $location, service_Messages, a
         $scope.editable = {};
     };
 
-    $scope.open = function () {
-        $scope.shouldBeOpen = true;
+    $scope.open = function (type) {
+        switch (type) {
+            case 'new':
+                $scope.new_modal = true;
+                break;
+            case 'delete':
+                $scope.delete_modal = true;
+                break;
+            case 'add':
+                $scope.add_modal = true;
+                break;
+        }
     };
 
-    $scope.close = function () {
-        $scope.shouldBeOpen = false;
+    $scope.close = function (type) {
+        switch (type) {
+            case 'new':
+                $scope.new_modal = false;
+                break;
+            case 'delete':
+                $scope.delete_modal = false;
+                break;
+            case 'add':
+                $scope.add_modal = false;
+                break;
+        }
     };
 
     $scope.opts = {
         backdropFade: true,
         dialogFade: true
     };
+
+    $scope.change = function () {
+        $scope.collection.name = $filter('filter_LowercaseNoWhite')($scope.collection.name);
+    };
+
+    // add new collection
+    $scope.new = function () {
+        // create a new project
+        api_Collection.new({name: $scope.collection.name, title: $scope.collection.title, project: $scope.project.name}, function () {
+            // close dialog
+            $scope.close('new');
+            // redirect
+            $scope.refresh();
+            // fire message
+            service_Messages.send('success', 'Success!', 'Collection ' + $scope.collection.name + ' was successfully created.');
+        });
+    }
+
+    // add existing collection
+    $scope.add = function () {
+        // create a new project
+        api_Project.add({name: $scope.project.name, collections:[$scope.collection.name]}, function () {
+            // close dialog
+            $scope.close('add');
+            // refresh
+            $scope.refresh();
+            // fire message
+            service_Messages.send('success', 'Success!', 'Collection ' + $scope.collection.name + ' was successfully added.');
+        });
+    }
+
+    // add existing collection
+    $scope.remove = function (collection) {
+        // create a new project
+        api_Project.remove({name: $scope.project.name, collections:[collection]}, function () {
+            // refresh
+            $scope.refresh();
+            // fire message
+            service_Messages.send('success', 'Success!', 'Collection ' + collection + ' was successfully removed.');
+        });
+    }
+
+    $scope.validate = function () {
+        // return validation
+        return !_.isUndefined($scope.collection.name);
+    }
 
     $scope.delete = function () {
         // delete project
@@ -293,6 +368,138 @@ function ProjectsDetailCtrl($scope, $routeParams, $location, service_Messages, a
     $scope.refresh();
 }
 
+function CollectionsCtrl($scope, $location, $filter, service_Messages, api_Collection) {
+    // initial value
+    $scope.empty = true;
+
+    // refresh function
+    $scope.refresh = function () {
+        // get all projects and get back to view
+        api_Collection.all(function (data) {
+            $scope.empty = (data.collections.length < 1);
+            $scope.collections = data.collections;
+        });
+    };
+
+    // click functionfor detail view
+    $scope.detail = function (collection) {
+        $location.path('/collections/' + collection.name);
+    };
+
+    $scope.open = function () {
+        $scope.shouldBeOpen = true;
+    };
+
+    $scope.close = function () {
+        $scope.shouldBeOpen = false;
+        $scope.collection.name = null;
+        $scope.collection.title = null;
+    };
+
+    $scope.opts = {
+        backdropFade: true,
+        dialogFade: true
+    };
+
+    $scope.change = function () {
+        $scope.collection.name = $filter('filter_LowercaseNoWhite')($scope.collection.name);
+    };
+
+    // save action
+    $scope.new = function () {
+        // create a new project
+        api_Collection.new({name: $scope.collection.name, title: $scope.collection.title}, function () {
+            // redirect
+            $location.path('/collections/' + $scope.collection.name);
+            // fire message
+            service_Messages.send('success', 'Success!', 'Collection ' + $scope.collection.name + ' was successfully created.');
+        });
+    }
+
+    $scope.validate = function () {
+        // check for undefined
+        if (_.isUndefined($scope.collection)) {
+            return false;
+        }
+
+        // exists flag
+        $scope.exists = false;
+
+        // check if already exists
+        _.forEach($scope.collections, function (item) {
+            if (_.isEqual(item.name, $scope.collection.name)) {
+                $scope.exists = true;
+            }
+        });
+
+        // return validation
+        return !_.isUndefined($scope.collection.title) && !_.isUndefined($scope.collection.name) && !$scope.exists;
+    }
+
+    // initial data
+    $scope.refresh();
+}
+
+function CollectionsDetailCtrl($scope, $routeParams, $location, service_Messages, api_Collection) {
+    // refresh function
+    $scope.refresh = function () {
+        // get selected project
+        api_Collection.get({name: $routeParams.name}, function (data) {
+            $scope.collection = data.collection;
+            $scope.editable = {};
+        });
+    };
+
+    $scope.edit = function (type) {
+        // cancel other edits
+        $scope.cancel();
+        // prepare new one
+        $scope.editable[type] = true;
+        $scope.editable['model'] = angular.copy($scope.collection);
+    };
+
+    $scope.cancel = function () {
+        $scope.editable = {};
+    };
+
+    $scope.open = function () {
+        $scope.shouldBeOpen = true;
+    };
+
+    $scope.close = function () {
+        $scope.shouldBeOpen = false;
+    };
+
+    $scope.opts = {
+        backdropFade: true,
+        dialogFade: true
+    };
+
+    $scope.delete = function () {
+        // delete project
+        api_Collection.delete({name: $scope.collection.name}, function() {
+            // close dialog
+            $scope.close();
+            // fire alert
+            service_Messages.send('success', 'Success!', 'Collection ' + $scope.collection.name + ' was successfully deleted.');
+            // get back to the overview
+            $location.path('/collections');
+        });
+    }
+
+    $scope.update = function () {
+        api_Collection.update({name: $scope.collection.name, title: $scope.editable['model'].title}, function (data) {
+            // refresh
+            $scope.refresh();
+            // fire message
+            service_Messages.send('success', 'Success!', 'Collection ' + data.collection.name + ' was successfully updated.');
+        });
+    };
+
+    // initial data
+    $scope.refresh();
+}
+
 function ComponentsNavigationCtrl($scope, $location) {
     // Help function for selection identification
     $scope.selected = function (item) {
@@ -302,6 +509,7 @@ function ComponentsNavigationCtrl($scope, $location) {
     // navigation initial array
     $scope.navigation = [
         {name: "projects", title: "Projects", url: "/projects", items: []},
+        {name: "collections", title: "Collections", url: "/collections", items: []},
         {name: "users", title: "Users", url: "/users", items: []},
         {name: "system", title: "System", url: "/system", items: [
             {name: "settings", title: "Settings", url: "/system/settings"}

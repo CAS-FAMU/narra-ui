@@ -42,6 +42,16 @@ angular.module('narra.core.api', ['ngResource']).
             get: {method: 'GET', isArray: false },
             new: {method: 'POST', params: {action: 'new'}, isArray: false},
             update: {method: 'POST', params: {name: '@name', action: 'update'}, isArray: false},
+            add: {method: 'POST', params: {name: '@name', action: 'add'}, isArray: false},
+            remove: {method: 'POST', params: {name: '@name', action: 'remove'}, isArray: false},
+            delete: {method: 'GET', params: {action: 'delete'}}});
+    }).
+    factory('api_Collection', function ($resource, service_Server, service_Token) {
+        return $resource(service_Server.url() + '/v1/collections/:name/:action', { token: service_Token.current() }, {
+            all: {method: 'GET', params: {object_id: '', action: ''}, isArray: false},
+            get: {method: 'GET', isArray: false },
+            new: {method: 'POST', params: {action: 'new'}, isArray: false},
+            update: {method: 'POST', params: {name: '@name', action: 'update'}, isArray: false},
             delete: {method: 'GET', params: {action: 'delete'}}});
     }).
     factory('api_System',function ($resource, service_Server, service_Token) {

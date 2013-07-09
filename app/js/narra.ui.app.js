@@ -52,6 +52,14 @@ angular.module('narra.ui.app', ['narra.core.api', 'narra.ui.filters', 'narra.ui.
                 templateUrl: '/partials/projects_detail.html',
                 controller: ProjectsDetailCtrl
             }).
+            when('/collections', {
+                templateUrl: '/partials/collections.html',
+                controller: CollectionsCtrl
+            }).
+            when('/collections/:name', {
+                templateUrl: '/partials/collections_detail.html',
+                controller: CollectionsDetailCtrl
+            }).
             when('/system/settings', {
                 templateUrl: '/partials/system_settings.html',
                 controller: SystemSettingsCtrl

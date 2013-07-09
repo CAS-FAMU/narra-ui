@@ -20,16 +20,16 @@
 -->
 
 <div class="page-header">
-    <h1>Projects
+    <h1>Collections
         <small>management</small>
         <span class="pull-right">
-            <span class="btn btn-primary" ng-click="open()">New Project</span>
+            <span class="btn btn-primary" ng-click="open()">New Collection</span>
         </span>
     </h1>
 </div>
 
 <div ng-show="empty" class="alert lead" style="text-align: center;">
-    You have no project registered
+    You have no colelction registered
 </div>
 
 <div ng-hide="empty">
@@ -43,15 +43,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="project in projects | filter:search | orderBy:'name'"  ng-click="detail(project)">
+        <tr ng-repeat="collection in collections | filter:search | orderBy:'name'"  ng-click="detail(collection)">
             <td>
-                <span class="lead">{{project.name}}</span>
+                <span class="lead">{{collection.name}}</span>
             </td>
             <td style="vertical-align:middle">
-                <small class="muted">{{project.title}}</small>
+                <small class="muted">{{collection.title}}</small>
             </td>
             <td style="vertical-align:middle">
-                <small class="muted pull-right">{{project.owner.name}}</small>
+                <small class="muted pull-right">{{collection.owner.name}}</small>
             </td>
         </tr>
         </tbody>
@@ -60,26 +60,26 @@
 
 <div modal="shouldBeOpen" close="close()" options="opts">
     <div class="modal-header">
-        <h4>Create a new project</h4>
+        <h4>Create a new collection</h4>
     </div>
     <div class="modal-body">
         <div class="form-horizontal">
             <div class="control-group">
-                <label class="control-label" for="projectName">name</label>
+                <label class="control-label" for="collectionName">name</label>
 
                 <div class="controls">
                     <div class="input-append">
-                        <input id="projectName" ng-model="project.name" ng-change="change()" type="text"
+                        <input id="collectionName" ng-model="collection.name" ng-change="change()" type="text"
                                placeholder="Enter a name here" class="width-300"/>
                     </div>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="projectTitle">title</label>
+                <label class="control-label" for="collectionTitle">title</label>
 
                 <div class="controls">
                     <div class="input-append">
-                        <input id="projectTitle" ng-model="project.title" type="text"
+                        <input id="collectionTitle" ng-model="collection.title" type="text"
                                placeholder="Enter a title here" class="width-300"/>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
             <div ng-show="exists" class="offset2 span4">
                 <div class="alert alert-error">
                     <strong>Warning!</strong><br/>
-                    <small>Project {{project.name|filter_LowercaseNoWhite}} already exists. Please choose a different name.</small>
+                    <small>Collection {{collection.name|filter_LowercaseNoWhite}} already exists. Please choose a different name.</small>
                 </div>
             </div>
         </div>
