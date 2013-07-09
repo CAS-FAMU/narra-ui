@@ -24,8 +24,17 @@
  */
 
 // controllers
-function DashboardCtrl($scope) {
+function DashboardCtrl($scope, api_Project) {
+    // refresh function
+    $scope.refresh = function () {
+        // get all projects
+        api_Project.all(function(data) {
+            $scope.projects = data.projects;
+        });
+    }
 
+    // initial data
+    $scope.refresh();
 }
 
 function SystemSettingsCtrl($scope, service_Messages, api_Settings) {

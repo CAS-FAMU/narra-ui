@@ -24,3 +24,11 @@
         <small> tive</small>
     </h1>
 </div>
+
+<div class="row">
+    <div ng-repeat="project in projects | orderBy:'name'" class="span4">
+        <span class="lead">{{project.title}}</span> <span class="muted">by {{project.owner.name}}</span>
+        <p><img src="http://placehold.it/300x200"/></p>
+        <p><a class="btn" href="/projects/{{project.name}}">View details »</a></p>
+    </div>
+</div>
