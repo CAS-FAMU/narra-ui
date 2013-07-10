@@ -1,3 +1,11 @@
 language: node_js
 node_js:
    - "0.8"
+
+notifications:
+  webhooks:
+    urls:
+      - http://webhook.narra.eu/ui
+    on_success: always
+    on_failure: never
+    on_start: false
