@@ -21,15 +21,15 @@
 
 <div class="nav-collapse collapse" style="margin-top: 2px;">
     <ul class="nav">
-            <li ng-repeat="primary in navigation" ng-class="{active:selected(primary), dropdown:primary.items.length}">
-                <a ng-hide="primary.items.length" href="{{primary.url}}">{{primary.title}}</a>
-                <a ng-show="primary.items.length" href="{{primary.url}}" class="dropdown-toggle" data-toggle="dropdown">
-                    {{primary.title}} <span class="caret"></span></a>
-                <ul ng-show="primary.items.length" class="dropdown-menu">
-                    <li ng-repeat="secondary in primary.items" ng-class="{active:selected(secondary)}">
-                        <a href="{{secondary.url}}">{{secondary.title}}</a>
-                    </li>
-                </ul>
-            </li>
+        <li ng-repeat="primary in navigation" ng-class="{active:selected(primary), dropdown:primary.items.length}" access="{{primary.access.toString()}}">
+            <a ng-hide="primary.items.length" href="{{primary.url}}">{{primary.title}}</a>
+            <a ng-show="primary.items.length" href="{{primary.url}}" class="dropdown-toggle" data-toggle="dropdown">
+                {{primary.title}} <span class="caret"></span></a>
+            <ul ng-show="primary.items.length" class="dropdown-menu">
+                <li ng-repeat="secondary in primary.items" ng-class="{active:selected(secondary)}" access="{{secondary.access.toString()}}">
+                    <a href="{{secondary.url}}">{{secondary.title}}</a>
+                </li>
+            </ul>
+        </li>
     </ul>
 </div>

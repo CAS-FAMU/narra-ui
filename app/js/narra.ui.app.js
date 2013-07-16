@@ -64,4 +64,29 @@ angular.module('narra.ui.app', ['narra.core.api', 'narra.ui.filters', 'narra.ui.
                 templateUrl: '/partials/system_settings.html',
                 controller: SystemSettingsCtrl
             });
+
+        var interceptor = ['$q', '$rootScope', '$location', 'service_Messages', function ($q, $rootScope, $location, service_Messages) {
+            function success(response) {
+                return response;
+            }
+
+            function error(response) {
+                // handle not authorized response
+                if (response.status === 403) {
+                    // get back to root
+                    $location.path('/');
+                    // fire unauthorized event
+                    service_Messages.send('error', 'Unauthorized!', 'Not enough privileges.');
+                    return $q.reject(response);
+                } else {
+                    return $q.reject(response);
+                }
+            }
+
+            return function (promise) {
+                return promise.then(success, error);
+            }
+        }];
+
+        $httpProvider.responseInterceptors.push(interceptor);
     });

@@ -518,10 +518,10 @@ function ComponentsNavigationCtrl($scope, $location) {
     // navigation initial array
     $scope.navigation = [
         {name: "projects", title: "Projects", url: "/projects", items: []},
-        {name: "collections", title: "Collections", url: "/collections", items: []},
-        {name: "users", title: "Users", url: "/users", items: []},
-        {name: "system", title: "System", url: "/system", items: [
-            {name: "settings", title: "Settings", url: "/system/settings"}
+        {name: "collections", title: "Collections", url: "/collections", access: ['author'], items: []},
+        {name: "users", title: "Users", url: "/users", access: ['admin'], items: []},
+        {name: "system", title: "System", url: "/system", access: ['admin'], items: [
+            {name: "settings", title: "Settings", url: "/system/settings", access: ['admin']}
         ]}
     ];
 }

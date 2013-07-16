@@ -81,6 +81,68 @@ angular.module('narra.ui.directives', []).
             templateUrl: '/partials/components_messages.html',
             replace: false
         };
+    }).
+    directive('access',function (service_User) {
+        return {
+            restrict: 'A',
+            link: function ($scope, $element, $attrs) {
+                // hidden flag
+                var hidden = false;
+
+                // refresh fucntion
+                var refresh = function () {
+                    // prepare access attributes
+                    var data = $attrs.access.split('|');
+                    var roles = data[0].split(',');
+                    var object = _.isUndefined(data[1]) ? data[1] : JSON.parse(data[1]);
+                    var user = service_User.current();
+
+                    // checks if user has access to this element
+                    if (_.contains(user.roles, 'admin') || _.isUndefined($attrs.access) || _.isEmpty($attrs.access)) {
+                        // show element
+                        hide(false);
+                    } else if (_.isEmpty(_.intersection(user.roles, roles))) {
+                        // hide element
+                        hide(true);
+                    } else if ((!_.isUndefined(object) && !_.isEqual(user.id, object.owner.id))) {
+                        // hide element
+                        hide(true);
+                    } else {
+                        // show element
+                        hide(false);
+                    }
+                }
+
+                // show or hide element
+                var hide = function(state) {
+                    // hide or show element
+                    state ? $element.hide() : $element.show();
+                    // set flag
+                    hidden = state
+                }
+
+                // preserves that access directive has master privileges
+                if (!_.isUndefined($attrs.ngShow)) {
+                    $scope.$watch($attrs.ngShow, function (value) {
+                        if (!_.isUndefined(value)) {
+                            hidden ? $element.hide() : $element.show();
+                        }
+                    }, true);
+                }
+
+                // listener for the attribute evaluation
+                // workaround for using expressions in attributes
+                $attrs.$observe('access', function() {
+                   refresh();
+                });
+
+                // listener for the initial user login
+                // workaround for the title page to be refreshed after login
+                $scope.$on('event:auth_user', function () {
+                    refresh();
+                });
+            }
+        };
     });
 
 angular.module('ng').directive('ngFocus', function ($timeout) {

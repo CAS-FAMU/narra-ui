@@ -24,8 +24,8 @@
 
         <div class="controls" ng-hide="editable['title']">
             <span class="lead">{{collection.title}}</span>
-            <span ng-show="edit_title" class="btn btn-mini left-buffer-10" style="margin-top: -8px;"
-                  ng-click="edit('title')">Edit</span>
+            <span access="author|{{collection}}"><span ng-show="edit_title" class="btn btn-mini left-buffer-10" style="margin-top: -8px;"
+                  ng-click="edit('title')">Edit</span></span>
         </div>
 
         <div class="controls" ng-show="editable['title']">
@@ -60,7 +60,7 @@
     </div>
     <div class=" control-group">
         <div class="controls">
-            <span ng-click="open()" class="btn btn-danger">Delete Collection</span>
+            <span ng-click="open()" class="btn btn-danger" access="author|{{collection}}">Delete Collection</span>
         </div>
     </div>
 </div>
