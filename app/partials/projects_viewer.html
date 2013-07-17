@@ -20,14 +20,10 @@
 -->
 
 <div class="page-header">
-    <h1><small>open </small>narra<small> tive</small>
+    <h1>Projects
+        <small>viewer</small>
+        <span class="pull-right">
+            <a href="/projects" class="btn btn-success">Back to Projects</a>
+        </span>
     </h1>
-</div>
-
-<div class="row">
-    <div ng-repeat="project in projects | orderBy:'name'" class="span4">
-        <span class="lead">{{project.title}}</span> <span class="muted">by {{project.owner.name}}</span>
-        <p><img src="http://placehold.it/300x200"/></p>
-        <p><a class="btn" href="/projects/{{project.name}}">View »</a><span access="author|{{project}}" class="left-buffer-10"><a class="btn btn-primary" href="/projects/{{project.name}}/editor">Modify »</a></span></p>
-    </div>
 </div>

@@ -49,8 +49,11 @@ angular.module('narra.ui.app', ['narra.core.api', 'narra.ui.filters', 'narra.ui.
                 controller: ProjectsCtrl
             }).
             when('/projects/:name', {
-                templateUrl: '/partials/projects_detail.html',
-                controller: ProjectsDetailCtrl
+                templateUrl: '/partials/projects_viewer.html'
+            }).
+            when('/projects/:name/editor', {
+                templateUrl: '/partials/projects_editor.html',
+                controller: ProjectsEditorCtrl
             }).
             when('/collections', {
                 templateUrl: '/partials/collections.html',

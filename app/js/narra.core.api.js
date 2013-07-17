@@ -32,6 +32,8 @@ angular.module('narra.core.api', ['ngResource']).
         return $resource(service_Server.url() + '/v1/users/:id/:action', { token: service_Token.current() }, {
             all: {method: 'GET', params: {id: '', action: ''}, isArray: false},
             get: {method: 'GET', params: {action: ''}, isArray: false },
+            update: {method: 'POST', params: {id: '@id', action: 'update'}, isArray: false},
+            roles: {method: 'GET', params: {id: 'roles', action: ''}, isArray: false},
             me: {method: 'GET', params: {id: 'me', action: ''}, isArray: false},
             signout: {method: 'GET', params: {id: 'me', action: 'signout'}, isArray: false},
             delete: {method: 'GET', params: {action: 'delete'}}});

@@ -36,16 +36,23 @@ angular.module('narra.ui.services', []).
         };
     }).
     service('service_User', ['$rootScope', function($rootScope) {
-        // empty user object
+        // empty user object and admin flag
         var current_user = {name:'Guest', email: 'Guest'};
+        var admin = false;
 
         $rootScope.$on('event:auth_user', function(event, user) {
             // setup current user
             current_user = user;
+            // check for admin
+            admin = _.contains(current_user.roles, 'admin');
         });
 
         this.current = function() {
             return current_user;
+        };
+
+        this.admin = function() {
+            return admin;
         };
     }]).
     service('service_Token', ['$location', function($location) {

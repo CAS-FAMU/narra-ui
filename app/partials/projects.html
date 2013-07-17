@@ -21,7 +21,7 @@
 
 <div class="page-header">
     <h1>Projects
-        <small>management</small>
+        <small>list</small>
         <span class="pull-right">
             <span class="btn btn-primary" ng-click="open()">New Project</span>
         </span>
@@ -34,28 +34,25 @@
 
 <div ng-hide="empty">
     <input type="text" ng-model="search" placeholder="Search">
-    <table class="table table-hover table-striped">
-        <thead>
-        <tr>
-            <th>name</th>
-            <th>title</th>
-            <th class="pull-right">owner</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="project in projects | filter:search | orderBy:'name'"  ng-click="detail(project)">
-            <td>
-                <span class="lead">{{project.name}}</span>
-            </td>
-            <td style="vertical-align:middle">
-                <small class="muted">{{project.title}}</small>
-            </td>
-            <td style="vertical-align:middle">
-                <small class="muted pull-right">{{project.owner.name}}</small>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div ng-repeat="project in projects | filter:search | orderBy:'name'">
+        <hr>
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="span2">
+                <img src="http://placehold.it/100x100"/>
+            </div>
+            <div class="span5">
+                <span class="lead">{{ project.title }}</span>
+                <p><span class="muted">by {{ project.owner.name }}</span></p>
+                <p><a class="btn" href="/projects/{{project.name}}">View</a><span access="author|{{project}}" class="left-buffer-10"><a class="btn btn-primary" href="/projects/{{project.name}}/editor">Modify</a></span></p>
+            </div>
+            <div class="pull-right">
+                <img src="http://placehold.it/100x100"/><img src="http://placehold.it/100x100"/><img src="http://placehold.it/100x100"/>
+            </div>
+        </div>
+    </div>
+    </div>
 </div>
 
 <div modal="shouldBeOpen" close="close()" options="opts">
@@ -87,7 +84,9 @@
             <div ng-show="exists" class="offset2 span4">
                 <div class="alert alert-error">
                     <strong>Warning!</strong><br/>
-                    <small>Project {{project.name|filter_LowercaseNoWhite}} already exists. Please choose a different name.</small>
+                    <small>Project {{project.name|filter_LowercaseNoWhite}} already exists. Please choose a different
+                        name.
+                    </small>
                 </div>
             </div>
         </div>

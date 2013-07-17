@@ -122,23 +122,60 @@ function UsersCtrl($scope, $location, api_User) {
     $scope.refresh();
 }
 
-function UsersDetailCtrl($scope, $location, $routeParams, service_User, api_User, service_Messages ) {
+function UsersDetailCtrl($scope, $rootScope, $location, $routeParams, service_User, api_User, service_Messages ) {
     // if me
     $scope.me = _.isEqual($routeParams.id, 'me');
 
     // refresh function
     $scope.refresh = function () {
+        // get changed and admin flag
+        $scope.changed = false;
+        $scope.admin = service_User.admin();
+
         // get user data
         if (!$scope.me) {
             api_User.get($scope.me ? {id: service_User.current().id} : {id: $routeParams.id}, function (data) {
                 $scope.user = data.user;
                 $scope.deletable = !_.isEqual(data.user, service_User.current());
+                // check for roles
+                $scope.check();
             });
         } else {
             $scope.user = service_User.current();
             $scope.deletable = false;
+            // check for roles
+            $scope.check();
         }
     };
+
+    $scope.check = function () {
+        // get roles and check for user ones
+        api_User.roles(function (data) {
+            // temporary array
+            var roles = new Array();
+            // mark checked
+            _.each(data.roles, function (role) {
+                if (_.contains($scope.user.roles, role)) {
+                    roles.push({name: role, checked: true});
+                } else {
+                    roles.push({name: role});
+                }
+            });
+
+            // push into model
+            $scope.roles = roles;
+        });
+    }
+
+    // change action
+    $scope.update = function () {
+        $scope.changed = !_.isEqual(_.pluck(_.where($scope.roles, {checked: true}), 'name'), $scope.user.roles);
+    };
+
+    // check if last checked
+    $scope.last = function (role) {
+        return _.isEmpty(_.difference(_.where($scope.roles, {checked: true}), role));
+    }
 
     $scope.open = function () {
         $scope.shouldBeOpen = true;
@@ -148,9 +185,28 @@ function UsersDetailCtrl($scope, $location, $routeParams, service_User, api_User
         $scope.shouldBeOpen = false;
     };
 
+    $scope.cancel = function () {
+        $scope.refresh();
+    };
+
     $scope.opts = {
         backdropFade: true,
         dialogFade: true
+    };
+
+    // save user
+    $scope.save = function () {
+        api_User.update({id: $scope.user.id, roles: _.pluck(_.where($scope.roles, {checked: true}), 'name')}, function (data) {
+            // if updating yourself then fire new user
+            if (_.isEqual($scope.user, service_User.current())) {
+                $rootScope.$broadcast('event:auth_user', data.user);
+            }
+            // send message
+            service_Messages.send('success', 'Success!', 'User roles were successfully updated for ' + $scope.user.name + '.');
+
+            // refresh
+            $scope.refresh();
+        });
     };
 
     // delete user
@@ -242,7 +298,7 @@ function ProjectsCtrl($scope, $location, $filter, service_Messages, api_Project)
     $scope.refresh();
 }
 
-function ProjectsDetailCtrl($scope, $filter, $routeParams, $location, service_Messages, api_Project, api_Collection) {
+function ProjectsEditorCtrl($scope, $filter, $routeParams, $location, service_Messages, api_Project, api_Collection) {
     // refresh function
     $scope.refresh = function () {
         // get selected project
@@ -348,8 +404,23 @@ function ProjectsDetailCtrl($scope, $filter, $routeParams, $location, service_Me
     }
 
     $scope.validate = function () {
+        // check for undefined
+        if (_.isUndefined($scope.collection)) {
+            return false;
+        }
+
+        // exists flag
+        $scope.exists = false;
+
+        // check if already exists
+        _.forEach($scope.collections, function (item) {
+            if (_.isEqual(item.name, $scope.collection.name)) {
+                $scope.exists = true;
+            }
+        });
+
         // return validation
-        return !_.isUndefined($scope.collection.name);
+        return !_.isUndefined($scope.collection.title) && !_.isUndefined($scope.collection.name) && !$scope.exists;
     }
 
     $scope.delete = function () {
