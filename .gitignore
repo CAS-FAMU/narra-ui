@@ -30,7 +30,7 @@ node_modules
 .settings
 .idea/*
 
-#_public
+_public/*
 node_modules/*
 npm-debug.log
 
