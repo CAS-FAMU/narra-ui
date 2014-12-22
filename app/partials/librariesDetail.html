@@ -1,0 +1,92 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="bs-docs-header" id="content">
+    <div class="container">
+        <h1>{{library.name}}</h1>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+
+    <div class="row">
+        <div class="col-md-9" role="main">
+            <div class="bs-docs-section" id="information">
+                <h5 class="page-header">Library Information</h5>
+
+                <div class="well">
+                    <dl class="dl-horizontal">
+                        <dt class="block-header">{{library.name}}</dt>
+                        <dd></dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>description</dt>
+                        <dd>{{library.description}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>author</dt>
+                        <dd>{{library.author.name}}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="bs-docs-section" id="items">
+                <h5 class="page-header">Items</h5>
+
+                <div ng-hide="items.length > 0" class="dashboard-item-empty">This library doesn't contain any item.</div>
+
+                <div id="items-{{$index}}" ng-repeat="item in items" class="well">
+                    <dl class="dl-horizontal">
+                        <dt class="block-header">{{item.name}}</dt>
+                        <dd></dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>type</dt>
+                        <dd>{{item.type}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollfix="+200">
+                <ul class="nav bs-docs-sidenav">
+                    <li du-scrollspy="information">
+                        <a href="#information" du-smooth-scroll>Library Information</a>
+                    </li>
+                    <li du-spy-context du-scrollspy="items">
+                        <a href="#items" du-smooth-scroll>Items</a>
+                        <ul class="nav">
+                            <li ng-repeat="item in items" du-spy-context du-scrollspy="items-{{$index}}">
+                                <a href="#items-{{$index}}" du-smooth-scroll>{{item.name}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <a class="back-to-top" href="/libraries">Back to libraries</a>
+                <a class="back-to-top" href="#top" du-smooth-scroll>Back to top</a>
+            </div>
+        </div>
+
+    </div>
+</div>

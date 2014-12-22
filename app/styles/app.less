@@ -1,0 +1,207 @@
+/*
+ #
+ # Copyright (C) 2014 CAS / FAMU
+ #
+ # This file is part of Narra Core.
+ #
+ # Narra Core is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # Narra Core is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+ #
+ # Authors: Michal Mocnak <michal@marigan.net>
+ #
+ */
+
+/* Put your CSS here */
+body {
+  background: #ffffff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #333333;
+}
+
+.pointer-hand {
+  cursor: pointer;
+  cursor: hand;
+}
+
+.vertical-center {
+  vertical-align: middle !important;
+}
+
+.grid {
+  width: 100%;
+  height: 250px;
+}
+
+.messages {
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+  z-index: 9999;
+}
+
+.ui-scrollfix {
+  position: fixed;
+  top: 10px;
+}
+.page-header {
+  text-transform: uppercase;
+  padding-top: 20px;
+  font-weight: normal;
+}
+
+.dl-horizontal dt {
+  font-size: small;
+}
+
+.block-header {
+  font-weight: bold;
+  color: #d9203b;
+  background-color: transparent;
+  text-transform: uppercase;
+}
+
+.ui-select-match {
+  text-align: left;
+}
+
+.dashboard-item {
+  float: none!important;
+}
+.dashboard-item-empty {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-weight: lighter;
+  font-size: x-large;
+}
+
+.dashboard-item-image {
+  -webkit-filter: grayscale(100%) opacity(0.2);
+  -moz-filter: grayscale(100%) opacity(0.2);
+  filter: grayscale(100%) opacity(0.2);
+  -webkit-transition:all linear 0.2s;
+  -moz-transition:all linear 0.2s;
+  transition:all linear 0.2s;
+}
+
+.dashboard-item-title {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  opacity: 0.0;
+}
+
+.dashboard-item-title-anim {
+  opacity: 1.0;
+  -webkit-transition:all linear 0.2s;
+  -moz-transition:all linear 0.2s;
+  transition:all linear 0.2s;
+}
+
+.dashboard-item-title h1 {
+  text-align: center;
+  color: #000000;
+  text-transform: uppercase;
+  font-size: x-large;
+  font-weight: lighter;
+  margin-top: 50px;
+}
+
+.dashboard-item-title p {
+  text-align: center;
+  color: #000000;
+  text-transform: lowercase;
+  font-size: medium;
+  font-weight: normal;
+}
+
+.queue li {
+  padding-left: 15px;
+  padding-right: 15px;
+  text-align: center;
+}
+
+.queue li > p {
+  font-size: small;
+  margin-top: 5px;
+}
+
+.queue li > h1 {
+  font-size: medium;
+  margin-bottom: 20px;
+}
+
+.dl-horizontal {
+  margin-bottom: 0px;
+}
+
+.well-hover:hover {
+  -webkit-transition:all linear 0.2s;
+  -moz-transition:all linear 0.2s;
+  transition:all linear 0.2s;
+  cursor: pointer;
+  cursor: hand;
+  background-color: #e6e6e6;
+}
+
+/* CUSTOMIZE IMAGES
+-------------------------------------------------- */
+.grayscale {
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  height: 200px;
+  margin-bottom: 60px;
+  position: relative;
+}
+
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 200px;
+  background-color: #777;
+}
+
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 200px;
+}
+
+.carousel-inner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-indicators {
+  visibility: hidden;
+}
+
+.carousel-control {
+  visibility: hidden;
+}

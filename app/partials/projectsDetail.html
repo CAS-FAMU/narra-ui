@@ -1,0 +1,96 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="bs-docs-header" id="content">
+    <div class="container">
+        <h1>{{project.title}}</h1>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+
+    <div class="row">
+        <div class="col-md-9" role="main">
+            <div class="bs-docs-section" id="information">
+                <h5 class="page-header">Project Information</h5>
+
+                <div class="well">
+                    <dl class="dl-horizontal">
+                        <dt class="block-header">{{project.title}}</dt>
+                        <dd></dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>name</dt>
+                        <dd>{{project.name}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>description</dt>
+                        <dd>{{project.description}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>author</dt>
+                        <dd>{{project.author.name}}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="bs-docs-section" id="libraries">
+                <h5 class="page-header">Libraries</h5>
+
+                <div ng-hide="project.libraries.length > 0" class="dashboard-item-empty">This project doesn't contain any library.</div>
+
+                <div id="libraries-{{$index}}" ng-repeat="library in project.libraries" class="well">
+                    <dl class="dl-horizontal">
+                        <dt class="block-header">{{library.name}}</dt>
+                        <dd></dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>description</dt>
+                        <dd>{{library.description}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollfix="+200">
+                <ul class="nav bs-docs-sidenav">
+                    <li du-scrollspy="information">
+                        <a href="#information" du-smooth-scroll>Project Information</a>
+                    </li>
+                    <li du-spy-context du-scrollspy="libraries">
+                        <a href="#libraries" du-smooth-scroll>Libraries</a>
+                        <ul class="nav">
+                            <li ng-repeat="library in project.libraries" du-spy-context du-scrollspy="libraries-{{$index}}">
+                                <a href="#libraries-{{$index}}" du-smooth-scroll>{{library.name}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <a class="back-to-top" href="/projects">Back to projects</a>
+                <a class="back-to-top" href="#top" du-smooth-scroll>Back to top</a>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,138 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<!doctype html>
+<html lang="en" ng-app="narra.ui">
+<head>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="NARRA is an open source software for visualizing, annotating and linking audio-visual media (video, photos, sounds) and text.">
+    <meta name="keywords"
+          content="audio-visual, media, video, photo, text, sound, audio, visualization, linking, annotating">
+    <meta name="author" content="Michal Mocnak, Krystof Pesek, Eric Rosenzveig, Matej Strnad and NARRA contributors">
+    <title>narra</title>
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/vendor.css">
+    <script src="js/vendor.js"></script>
+    <script src="js/app.js"></script>
+</head>
+<body>
+
+<!-- header -->
+<header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse"
+                    data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><img src="images/logo_header.png" alt="NARRA"
+                                                  style="height: 25px; margin-top: -1px; margin-bottom: -5px;"></a>
+        </div>
+        <div class="navbar-collapse collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav" elzoido-navigation>
+                <!-- elzoido navigation component -->
+            </ul>
+            <div class="btn-group navbar-left" elzoido-auth-access="admin,author">
+                <button class="btn btn-danger btn-xs navbar-btn dropdown-toggle" type="button" data-toggle="dropdown"
+                        aria-expanded="false">
+                    <span class="fa fa-plus"></span> Add New <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" ng-controller="AddCtrl">
+                    <li><a href="#" ng-click="addItem()">Add Item</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#" ng-click="addLibrary()">Add Library</a></li>
+                    <li><a href="#" ng-click="addProject()">Add Project</a></li>
+                </ul>
+            </div>
+            <ul class="nav navbar-nav navbar-right" elzoido-auth-user>
+                <!-- elzoido auth user component -->
+            </ul>
+            <div class="btn-group navbar-right" elzoido-auth-access="admin,author">
+                <div ng-show="events.length" ng-controller="EventsCtrl">
+                    <ul class="nav navbar-nav nav-pills dropdown-toggle" data-toggle="dropdown"
+                        role="tablist">
+                        <li role="presentation"><a href="#">Queue <span class="badge">{{events.length}}</span></a></li>
+                    </ul>
+                    <ul class="dropdown-menu queue" role="menu" style="width: 300px;">
+                        <li ng-repeat="event in events" ng-if="event.progress > 0">
+                            <p>{{event.item.type | capitalize}} {{event.item.name}} is being processed</p>
+
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                     aria-valuenow="{{event.progress}}" aria-valuemin="0" aria-valuemax="100"
+                                     ng-style="{width: event.progress + '%'}">
+                                    <span>{{event.progress}} %</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <h1>
+                                <ng-pluralize count="events.length"
+                                              when="{'one': 'There is 1 item in queue.', 'other': 'There are {} items in queue.'}">
+                                </ng-pluralize>
+                            </h1>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div ng-view></div>
+
+<div class="messages">
+    <div elzoido-messages></div>
+</div>
+
+<footer class="bs-docs-footer" role="contentinfo" ng-controller="VersionCtrl">
+    <div class="container">
+        <p>Designed and built with all the love in the world by <a href="http://cas.famu.cz/" target="_blank">CAS
+            FAMU</a>.</p>
+
+        <p>Maintained by the <a href="https://github.com/orgs/CAS-FAMU/teams/narra">core team</a> with the help of <a
+                href="https://github.com/orgs/CAS-FAMU/people">our contributors</a>.</p>
+
+        <p>Code licensed under <a href="https://github.com/CAS-FAMU/narra/blob/master/LICENSE"
+                                  target="_blank">GPL-3.0</a>, documentation under <a
+                href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+        <ul class="bs-docs-footer-links text-muted">
+            <li>Currently version {{version.release}}</li>
+            <li>&middot;</li>
+            <li><a href="https://github.com/CAS-FAMU?query=narra">GitHub</a></li>
+            <li>&middot;</li>
+            <li><a href="http://www.narra.eu">About</a></li>
+            <li>&middot;</li>
+            <li><a href="https://github.com/CAS-FAMU/narra/issues">Issues</a></li>
+        </ul>
+    </div>
+</footer>
+</body>
+</html>

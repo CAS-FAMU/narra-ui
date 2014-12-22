@@ -1,33 +1,57 @@
 <!--
-    Copyright (C) 2013 CAS / FAMU
-
-    This file is part of Narra UI.
-
-    Narra UI is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Narra UI is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Narra UI. If not, see <http://www.gnu.org/licenses/>.
-
-    Authors: Michal Mocnak <michal@marigan.net>, Krystof Pesek <krystof.pesek@gmail.com>
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
 -->
 
-<div class="page-header">
-    <h1><small>open </small>narra<small> tive</small>
-    </h1>
+<div class="bs-docs-header" id="content">
+    <div style="height: 100px;">
+        <carousel interval="5000" style="top: 0; left: 0; position: absolute; width: 100%;" class="hidden-xs">
+            <div class="carousel-inner">
+                <slide ng-repeat="thumbnail in thumbnails">
+                    <div class="background-cover grayscale"
+                         style="background-image: url('{{thumbnail}}'); width: 100%; height: 100%;"></div>
+                </slide>
+            </div>
+        </carousel>
+    </div>
 </div>
 
-<div class="row">
-    <div ng-repeat="project in projects | orderBy:'name'" class="span4">
-        <span class="lead">{{project.title}}</span> <span class="muted">by {{project.owner.name}}</span>
-        <p><img src="http://placehold.it/300x200"/></p>
-        <p><a class="btn" href="/projects/{{project.name}}">View »</a><span access="author|{{project}}" class="left-buffer-10"><a class="btn btn-primary" href="/projects/{{project.name}}/editor">Modify »</a></span></p>
+<div class="container bs-docs-container" style="margin-top: 60px;">
+    <div class="row">
+        <div class="col-md-12">
+
+            <div ng-hide="projects.length > 0" class="col-md-12 dashboard-item-empty">Any project is registered.</div>
+
+            <div ng-repeat="project in projects" class="col-md-12 dashboard-item" style="width: 100%; height: 150px;"
+                 ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false">
+                <div ng-repeat="thumbnail in project.thumbnails track by $index"
+                     ng-class="{'dashboard-item-image': hover$index}"
+                     class="background-cover"
+                     style="background-image: url('{{thumbnail}}'); width: 20%; height: 150px; float: left"></div>
+                <div class="dashboard-item-title" ng-class="{'dashboard-item-title-anim': hover$index}">
+                    <h1>{{project.title}}</h1>
+
+                    <p>by {{project.author.name}}</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -23,7 +23,7 @@
 
 <div class="bs-docs-header" id="content">
     <div class="container">
-        <h1>Projects</h1>
+        <h1>Libraries</h1>
     </div>
 </div>
 
@@ -32,20 +32,19 @@
     <div class="row">
         <div class="col-md-12" role="main">
             <div class="bs-docs-section" id="projects-section">
-                <h5 id="projects" class="page-header">Projects</h5>
+                <h5 id="projects" class="page-header">Libraries</h5>
 
-                <div ng-hide="projects.length > 0" class="col-md-12 dashboard-item-empty">You are not an author of any project.</div>
+                <div ng-hide="libraries.length > 0" class="col-md-12 dashboard-item-empty">You are not an author of any library.</div>
 
-                <div ng-repeat="project in projects" class="col-md-12 dashboard-item pointer-hand" style="width: 100%; height: 150px;"
-                     ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false" ng-click="detail(project)">
-                    <div ng-repeat="thumbnail in project.thumbnails track by $index"
+                <div ng-repeat="library in libraries" class="col-md-12 dashboard-item pointer-hand" style="width: 100%; height: 150px;"
+                     ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false" ng-click="detail(library)">
+                    <div ng-repeat="thumbnail in library.thumbnails track by $index"
                          ng-class="{'dashboard-item-image': hover$index}"
                          class="background-cover"
                          style="background-image: url('{{thumbnail}}'); width: 20%; height: 150px; float: left"></div>
                     <div class="dashboard-item-title" ng-class="{'dashboard-item-title-anim': hover$index}">
-                        <h1>{{project.title}}</h1>
-
-                        <p>by {{project.author.name}}</p>
+                        <h1>{{library.name}}</h1>
+                        <p>by {{library.author.name}}</p>
                     </div>
                 </div>
             </div>
@@ -55,16 +54,16 @@
 
                 <div ng-hide="contributions.length > 0" class="col-md-12 dashboard-item-empty">You don't have any contribution.</div>
 
-                <div ng-repeat="project in contributions" class="col-md-12 dashboard-item pointer-hand" style="width: 100%; height: 150px;"
-                     ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false" ng-click="detail(project)">
-                    <div ng-repeat="thumbnail in project.thumbnails track by $index"
+                <div ng-repeat="library in contributions" class="col-md-12 pointer-hand" style="width: 100%; height: 150px;"
+                     ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false" ng-click="detail(library)">
+                    <div ng-repeat="thumbnail in library.thumbnails track by $index"
                          ng-class="{'dashboard-item-image': hover$index}"
                          class="background-cover"
                          style="background-image: url('{{thumbnail}}'); width: 20%; height: 150px; float: left"></div>
                     <div class="dashboard-item-title" ng-class="{'dashboard-item-title-anim': hover$index}">
-                        <h1>{{project.title}}</h1>
+                        <h1>{{library.name}}</h1>
 
-                        <p>by {{project.author.name}}</p>
+                        <p>by {{library.author.name}}</p>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,111 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="bs-docs-header" id="content">
+    <div class="container">
+        <h1>Information</h1>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+
+    <div class="row">
+        <div class="col-md-9" role="main">
+            <div class="bs-docs-section" id="version">
+                <h5 class="page-header">System Version</h5>
+
+                <div class="well">
+                    <dl class="dl-horizontal">
+                        <dt class="block-header">narra-api</dt>
+                        <dd>{{coreVersion}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt class="block-header">narra-ui</dt>
+                        <dd>{{uiVersion}}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="bs-docs-section" id="modules">
+                <h5 class="page-header">Modules</h5>
+
+                <div id="modules-{{module.name}}" ng-repeat="module in coreModules" class="well">
+                    <dl class="dl-horizontal">
+                        <dt class="block-header">{{module.name}}</dt>
+                        <dd></dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>version</dt>
+                        <dd>{{module.version}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>summary</dt>
+                        <dd>{{module.summary}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>description</dt>
+                        <dd>{{module.description}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>homepage</dt>
+                        <dd><a href="{{module.homepage}}" target="_blank">{{module.homepage}}</a></dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>contact</dt>
+                        <dd><a ng-repeat="email in module.email" href="mailto: {{email}}" target="_blank">{{email}}<span
+                                ng-hide="$last">, </span></a></dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>authors</dt>
+                        <dd><span ng-repeat="author in module.authors">{{author}}<span ng-hide="$last">, </span></span>
+                        </dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>license</dt>
+                        <dd>{{module.license}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollfix="+200">
+                <ul class="nav bs-docs-sidenav">
+                    <li du-scrollspy="version">
+                        <a href="#version" du-smooth-scroll>System Version</a>
+                    </li>
+                    <li du-spy-context du-scrollspy="modules">
+                        <a href="#modules" du-smooth-scroll>Modules</a>
+                        <ul class="nav">
+                            <li ng-repeat="module in coreModules" du-spy-context du-scrollspy="modules-{{module.name}}">
+                                <a href="#modules-{{module.name}}" du-smooth-scroll>{{module.name}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <a class="back-to-top" href="#top" du-smooth-scroll>Back to top</a>
+            </div>
+        </div>
+
+    </div>
+</div>
