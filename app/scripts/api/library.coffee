@@ -48,5 +48,5 @@ angular.module('narra.ui').factory "apiLibrary", ($resource, serviceServer, serv
     update:
       method: 'POST'
       params:
-        name: '@id'
+        id: '@id'
         action: 'update'

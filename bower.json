@@ -26,7 +26,6 @@
     "font-awesome": "~4.2.0",
     "holderjs": "~2.4.1",
     "momentjs": "~2.8.4",
-    "angular-backgroundcover": "~0.0.2",
     "angular-scroll": "~0.6.2"
   },
   "overrides": {}

@@ -31,20 +31,21 @@
 
     <div class="row">
         <div class="col-md-12" role="main">
-            <div class="bs-docs-section" id="projects-section">
-                <h5 id="projects" class="page-header">Libraries</h5>
+            <div class="bs-docs-section" id="libraries-section">
+                <h5 id="libraries" class="page-header">Libraries</h5>
 
-                <div ng-hide="libraries.length > 0" class="col-md-12 dashboard-item-empty">You are not an author of any library.</div>
+                <div ng-hide="libraries.length > 0" class="col-md-12 dashboard-item-empty">You are not an author of any
+                    library.
+                </div>
 
-                <div ng-repeat="library in libraries" class="col-md-12 dashboard-item pointer-hand" style="width: 100%; height: 150px;"
-                     ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false" ng-click="detail(library)">
-                    <div ng-repeat="thumbnail in library.thumbnails track by $index"
-                         ng-class="{'dashboard-item-image': hover$index}"
-                         class="background-cover"
-                         style="background-image: url('{{thumbnail}}'); width: 20%; height: 150px; float: left"></div>
-                    <div class="dashboard-item-title" ng-class="{'dashboard-item-title-anim': hover$index}">
-                        <h1>{{library.name}}</h1>
-                        <p>by {{library.author.name}}</p>
+                <div class="row">
+                    <div ng-repeat="library in libraries" class="col-sm-4">
+                        <div class="well well-hover" ng-click="detail(library)">
+                            <img src="{{library.thumbnails[0]}}" alt="{{library.name}}" class="img-responsive"
+                                 style="width: 100%; height: 150px;">
+
+                            <h3 class="libraries-item">{{library.name}}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,18 +53,18 @@
             <div class="bs-docs-section" id="contributions-section">
                 <h5 id="contributions" class="page-header">Contributions</h5>
 
-                <div ng-hide="contributions.length > 0" class="col-md-12 dashboard-item-empty">You don't have any contribution.</div>
+                <div ng-hide="contributions.length > 0" class="col-md-12 dashboard-item-empty">You don't have any
+                    contribution.
+                </div>
 
-                <div ng-repeat="library in contributions" class="col-md-12 pointer-hand" style="width: 100%; height: 150px;"
-                     ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false" ng-click="detail(library)">
-                    <div ng-repeat="thumbnail in library.thumbnails track by $index"
-                         ng-class="{'dashboard-item-image': hover$index}"
-                         class="background-cover"
-                         style="background-image: url('{{thumbnail}}'); width: 20%; height: 150px; float: left"></div>
-                    <div class="dashboard-item-title" ng-class="{'dashboard-item-title-anim': hover$index}">
-                        <h1>{{library.name}}</h1>
+                <div class="row">
+                    <div ng-repeat="library in contributions" class="col-sm-4">
+                        <div class="well well-hover" ng-click="detail(library)">
+                            <img src="{{library.thumbnails[0]}}" alt="{{library.name}}" class="img-responsive"
+                                 style="width: 100%; height: 150px;">
 
-                        <p>by {{library.author.name}}</p>
+                            <h3 class="text-center">{{library.name}}</h3>
+                        </div>
                     </div>
                 </div>
             </div>

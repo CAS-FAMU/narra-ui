@@ -33,6 +33,7 @@ node_modules
 _public/*
 node_modules/*
 npm-debug.log
+cache/*
 
 test/test-results.xml
 

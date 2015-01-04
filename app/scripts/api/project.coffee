@@ -34,3 +34,9 @@ angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serv
       method: 'POST'
       params:
         action: 'new'
+
+    update:
+      method: 'POST'
+      params:
+        name: '@name'
+        action: 'update'

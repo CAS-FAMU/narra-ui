@@ -34,7 +34,7 @@
             <div class="bs-docs-section" id="information">
                 <h5 class="page-header">Project Information</h5>
 
-                <div class="well">
+                <div class="well well-hover" ng-click="edit()">
                     <dl class="dl-horizontal">
                         <dt class="block-header">{{project.title}}</dt>
                         <dd></dd>
@@ -51,6 +51,11 @@
                         <dt>author</dt>
                         <dd>{{project.author.name}}</dd>
                     </dl>
+                    <dl class="dl-horizontal">
+                        <dt>contributors</dt>
+                        <dd><span ng-repeat="contributor in project.contributors">{{contributor.name}}<span
+                                ng-hide="$last">, </span></span><span ng-show="project.contributors.length == 0" class="text-muted">There is no contributors in this project.</span></dd>
+                    </dl>
                 </div>
             </div>
 
@@ -59,7 +64,12 @@
 
                 <div ng-hide="project.libraries.length > 0" class="dashboard-item-empty">This project doesn't contain any library.</div>
 
-                <div id="libraries-{{$index}}" ng-repeat="library in project.libraries" class="well">
+                <div ng-hide="filtered.length > 0 || items.length == 0" class="dashboard-item-empty">Any library meets you search criteria.</div>
+
+                <div id="libraries-{{$index}}" ng-repeat="library in filtered = (project.libraries | filter:search) | orderBy:'name'" class="well well-hover" ng-click="detail(library)">
+                    <div ng-repeat="thumbnail in library.thumbnails track by $index"
+                         class="background-cover"
+                         style="background-image: url('{{thumbnail}}'); width: 20%; height: 80px; float: left; margin-bottom: 10px;"></div>
                     <dl class="dl-horizontal">
                         <dt class="block-header">{{library.name}}</dt>
                         <dd></dd>
@@ -68,12 +78,25 @@
                         <dt>description</dt>
                         <dd>{{library.description}}</dd>
                     </dl>
+                    <dl class="dl-horizontal">
+                        <dt>author</dt>
+                        <dd>{{library.author.name}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>contributors</dt>
+                        <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
+                                ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0" class="text-muted">There is no contributors in this library.</span></dd>
+                    </dl>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollfix="+200">
+                <div class="input-group input-group-sm" style="width: 200px;">
+                    <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                    <input type="text" class="form-control" ng-model="search" placeholder="Search">
+                </div>
                 <ul class="nav bs-docs-sidenav">
                     <li du-scrollspy="information">
                         <a href="#information" du-smooth-scroll>Project Information</a>
@@ -81,7 +104,7 @@
                     <li du-spy-context du-scrollspy="libraries">
                         <a href="#libraries" du-smooth-scroll>Libraries</a>
                         <ul class="nav">
-                            <li ng-repeat="library in project.libraries" du-spy-context du-scrollspy="libraries-{{$index}}">
+                            <li ng-repeat="library in filtered | orderBy:'name'" du-spy-context du-scrollspy="libraries-{{$index}}">
                                 <a href="#libraries-{{$index}}" du-smooth-scroll>{{library.name}}</a>
                             </li>
                         </ul>

@@ -6,10 +6,10 @@ module.exports = function(grunt) {
         version: "0.11.3",
         build_dir: './_dist',
         // specifiy what to build
-        mac: false,
+        mac: true,
         win: false,
         linux32: false,
-        linux64: true
+        linux64: false
       },
       src: './_public/**/*'
     },

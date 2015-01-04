@@ -40,6 +40,5 @@ angular.module('narra.ui', [
   'elzoido.messages',
   'elzoido.promises',
   'wu.masonry',
-  'backgroundCover',
   'duScroll'
 ])

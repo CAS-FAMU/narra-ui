@@ -34,7 +34,7 @@
             <div class="bs-docs-section" id="information">
                 <h5 class="page-header">Library Information</h5>
 
-                <div class="well">
+                <div class="well well-hover" ng-click="edit()">
                     <dl class="dl-horizontal">
                         <dt class="block-header">{{library.name}}</dt>
                         <dd></dd>
@@ -47,6 +47,11 @@
                         <dt>author</dt>
                         <dd>{{library.author.name}}</dd>
                     </dl>
+                    <dl class="dl-horizontal">
+                        <dt>contributors</dt>
+                        <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
+                                ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0" class="text-muted">There is no contributors in this library.</span></dd>
+                    </dl>
                 </div>
             </div>
 
@@ -55,7 +60,12 @@
 
                 <div ng-hide="items.length > 0" class="dashboard-item-empty">This library doesn't contain any item.</div>
 
-                <div id="items-{{$index}}" ng-repeat="item in items" class="well">
+                <div ng-hide="filtered.length > 0 || items.length == 0" class="dashboard-item-empty">Any item meets you search criteria.</div>
+
+                <div id="items-{{$index}}" ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'" class="well well-hover" ng-click="detail(item)">
+                    <div ng-repeat="thumbnail in item.thumbnails track by $index"
+                         class="background-cover"
+                         style="background-image: url('{{thumbnail}}'); width: 20%; height: 80px; float: left; margin-bottom: 10px;"></div>
                     <dl class="dl-horizontal">
                         <dt class="block-header">{{item.name}}</dt>
                         <dd></dd>
@@ -64,12 +74,20 @@
                         <dt>type</dt>
                         <dd>{{item.type}}</dd>
                     </dl>
+                    <dl class="dl-horizontal">
+                        <dt>author</dt>
+                        <dd>{{item.metadata['author']}}</dd>
+                    </dl>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollfix="+200">
+                <div class="input-group input-group-sm" style="width: 200px;">
+                    <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                    <input type="text" class="form-control" ng-model="search" placeholder="Search">
+                </div>
                 <ul class="nav bs-docs-sidenav">
                     <li du-scrollspy="information">
                         <a href="#information" du-smooth-scroll>Library Information</a>
@@ -83,7 +101,8 @@
                         </ul>
                     </li>
                 </ul>
-                <a class="back-to-top" href="/libraries">Back to libraries</a>
+                <a ng-hide="project" class="back-to-top" href="/libraries">Back to libraries</a>
+                <a ng-show="project" class="back-to-top" href="/projects/{{project}}">Back to project</a>
                 <a class="back-to-top" href="#top" du-smooth-scroll>Back to top</a>
             </div>
         </div>

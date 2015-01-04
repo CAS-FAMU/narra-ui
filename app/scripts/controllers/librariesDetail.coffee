@@ -20,6 +20,10 @@
 #
 
 angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope, $routeParams, $location, $filter, $q, dialogs, apiProject, apiLibrary, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
+  # set up context
+  $scope.project = $routeParams.project
+
+  # refresh data
   $scope.refresh = ->
     # get current user
     $scope.user = elzoidoAuthUser.get()
@@ -39,8 +43,22 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
     # show wait dialog when the loading is taking long
     elzoidoPromises.wait('library', 'Loading library ...')
 
+  $scope.edit = ->
+    confirm = dialogs.create('partials/librariesInformationEdit.html', 'LibrariesInformationEditCtrl',
+      {library: $scope.library},
+      {size: 'lg', keyboard: false})
+    # result
+    confirm.result.then (wait) ->
+      wait.result.then (library)->
+        # fire event
+        $rootScope.$broadcast 'event:narra-library-updated', library
+
   # refresh when new library is added
   $rootScope.$on 'event:narra-item-created', (event, status) ->
+    $scope.refresh()
+
+  # refresh when new library is added
+  $rootScope.$on 'event:narra-library-updated', (event, library) ->
     $scope.refresh()
 
   # initial data
