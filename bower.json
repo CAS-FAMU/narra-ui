@@ -19,14 +19,20 @@
     "angular-ui-grid": "~3.0.0-rc.16",
     "angular-dialog-service": "~5.2.6",
     "lodash": "~2.4.1",
-    "elzoido-auth": "marigan/elzoido-auth#0.2.2",
+    "elzoido-auth": "marigan/elzoido-auth#0.3.0",
     "elzoido-navigation": "marigan/elzoido-navigation#0.1.6",
     "elzoido-messages": "marigan/elzoido-messages#0.2.0",
-    "elzoido-promises": "marigan/elzoido-promises#0.1.2",
+    "elzoido-promises": "marigan/elzoido-promises#0.2.0",
     "font-awesome": "~4.2.0",
     "holderjs": "~2.4.1",
     "momentjs": "~2.8.4",
-    "angular-scroll": "~0.6.2"
+    "angular-scroll": "~0.6.2",
+    "videogular": "~0.7.2",
+    "videogular-controls": "~0.7.2",
+    "videogular-overlay-play": "~0.7.2",
+    "videogular-poster": "~0.7.2",
+    "videogular-buffering": "~0.7.2",
+    "videogular-themes-default": "~0.7.2"
   },
   "overrides": {}
 }

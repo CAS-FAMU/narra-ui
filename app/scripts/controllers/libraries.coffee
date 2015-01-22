@@ -19,7 +19,11 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $location, $filter, $q, dialogs, apiProject, apiLibrary, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
+angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $location, $interval, $filter, $q, dialogs, apiProject, apiLibrary, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
+  # initialization
+  $scope.rotation = {}
+  $scope.thumbnail = {}
+
   $scope.refresh = ->
     # get current user
     $scope.user = elzoidoAuthUser.get()
@@ -30,7 +34,8 @@ angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $loc
       _.forEach(data.libraries, (library) ->
         library.thumbnails = [] if _.isUndefined(library.thumbnails)
         while library.thumbnails.length < 5
-          library.thumbnails.push('/images/empty_project.png'))
+          library.thumbnails.push('/images/bars.png')
+        $scope.thumbnail[library.name] = library.thumbnails[0])
       $scope.libraries = _.filter(data.libraries, (library) ->
         _.isEqual(library.author.username, $scope.user.username))
       $scope.contributions = _.filter(data.libraries, (library) ->
@@ -41,6 +46,26 @@ angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $loc
     elzoidoPromises.register('libraries', [libraries.promise])
     # show wait dialog when the loading is taking long
     elzoidoPromises.wait('dashboard', 'Loading libraries ...')
+
+  $scope.startRotation = (library) ->
+    # don't start new refresh when it is already on
+    if angular.isDefined($scope.rotation[library.name]) then return
+    # counter
+    count = 0
+    # rotate
+    $scope.rotation[library.name] = $interval(->
+      # revalidate count
+      if count + 1 == library.thumbnails.length then count = 0 else count++
+      # rotate
+      $scope.thumbnail[library.name] = library.thumbnails[count]
+    , 600)
+
+  $scope.stopRotation = (library) ->
+    # don't start new refresh when it is already on
+    if angular.isDefined($scope.rotation[library.name])
+      $interval.cancel($scope.rotation[library.name])
+      $scope.rotation[library.name] = undefined
+      $scope.thumbnail[library.name] = library.thumbnails[0]
 
   # refresh when user is logged
   $rootScope.$on 'event:elzoido-auth-user', (event, status) ->

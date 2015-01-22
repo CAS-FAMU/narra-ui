@@ -19,5 +19,11 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').factory 'serviceServer', ->
-  url: 'http://narra-api'
+
+angular.module('narra.ui').factory "apiAuth", ($resource, serviceServer) ->
+  $resource serviceServer.url + "/auth/:action", {}
+  ,
+    providers:
+      method: 'GET'
+      params:
+        action: 'providers'

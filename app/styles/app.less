@@ -155,6 +155,18 @@ body {
   background-color: #e6e6e6;
 }
 
+.bookmark-hover {
+  margin-left: 10px;
+  color: #d9534f;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.bookmark-hover:hover {
+  margin-left: 10px;
+  color: #c12e2a;
+}
+
 .background-cover {
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -164,8 +176,55 @@ body {
 .libraries-item {
   text-align: center;
   font-weight: lighter;
-  font-size: x-large;
+  font-size: medium;
   text-transform: uppercase;
+}
+
+.cuepoints {
+  position: relative;
+  top: -50px;
+  display: block;
+  width: 100%;
+  height: 0px;
+}
+
+.cuepoint {
+  position: absolute;
+  display: block;
+  width: 4px;
+  height: 50px;
+  background-color: #c12e2a;
+}
+
+.cuepoint:hover {
+  -webkit-transition:all linear 0.1s;
+  -moz-transition:all linear 0.1s;
+  transition:all linear 0.1s;
+  background-color: red;
+  width: 16px;
+  margin-left: -4px;
+}
+
+.narra-tooltip {
+  opacity: 0.0;
+}
+
+.narra-tooltip-anim {
+  opacity: 1.0;
+  -webkit-transition:all linear 2s;
+  -moz-transition:all linear 2s;
+  transition:all linear 2s;
+}
+
+.side-buttons {
+  margin-left: 20px;
+}
+
+.red-tooltip + .tooltip > .tooltip-inner {
+  background-color: #c12e2a;
+}
+.red-tooltip + .tooltip > .tooltip-arrow {
+  border-bottom-color:#c12e2a;
 }
 
 /* CUSTOMIZE IMAGES

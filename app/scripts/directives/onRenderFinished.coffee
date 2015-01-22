@@ -19,31 +19,9 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui', [
-  'ngRoute',
-  'ngResource',
-  'ngSanitize',
-  'ngCookies',
-  'ui.bootstrap',
-  'ui.event',
-  'ui.validate',
-  'ui.scrollfix',
-  'ui.grid',
-  'ui.grid.edit',
-  'ui.grid.cellNav',
-  'ui.grid.autoResize',
-  'ui.select',
-  'dialogs.main',
-  'dialogs.default-translations',
-  'elzoido.auth',
-  'elzoido.navigation',
-  'elzoido.messages',
-  'elzoido.promises',
-  'wu.masonry',
-  'duScroll',
-  'com.2fdevs.videogular',
-  'com.2fdevs.videogular.plugins.controls',
-  'com.2fdevs.videogular.plugins.overlayplay',
-  'com.2fdevs.videogular.plugins.poster',
-  'com.2fdevs.videogular.plugins.buffering'
-])
+angular.module('narra.ui').directive 'onRenderFinished', ($timeout) ->
+  restrict: 'A'
+  link: (scope, element, attr) ->
+    if scope.$last == true
+      $timeout ->
+        scope.$emit('event:narra-render-finished')

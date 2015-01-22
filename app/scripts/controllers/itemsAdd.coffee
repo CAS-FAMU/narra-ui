@@ -19,9 +19,9 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $filter, $modalInstance, dialogs, apiItem, apiLibrary, apiUser, elzoidoMessages, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $timeout, $filter, $modalInstance, dialogs, apiItem, apiLibrary, apiUser, elzoidoMessages, elzoidoAuthUser, elzoidoPromises) ->
   $scope.user = elzoidoAuthUser.get()
-  $scope.item = { url: '', library: '', author: $scope.user }
+  $scope.item = {url: '', library: '', author: $scope.user}
 
   apiLibrary.all (data) ->
     temporary = angular.copy(data.libraries)
@@ -38,18 +38,39 @@ angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $filter, $modalIn
   # save action
   $scope.new = ->
     # open waiting
-    wait = dialogs.wait('Please Wait', 'Registering new library ...')
-
+    waiting = dialogs.wait('Please Wait', 'Registering new items ...')
     # close dialog
-    $modalInstance.close(wait)
-
-    apiItem.new({
-      url: $scope.item.url
-      author: $scope.item.author.username
-      library: $scope.item.library.id
-    }, (data) ->
-      # close wait dialog
-      wait.close()
-      # fire message
-      elzoidoMessages.send('success', 'Success!', 'Item ' + data.item.name + ' was successfully created.')
+    $modalInstance.close(waiting)
+    # promises
+    promises = []
+    # parse items
+    items = $scope.item.url.split("\n")
+    # iterate over
+    _.forEach(items, (item) ->
+      # get deffered
+      wait = $q.defer()
+      # register promise
+      promises.push(wait.promise)
+      # add item
+      $timeout(->
+        apiItem.new({
+            url: item
+            author: $scope.item.author.name
+            library: $scope.item.library.id
+          }, (data) ->
+          wait.resolve true
+          # fire message
+          elzoidoMessages.send('success', 'Success!', 'Item ' + data.item.name + ' was successfully created.')
+        , (error) ->
+          wait.resolve true
+          # fire message
+          elzoidoMessages.send('danger', 'Error!', 'Item on ' + item + ' encountered problem.')
+        )
+      , 500)
     )
+
+    # register promises into one queue
+    elzoidoPromises.register('add-items', promises)
+    # close dialog
+    elzoidoPromises.promise('add-items').then ->
+      waiting.close()

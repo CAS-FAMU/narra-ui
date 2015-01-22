@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope, $routeParams, $location, $filter, $q, dialogs, apiProject, apiUser, elzoidoPromises, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope, $document, $routeParams, $location, $filter, $q, dialogs, apiProject, apiUser, elzoidoPromises, elzoidoAuthUser) ->
   $scope.refresh = ->
     # get current user
     $scope.user = elzoidoAuthUser.get()
@@ -30,7 +30,7 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
       _.forEach(data.project.libraries, (library) ->
         library.thumbnails = [] if _.isUndefined(library.thumbnails)
         while library.thumbnails.length < 5
-          library.thumbnails.push('/images/empty_project.png'))
+          library.thumbnails.push('/images/bars.png'))
       $scope.project = data.project
       project.resolve true
 
@@ -49,17 +49,19 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
         $rootScope.$broadcast 'event:narra-project-updated', project
 
   # click function for detail view
-  $scope.detail = (library) ->
-    $location.path('/libraries/' + library.id + '/' + $scope.project.name)
+  $scope.detail = (library, index) ->
+    $location.url('/libraries/' + library.id + '?project=' + $scope.project.name + '&from=libraries-' + index)
 
   # refresh when new library is added
   $rootScope.$on 'event:narra-library-created', (event, status) ->
     $scope.refresh()
 
+  $scope.$on 'event:narra-render-finished', ->
+    if !_.isEmpty($location.hash())
+      $document.duScrollToElement(document.getElementById($location.hash()))
+
   # refresh when new library is added
   $rootScope.$on 'event:narra-project-updated', (event, project) ->
-    console.log(event)
-    console.log(project)
     if _.isEqual(project.name, $scope.project.name)
       $scope.refresh()
     else

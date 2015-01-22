@@ -20,19 +20,10 @@
 #
 
 angular.module('narra.ui').run ($rootScope, $window, dialogs, serviceServer) ->
-  # first run flag to avoid multiple runs
-  first_run = true
-
   # registering unauthenticated listener
   $rootScope.$on 'event:elzoido-auth-unauthenticated', (event, status) ->
-    if first_run
-      # switch flag
-      first_run = false;
-      # show please wait dialog
-      dialogs.wait('Please wait', 'You are being authenticated right now ...')
-      # sign in
-      $window.location.href = serviceServer.url + '/auth/developer'
+    # nothing to do
 
-    # registering unauthorized listener
+  # registering unauthorized listener
   $rootScope.$on 'event:elzoido-auth-unauthorized', (event, status) ->
     # nothing to do

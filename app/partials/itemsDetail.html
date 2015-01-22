@@ -1,0 +1,105 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="bs-docs-header" id="content">
+    <div class="container">
+        <h1>{{item.name}}</h1>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+
+    <div class="row">
+        <div class="col-md-9" role="main">
+            <div class="videogular-container">
+                <videogular vg-player-ready="onPlayerReady" vg-responsive="true">
+                    <vg-video vg-src="player.sources"
+                              vg-tracks="player.tracks" vg-preload="player.preload">
+                    </vg-video>
+
+                    <vg-controls vg-autohide="player.autoHide" vg-autohide-time="player.autoHideTime">
+                        <vg-play-pause-button></vg-play-pause-button>
+                        <vg-timedisplay>{{ currentTime | date:'mm:ss' }}</vg-timedisplay>
+                        <vg-scrubBar>
+                            <vg-scrubbarcurrenttime></vg-scrubbarcurrenttime>
+                            <div class=" cuepoints hidden-xs hidden-sm">
+                                <div ng-repeat="cuepoint in cuepoints" class="cuepoint cuepoint-hover red-tooltip"
+                                     style="left: {{cuepoint.position}}%;" ng-click="seek(cuepoint.in)"
+                                     tooltip-trigger="mouseenter" tooltip="{{cuepoint.name}}"></div>
+                            </div>
+                        </vg-scrubBar>
+                        <vg-timedisplay>{{ timeLeft | date:'mm:ss' }}</vg-timedisplay>
+                        <vg-volume>
+                            <vg-mutebutton></vg-mutebutton>
+                            <vg-volumebar></vg-volumebar>
+                        </vg-volume>
+                        <vg-fullscreenButton></vg-fullscreenButton>
+                    </vg-controls>
+
+                    <vg-overlay-play></vg-overlay-play>
+                    <vg-buffering></vg-buffering>
+                </videogular>
+            </div>
+
+            <div class="bs-docs-section" id="meta">
+                <h5 class="page-header">Metadata</h5>
+
+                <div ng-hide="filtered.length == 0" class="well" ng-repeat="generator in meta | orderBy:'name'"
+                     id="meta-{{generator.name}}">
+                    <dl class="dl-horizontal">
+                        <dt class="block-header">{{generator.name}}</dt>
+                        <dd></dd>
+                    </dl>
+                    <dl class="dl-horizontal" ng-repeat="entry in filtered = (generator.data | filter:search)">
+                        <dt>{{entry.name}}</dt>
+                        <dd><span ng-show="isLink(entry.content)"><a href="{{entry.content}}" target="_blank">{{entry.content}}</a></span><span
+                                ng-hide="isLink(entry.content)">{{entry.content}}</span><span
+                                ng-repeat="mark in entry.marks" class="fa fa-bookmark bookmark-hover"
+                                ng-click="seek(mark.in)"></span></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollfix="+200">
+                <div class="input-group input-group-sm" style="width: 200px;">
+                    <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                    <input type="text" class="form-control" ng-model="search" placeholder="Search">
+                </div>
+                <ul class="nav side-buttons">
+                    <li>
+                        <span class="btn btn-danger btn-xs navbar-btn" type="button"><span class="fa fa-plus"></span> Add Meta</span>
+                    </li>
+                    <li>
+                        <span class="btn btn-default btn-xs navbar-btn" type="button" ng-click="delete()"><span class="fa fa-remove"></span> Delete</span>
+                    </li>
+                </ul>
+
+                <a class="back-to-top" href="/libraries/{{library}}#{{from}}">Back to library</a>
+                <a class="back-to-top" href="#top" du-smooth-scroll>Back to top</a>
+            </div>
+        </div>
+
+    </div>
+</div>

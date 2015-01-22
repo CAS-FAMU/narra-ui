@@ -62,22 +62,25 @@
 
                 <div ng-hide="filtered.length > 0 || items.length == 0" class="dashboard-item-empty">Any item meets you search criteria.</div>
 
-                <div id="items-{{$index}}" ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'" class="well well-hover" ng-click="detail(item)">
-                    <div ng-repeat="thumbnail in item.thumbnails track by $index"
-                         class="background-cover"
-                         style="background-image: url('{{thumbnail}}'); width: 20%; height: 80px; float: left; margin-bottom: 10px;"></div>
-                    <dl class="dl-horizontal">
-                        <dt class="block-header">{{item.name}}</dt>
-                        <dd></dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>type</dt>
-                        <dd>{{item.type}}</dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>author</dt>
-                        <dd>{{item.metadata['author']}}</dd>
-                    </dl>
+                <div class="row">
+                    <div ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'" class="col-sm-4" id="items-{{$index}}" on-render-finished>
+                        <div ng-show="item.prepared" class="well well-hover" ng-click="detail(item, $index)" ng-mouseover="startRotation(item)" ng-mouseleave="stopRotation(item)">
+                            <div class="background-cover" style="background-image: url('{{thumbnail[item.name]}}'); width: 100%; height: 150px;"></div>
+
+                            <h3 class="libraries-item">{{item.name}}</h3>
+                        </div>
+
+                        <div ng-hide="item.prepared" class="well">
+                            <div class="background-cover" style="background-image: url('/images/bars.png'); width: 100%; height: 150px; opacity: 0.9;">
+                                <div class="text-center" style="padding-top: 50px;">
+                                    <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
+                                    <p>PREPARING</p>
+                                </div>
+                            </div>
+
+                            <h3 class="libraries-item">{{item.name}}</h3>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -95,14 +98,14 @@
                     <li du-spy-context du-scrollspy="items">
                         <a href="#items" du-smooth-scroll>Items</a>
                         <ul class="nav">
-                            <li ng-repeat="item in items" du-spy-context du-scrollspy="items-{{$index}}">
+                            <li ng-repeat="item in filtered | orderBy:'name'" du-spy-context du-scrollspy="items-{{$index}}">
                                 <a href="#items-{{$index}}" du-smooth-scroll>{{item.name}}</a>
                             </li>
                         </ul>
                     </li>
                 </ul>
                 <a ng-hide="project" class="back-to-top" href="/libraries">Back to libraries</a>
-                <a ng-show="project" class="back-to-top" href="/projects/{{project}}">Back to project</a>
+                <a ng-show="project" class="back-to-top" href="/projects/{{project}}#{{from}}">Back to project</a>
                 <a class="back-to-top" href="#top" du-smooth-scroll>Back to top</a>
             </div>
         </div>

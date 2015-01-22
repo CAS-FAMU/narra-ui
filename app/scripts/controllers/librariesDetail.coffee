@@ -19,9 +19,13 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope, $routeParams, $location, $filter, $q, dialogs, apiProject, apiLibrary, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
+angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope, $routeParams, $location, $document, $interval, $filter, $q, dialogs, apiProject, apiLibrary, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
   # set up context
   $scope.project = $routeParams.project
+  $scope.from = $routeParams.from
+  # initialization
+  $scope.rotation = {}
+  $scope.thumbnail = {}
 
   # refresh data
   $scope.refresh = ->
@@ -35,6 +39,9 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
       $scope.library = data.library
       library.resolve true
     apiLibrary.items {id: $routeParams.id}, (data) ->
+      _.forEach(data.items, (item) ->
+        item.thumbnails = ['/images/bars.png'] if _.isUndefined(item.thumbnails)
+        $scope.thumbnail[item.name] = item.thumbnails[0])
       $scope.items = data.items
       items.resolve true
 
@@ -53,13 +60,43 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
         # fire event
         $rootScope.$broadcast 'event:narra-library-updated', library
 
+  # click function for detail view
+  $scope.detail = (item, index) ->
+    $location.url('/items/' + item.id + '?library=' + $scope.library.id + '&from=items-' + index)
+
+  $scope.startRotation = (item) ->
+    # don't start new refresh when it is already on
+    if angular.isDefined($scope.rotation[item.name]) then return
+    # counter
+    count = 0
+    # rotate
+    $scope.rotation[item.name] = $interval(->
+      # revalidate count
+      if count + 1 == item.thumbnails.length then count = 0 else count++
+      # rotate
+      $scope.thumbnail[item.name] = item.thumbnails[count]
+    , 600)
+
+  $scope.stopRotation = (item) ->
+    # don't start new refresh when it is already on
+    if angular.isDefined($scope.rotation[item.name])
+      $interval.cancel($scope.rotation[item.name])
+      $scope.rotation[item.name] = undefined
+      $scope.thumbnail[item.name] = item.thumbnails[0]
+
   # refresh when new library is added
   $rootScope.$on 'event:narra-item-created', (event, status) ->
-    $scope.refresh()
+    if !_.isUndefined($routeParams.id)
+      $scope.refresh()
 
   # refresh when new library is added
   $rootScope.$on 'event:narra-library-updated', (event, library) ->
-    $scope.refresh()
+    if !_.isUndefined($routeParams.id)
+      $scope.refresh()
+
+  $scope.$on 'event:narra-render-finished', ->
+    if !_.isEmpty($location.hash())
+      $document.duScrollToElement(document.getElementById($location.hash()))
 
   # initial data
   $scope.refresh()

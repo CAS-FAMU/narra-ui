@@ -33,7 +33,7 @@ angular.module('narra.ui').controller 'DashboardCtrl', ($scope, $rootScope, $q, 
       _.forEach(data.projects, (project) ->
         project.thumbnails = [] if _.isUndefined(project.thumbnails)
         while project.thumbnails.length < 5
-          project.thumbnails.push('/images/empty_project.png'))
+          project.thumbnails.push('/images/bars.png'))
       $scope.projects = data.projects
       projects.resolve true
 

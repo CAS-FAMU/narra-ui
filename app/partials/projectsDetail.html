@@ -66,7 +66,7 @@
 
                 <div ng-hide="filtered.length > 0 || items.length == 0" class="dashboard-item-empty">Any library meets you search criteria.</div>
 
-                <div id="libraries-{{$index}}" ng-repeat="library in filtered = (project.libraries | filter:search) | orderBy:'name'" class="well well-hover" ng-click="detail(library)">
+                <div id="libraries-{{$index}}" ng-repeat="library in filtered = (project.libraries | filter:search) | orderBy:'name'" class="well well-hover" ng-click="detail(library, $index)" on-render-finished>
                     <div ng-repeat="thumbnail in library.thumbnails track by $index"
                          class="background-cover"
                          style="background-image: url('{{thumbnail}}'); width: 20%; height: 80px; float: left; margin-bottom: 10px;"></div>

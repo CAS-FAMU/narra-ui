@@ -25,6 +25,7 @@ angular.module('narra.ui').config(($httpProvider, elzoidoAuthModule) ->
 
   # static configuration elzoido auth plugin
   elzoidoAuthModule.config.userProvider = 'apiUser'
+  elzoidoAuthModule.config.providersProvider = 'apiAuth'
 ).run ($rootScope, $q, $window, $cookieStore, dialogs, elzoidoAuthModule, elzoidoAuthUser, elzoidoAuthAPI, serviceToken, serviceServer, apiUser) ->
   # dynamic configuration elzoido auth plugin
   elzoidoAuthModule.config.functionProfile = ->
@@ -38,10 +39,16 @@ angular.module('narra.ui').config(($httpProvider, elzoidoAuthModule) ->
         # signin again to refresh current user data
         elzoidoAuthAPI.signin()
 
-  elzoidoAuthModule.config.functionSignin = ->
+  elzoidoAuthModule.config.functionSignin = (provider) ->
     # get deffered
     deferred = $q.defer()
-    # open wait dialog
+    # token check
+    if !serviceToken.get()
+      # get deffered
+      dialogs.wait('Please wait', 'You are being authenticated right now ...')
+      # signin user
+      $window.location.href = serviceServer.url + '/auth/' + provider
+    # resolve
     deferred.resolve true
     # return promise
     deferred.promise
@@ -60,7 +67,6 @@ angular.module('narra.ui').config(($httpProvider, elzoidoAuthModule) ->
     # return promise
     deferred.promise
 
-  # check token
+  # autosign check
   if serviceToken.get()
-    # signin
     elzoidoAuthAPI.signin()

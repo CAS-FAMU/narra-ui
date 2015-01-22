@@ -40,9 +40,8 @@
 
                 <div class="row">
                     <div ng-repeat="library in libraries" class="col-sm-4">
-                        <div class="well well-hover" ng-click="detail(library)">
-                            <img src="{{library.thumbnails[0]}}" alt="{{library.name}}" class="img-responsive"
-                                 style="width: 100%; height: 150px;">
+                        <div class="well well-hover" ng-click="detail(library)" ng-mouseover="startRotation(library)" ng-mouseleave="stopRotation(library)">
+                            <div class="background-cover" style="background-image: url('{{thumbnail[library.name]}}'); width: 100%; height: 150px;"></div>
 
                             <h3 class="libraries-item">{{library.name}}</h3>
                         </div>
@@ -59,9 +58,8 @@
 
                 <div class="row">
                     <div ng-repeat="library in contributions" class="col-sm-4">
-                        <div class="well well-hover" ng-click="detail(library)">
-                            <img src="{{library.thumbnails[0]}}" alt="{{library.name}}" class="img-responsive"
-                                 style="width: 100%; height: 150px;">
+                        <div class="well well-hover" ng-click="detail(library)" ng-mouseover="startRotation(library)" ng-mouseleave="stopRotation(library)">
+                            <div class="background-cover" style="background-image: url('{{thumbnail[library.name]}}'); width: 100%; height: 150px;"></div>
 
                             <h3 class="text-center">{{library.name}}</h3>
                         </div>

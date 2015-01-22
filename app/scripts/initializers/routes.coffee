@@ -40,9 +40,9 @@ angular.module('narra.ui').config ($routeProvider, $locationProvider) ->
   .when '/libraries/:id',
     templateUrl: 'partials/librariesDetail.html'
     controller: 'LibrariesDetailCtrl'
-  .when '/libraries/:id/:project',
-    templateUrl: 'partials/librariesDetail.html'
-    controller: 'LibrariesDetailCtrl'
+  .when '/items/:id',
+    templateUrl: 'partials/itemsDetail.html'
+    controller: 'ItemsDetailCtrl'
   .when '/users',
     templateUrl: 'partials/users.html'
     controller: 'UsersCtrl'
