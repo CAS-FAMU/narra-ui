@@ -20,37 +20,9 @@
 #
 
 
-angular.module('narra.ui').factory "apiItem", ($resource, serviceServer, serviceToken) ->
-  $resource serviceServer.url + "/v1/items/:id/:action/:param",
+angular.module('narra.ui').factory "apiGenerator", ($resource, serviceServer, serviceToken) ->
+  $resource serviceServer.url + "/v1/generators",
     token: serviceToken.get()
   ,
     all:
       method: 'GET'
-
-    get:
-      method: 'GET'
-
-    new:
-      method: 'POST'
-      params:
-        action: 'new'
-
-    delete:
-      method: 'GET'
-      params:
-        action: 'delete'
-
-    events:
-      method: 'GET'
-      params:
-        action: 'events'
-
-    thumbnails:
-      method: 'GET'
-      params:
-        id: 'thumbnails'
-
-    regenerate:
-      method: 'GET'
-      params:
-        action: 'regenerate'

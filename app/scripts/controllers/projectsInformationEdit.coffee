@@ -57,10 +57,12 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
       description: $scope.project.description
       contributors: _.pluck($scope.project.contributors, 'username')
     }, (data) ->
-      # close wait dialog
-      wait.close(data.project)
-      # fire message
-      elzoidoMessages.send('success', 'Success!', 'Project ' + data.project.title + ' was successfully saved.')
+      # update public metadata tag
+      apiProject.metadataUpdate { name: data.project.name, param: 'public', value: $scope.project.public }, ->
+        # close wait dialog
+        wait.close(data.project)
+        # fire message
+        elzoidoMessages.send('success', 'Success!', 'Project ' + data.project.title + ' was successfully saved.')
     )
 
   $scope.validateName = (value) ->

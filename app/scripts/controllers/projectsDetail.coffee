@@ -19,14 +19,14 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope, $document, $routeParams, $location, $filter, $q, dialogs, apiProject, apiUser, elzoidoPromises, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope, $document, $routeParams, $location, $filter, $q, dialogs, apiProject, apiUser, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
   $scope.refresh = ->
     # get current user
     $scope.user = elzoidoAuthUser.get()
     # get deffered
     project = $q.defer()
 
-    apiProject.get {name: $routeParams.name}, (data) ->
+    apiProject.get {name: $routeParams.project}, (data) ->
       _.forEach(data.project.libraries, (library) ->
         library.thumbnails = [] if _.isUndefined(library.thumbnails)
         while library.thumbnails.length < 5
@@ -40,13 +40,28 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
     elzoidoPromises.wait('project', 'Loading project ...')
 
   $scope.edit = ->
-    confirm = dialogs.create('partials/projectsInformationEdit.html', 'ProjectsInformationEditCtrl', {project: $scope.project},
+    confirm = dialogs.create('partials/projectsInformationEdit.html', 'ProjectsInformationEditCtrl',
+      {project: $scope.project},
       {size: 'lg', keyboard: false})
     # result
     confirm.result.then (wait) ->
       wait.result.then (project)->
         # fire event
-        $rootScope.$broadcast 'event:narra-project-updated', project
+        $rootScope.$broadcast 'event:narra-project-updated', project.name
+
+  $scope.delete = ->
+      # open confirmation dialog
+    confirm = dialogs.confirm('Please Confirm',
+      'You are about to delete the project ' + $scope.project.title + ', this procedure is irreversible. Do you want to continue ?')
+
+    # result
+    confirm.result.then ->
+      # delete storage and its projects
+      apiProject.delete {name: $scope.project.name}, ->
+        # redirect back to libraries
+        $location.url('/projects/')
+        # send message
+        elzoidoMessages.send('success', 'Success!', 'Project ' + $scope.project.name + ' was successfully deleted.')
 
   # click function for detail view
   $scope.detail = (library, index) ->
@@ -54,7 +69,8 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
 
   # refresh when new library is added
   $rootScope.$on 'event:narra-library-created', (event, status) ->
-    $scope.refresh()
+    if !_.isUndefined($routeParams.project)
+      $scope.refresh()
 
   $scope.$on 'event:narra-render-finished', ->
     if !_.isEmpty($location.hash())
@@ -62,10 +78,8 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
 
   # refresh when new library is added
   $rootScope.$on 'event:narra-project-updated', (event, project) ->
-    if _.isEqual(project.name, $scope.project.name)
+    if _.isEqual($routeParams.project, project)
       $scope.refresh()
-    else
-      $location.path('/projects/' + project.name)
 
   # initial data
   $scope.refresh()

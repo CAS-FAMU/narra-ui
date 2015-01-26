@@ -52,6 +52,11 @@
                         <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
                                 ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0" class="text-muted">There is no contributors in this library.</span></dd>
                     </dl>
+                    <dl class="dl-horizontal">
+                        <dt>generators</dt>
+                        <dd><span ng-repeat="generator in library.generators">{{generator.title}}<span
+                                ng-hide="$last">, </span></span><span ng-show="library.generators.length == 0" class="text-muted">There is no generators assigned to this library.</span></dd>
+                    </dl>
                 </div>
             </div>
 
@@ -91,6 +96,7 @@
                     <span class="input-group-addon"><span class="fa fa-search"></span></span>
                     <input type="text" class="form-control" ng-model="search" placeholder="Search">
                 </div>
+
                 <ul class="nav bs-docs-sidenav">
                     <li du-scrollspy="information">
                         <a href="#information" du-smooth-scroll>Library Information</a>
@@ -104,9 +110,31 @@
                         </ul>
                     </li>
                 </ul>
-                <a ng-hide="project" class="back-to-top" href="/libraries">Back to libraries</a>
-                <a ng-show="project" class="back-to-top" href="/projects/{{project}}#{{from}}">Back to project</a>
-                <a class="back-to-top" href="#top" du-smooth-scroll>Back to top</a>
+
+                <ul class="side-buttons">
+                    <li ng-show="library.generators.length">
+                        <button class="btn btn-danger btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                            <span class="fa fa-repeat"></span> Regenerate <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" ng-controller="AddCtrl">
+                            <li ng-repeat="generator in library.generators">
+                                <a href="#" ng-click="regenerate(generator.identifier)">{{generator.title}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="delete()"><span class="fa fa-remove"></span> Delete</button>
+                    </li>
+                    <li ng-hide="project">
+                        <a class="btn btn-default btn-xs" type="button" href="/libraries"><span class="fa fa-angle-double-left"></span> Back To Libraries</a>
+                    </li>
+                    <li ng-show="project">
+                        <a class="btn btn-default btn-xs" type="button" href="/projects/{{project}}#{{from}}"><span class="fa fa-angle-double-left"></span> Back To Project</a>
+                    </li>
+                    <li>
+                        <a class="btn btn-default btn-xs" type="button" href="#top"><span class="fa fa-angle-double-up"></span> Back To Top</a>
+                    </li>
+                </ul>
             </div>
         </div>
 

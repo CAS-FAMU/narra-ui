@@ -48,6 +48,7 @@ angular.module('narra.ui').controller 'UsersEditCtrl', ($scope, $q, $location, $
     apiUser.update({
         username: $scope.username
         new_username: username
+        email: $scope.user.email
         roles: $scope.user.roles
       }, (data) ->
       # close wait dialog

@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiLibrary, apiUser, elzoidoMessages, elzoidoAuthUser, data) ->
+angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiLibrary, apiUser, apiGenerator, elzoidoMessages, elzoidoAuthUser, data) ->
   $scope.user = elzoidoAuthUser.get()
   $scope.library = data.library
   $scope.initial = angular.copy(data.library)
@@ -31,6 +31,8 @@ angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $
   apiUser.all (data) ->
     $scope.users = data.users
     $scope.filter()
+  apiGenerator.all (data) ->
+    $scope.generators = data.generators
 
   $scope.filter = ->
     $scope.contributors = _.filter($scope.users, (user) ->
@@ -53,10 +55,11 @@ angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $
       name: $scope.library.name
       author: $scope.library.author.username
       description: $scope.library.description
+      generators: _.pluck($scope.library.generators, 'identifier')
       contributors: _.pluck($scope.library.contributors, 'username')
     }, (data) ->
       # close wait dialog
-      wait.close(data.project)
+      wait.close()
       # fire message
       elzoidoMessages.send('success', 'Success!', 'Library ' + data.library.name + ' was successfully saved.')
     )

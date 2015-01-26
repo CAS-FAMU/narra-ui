@@ -19,9 +19,9 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'LibrariesAddCtrl', ($scope, $filter, $modalInstance, dialogs, apiLibrary, apiProject, apiUser, elzoidoMessages, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'LibrariesAddCtrl', ($scope, $filter, $modalInstance, dialogs, apiLibrary, apiProject, apiUser, apiGenerator, elzoidoMessages, elzoidoAuthUser) ->
   $scope.user = elzoidoAuthUser.get()
-  $scope.library = { name: '', description: '', author: $scope.user, contributors: [], project: '' }
+  $scope.library = { name: '', description: '', author: $scope.user, contributors: [], generators: [], project: '' }
 
   apiLibrary.all (data) ->
     $scope.libraries = data.libraries
@@ -34,6 +34,8 @@ angular.module('narra.ui').controller 'LibrariesAddCtrl', ($scope, $filter, $mod
   apiUser.all (data) ->
     $scope.users = data.users
     $scope.filter()
+  apiGenerator.all (data) ->
+    $scope.generators = data.generators
 
   $scope.filter = ->
     temporary = angular.copy($scope.users)
@@ -56,6 +58,7 @@ angular.module('narra.ui').controller 'LibrariesAddCtrl', ($scope, $filter, $mod
       name: $scope.library.name
       author: $scope.library.author.username
       description: $scope.library.description
+      generators: _.pluck($scope.library.generators, 'identifier')
       contributors: _.pluck($scope.library.contributors, 'username')
       project: $scope.library.project.name
     }, (data) ->

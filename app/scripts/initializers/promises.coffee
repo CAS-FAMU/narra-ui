@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014 CAS / FAMU
+# Copyright (C) 2015 CAS / FAMU
 #
 # This file is part of narra-ui.
 #
@@ -19,8 +19,6 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'VersionCtrl', ($scope, apiSystem, serviceVersion) ->
-  serviceVersion.version (data) ->
-    $scope.uiVersion = data.version
-  apiSystem.version (data) ->
-    $scope.coreVersion = data.version
+angular.module('narra.ui').config (elzoidoPromisesModule) ->
+  # static configuration elzoido auth plugin
+  elzoidoPromisesModule.config.timeout = 1000

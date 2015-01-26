@@ -51,3 +51,18 @@ angular.module('narra.ui').controller 'EventsCtrl', ($scope, $rootScope, $interv
   $scope.$on '$destroy', () ->
     # stop current refresh
     $scope.stopRefreshInterval()
+
+  $scope.$watch 'events', (newEvents, oldEvents) ->
+    # get finished events
+    finished = _.difference(_.pluck(oldEvents, 'id'), _.pluck(newEvents, 'id'))
+    # check
+    if finished.length > 0
+      _.forEach(finished, (id) ->
+        # find event
+        event = _.find(oldEvents, { id: id })
+        # check for the item or project
+        if !_.isUndefined(event.item)
+          $rootScope.$broadcast 'event:narra-item-updated', event.item.id
+        if !_.isUndefined(event.project)
+          $rootScope.$broadcast 'event:narra-project-updated', event.project.name
+      )

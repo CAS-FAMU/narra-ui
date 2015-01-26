@@ -31,16 +31,16 @@ angular.module('narra.ui').config ($routeProvider, $locationProvider) ->
   .when '/projects',
     templateUrl: 'partials/projects.html'
     controller: 'ProjectsCtrl'
-  .when '/projects/:name',
+  .when '/projects/:project',
     templateUrl: 'partials/projectsDetail.html'
     controller: 'ProjectsDetailCtrl'
   .when '/libraries',
     templateUrl: 'partials/libraries.html'
     controller: 'LibrariesCtrl'
-  .when '/libraries/:id',
+  .when '/libraries/:library',
     templateUrl: 'partials/librariesDetail.html'
     controller: 'LibrariesDetailCtrl'
-  .when '/items/:id',
+  .when '/items/:item',
     templateUrl: 'partials/itemsDetail.html'
     controller: 'ItemsDetailCtrl'
   .when '/users',

@@ -1,5 +1,6 @@
+<!--
 #
-# Copyright (C) 2014 CAS / FAMU
+# Copyright (C) 2015 CAS / FAMU
 #
 # This file is part of Narra Core.
 #
@@ -18,39 +19,15 @@
 #
 # Authors: Michal Mocnak <michal@marigan.net>
 #
+-->
 
-
-angular.module('narra.ui').factory "apiItem", ($resource, serviceServer, serviceToken) ->
-  $resource serviceServer.url + "/v1/items/:id/:action/:param",
-    token: serviceToken.get()
-  ,
-    all:
-      method: 'GET'
-
-    get:
-      method: 'GET'
-
-    new:
-      method: 'POST'
-      params:
-        action: 'new'
-
-    delete:
-      method: 'GET'
-      params:
-        action: 'delete'
-
-    events:
-      method: 'GET'
-      params:
-        action: 'events'
-
-    thumbnails:
-      method: 'GET'
-      params:
-        id: 'thumbnails'
-
-    regenerate:
-      method: 'GET'
-      params:
-        action: 'regenerate'
+<button class="btn btn-danger btn-xs navbar-btn dropdown-toggle" type="button" data-toggle="dropdown"
+        aria-expanded="false">
+    <span class="fa fa-plus"></span> Add New <span class="caret"></span>
+</button>
+<ul class="dropdown-menu" role="menu">
+    <li><a href="#" ng-click="addItem()">Add Item</a></li>
+    <li class="divider"></li>
+    <li><a href="#" ng-click="addLibrary()">Add Library</a></li>
+    <li><a href="#" ng-click="addProject()">Add Project</a></li>
+</ul>

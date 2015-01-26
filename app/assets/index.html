@@ -60,46 +60,16 @@
                 <!-- elzoido navigation component -->
             </ul>
             <div class="btn-group navbar-left" elzoido-auth-access="admin,author">
-                <button class="btn btn-danger btn-xs navbar-btn dropdown-toggle" type="button" data-toggle="dropdown"
-                        aria-expanded="false">
-                    <span class="fa fa-plus"></span> Add New <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu" ng-controller="AddCtrl">
-                    <li><a href="#" ng-click="addItem()">Add Item</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#" ng-click="addLibrary()">Add Library</a></li>
-                    <li><a href="#" ng-click="addProject()">Add Project</a></li>
-                </ul>
+                <div narra-add>
+                    <!-- narra add component -->
+                </div>
             </div>
             <ul class="nav navbar-nav navbar-right" elzoido-auth-user>
                 <!-- elzoido auth user component -->
             </ul>
             <div class="btn-group navbar-right" elzoido-auth-access="admin,author">
-                <div ng-show="events.length" ng-controller="EventsCtrl">
-                    <ul class="nav navbar-nav nav-pills dropdown-toggle" data-toggle="dropdown"
-                        role="tablist">
-                        <li role="presentation"><a href="#">Queue <span class="badge">{{events.length}}</span></a></li>
-                    </ul>
-                    <ul class="dropdown-menu queue" role="menu" style="width: 300px;">
-                        <li ng-repeat="event in events" ng-if="event.progress > 0">
-                            <p>{{event.item.type | capitalize}} {{event.item.name}} is being processed</p>
-
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-danger" role="progressbar"
-                                     aria-valuenow="{{event.progress}}" aria-valuemin="0" aria-valuemax="100"
-                                     ng-style="{width: event.progress + '%'}">
-                                    <span>{{event.progress}} %</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <h1>
-                                <ng-pluralize count="events.length"
-                                              when="{'one': 'There is 1 item in queue.', 'other': 'There are {} items in queue.'}">
-                                </ng-pluralize>
-                            </h1>
-                        </li>
-                    </ul>
+                <div narra-events>
+                    <!-- narra events component -->
                 </div>
             </div>
         </div>
@@ -112,7 +82,7 @@
     <div elzoido-messages></div>
 </div>
 
-<footer class="bs-docs-footer" role="contentinfo" ng-controller="VersionCtrl">
+<footer class="bs-docs-footer" role="contentinfo">
     <div class="container">
         <p>Designed and built with all the love in the world by <a href="http://cas.famu.cz/" target="_blank">CAS
             FAMU</a>.</p>
@@ -124,7 +94,7 @@
                                   target="_blank">GPL-3.0</a>, documentation under <a
                 href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
         <ul class="bs-docs-footer-links text-muted">
-            <li>Currently version {{version.release}}</li>
+            <li><span narra-version></span></li>
             <li>&middot;</li>
             <li><a href="https://github.com/CAS-FAMU?query=narra">GitHub</a></li>
             <li>&middot;</li>

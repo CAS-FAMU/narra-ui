@@ -52,6 +52,10 @@
                         <dd>{{project.author.name}}</dd>
                     </dl>
                     <dl class="dl-horizontal">
+                        <dt>public</dt>
+                        <dd>{{project.public}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
                         <dt>contributors</dt>
                         <dd><span ng-repeat="contributor in project.contributors">{{contributor.name}}<span
                                 ng-hide="$last">, </span></span><span ng-show="project.contributors.length == 0" class="text-muted">There is no contributors in this project.</span></dd>
@@ -64,7 +68,7 @@
 
                 <div ng-hide="project.libraries.length > 0" class="dashboard-item-empty">This project doesn't contain any library.</div>
 
-                <div ng-hide="filtered.length > 0 || items.length == 0" class="dashboard-item-empty">Any library meets you search criteria.</div>
+                <div ng-hide="filtered.length > 0 || project.libraries.length == 0" class="dashboard-item-empty">Any library meets you search criteria.</div>
 
                 <div id="libraries-{{$index}}" ng-repeat="library in filtered = (project.libraries | filter:search) | orderBy:'name'" class="well well-hover" ng-click="detail(library, $index)" on-render-finished>
                     <div ng-repeat="thumbnail in library.thumbnails track by $index"
@@ -110,8 +114,18 @@
                         </ul>
                     </li>
                 </ul>
-                <a class="back-to-top" href="/projects">Back to projects</a>
-                <a class="back-to-top" href="#top" du-smooth-scroll>Back to top</a>
+
+                <ul class="side-buttons">
+                    <li>
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="delete()"><span class="fa fa-remove"></span> Delete</button>
+                    </li>
+                    <li>
+                        <a class="btn btn-default btn-xs" type="button" href="/projects"><span class="fa fa-angle-double-left"></span> Back To Projects</a>
+                    </li>
+                    <li>
+                        <a class="btn btn-default btn-xs" type="button" href="#top"><span class="fa fa-angle-double-up"></span> Back To Top</a>
+                    </li>
+                </ul>
             </div>
         </div>
 

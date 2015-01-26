@@ -35,10 +35,10 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
     library = $q.defer()
     items = $q.defer()
 
-    apiLibrary.get {id: $routeParams.id}, (data) ->
+    apiLibrary.get {id: $routeParams.library}, (data) ->
       $scope.library = data.library
       library.resolve true
-    apiLibrary.items {id: $routeParams.id}, (data) ->
+    apiLibrary.items {id: $routeParams.library}, (data) ->
       _.forEach(data.items, (item) ->
         item.thumbnails = ['/images/bars.png'] if _.isUndefined(item.thumbnails)
         $scope.thumbnail[item.name] = item.thumbnails[0])
@@ -56,9 +56,40 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
       {size: 'lg', keyboard: false})
     # result
     confirm.result.then (wait) ->
-      wait.result.then (library)->
+      wait.result.then ->
         # fire event
-        $rootScope.$broadcast 'event:narra-library-updated', library
+        $rootScope.$broadcast 'event:narra-library-updated', $routeParams.library
+
+  $scope.regenerate = (generator) ->
+      # open confirmation dialog
+    confirm = dialogs.confirm('Please Confirm',
+      'You are about to regenerate the library ' + $scope.library.name + ', this will erase all metadata by the generator. Do you want to continue ?')
+
+    # result
+    confirm.result.then ->
+      # regenerate item for the selected generator
+      apiLibrary.regenerate {id: $scope.library.id, param: generator}, ->
+        # send message
+        elzoidoMessages.send('success', 'Success!', 'Library ' + $scope.library.name + ' was successfully regenerated.')
+        # brodcast event
+        $rootScope.$broadcast 'event:narra-library-updated', $scope.library.library
+
+  $scope.delete = ->
+    # open confirmation dialog
+    confirm = dialogs.confirm('Please Confirm',
+      'You are about to delete the library ' + $scope.library.name + ', this procedure is irreversible. Do you want to continue ?')
+
+    # result
+    confirm.result.then ->
+      # delete storage and its projects
+      apiLibrary.delete {id: $scope.library.id}, ->
+        # send message
+        elzoidoMessages.send('success', 'Success!', 'Library ' + $scope.library.name + ' was successfully deleted.')
+        # redirect back to libraries
+        if _.isUndefined($scope.project)
+          $location.url('/libraries')
+        else
+          $location.url('/projects/' + $scope.project + '#' + $scope.from)
 
   # click function for detail view
   $scope.detail = (item, index) ->
@@ -85,13 +116,18 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
       $scope.thumbnail[item.name] = item.thumbnails[0]
 
   # refresh when new library is added
-  $rootScope.$on 'event:narra-item-created', (event, status) ->
-    if !_.isUndefined($routeParams.id)
+  $rootScope.$on 'event:narra-item-created', (event, item) ->
+    if !_.isUndefined($routeParams.library)
+      $scope.refresh()
+
+  # refresh when new library is added
+  $rootScope.$on 'event:narra-item-updated', (event, item) ->
+    if !_.isUndefined($routeParams.library) && _.find($scope.items, { id: item })
       $scope.refresh()
 
   # refresh when new library is added
   $rootScope.$on 'event:narra-library-updated', (event, library) ->
-    if !_.isUndefined($routeParams.id)
+    if !_.isUndefined($routeParams.library) && _.isEqual($routeParams.library, library)
       $scope.refresh()
 
   $scope.$on 'event:narra-render-finished', ->

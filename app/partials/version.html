@@ -1,5 +1,6 @@
+<!--
 #
-# Copyright (C) 2014 CAS / FAMU
+# Copyright (C) 2015 CAS / FAMU
 #
 # This file is part of Narra Core.
 #
@@ -18,39 +19,6 @@
 #
 # Authors: Michal Mocnak <michal@marigan.net>
 #
+-->
 
-
-angular.module('narra.ui').factory "apiItem", ($resource, serviceServer, serviceToken) ->
-  $resource serviceServer.url + "/v1/items/:id/:action/:param",
-    token: serviceToken.get()
-  ,
-    all:
-      method: 'GET'
-
-    get:
-      method: 'GET'
-
-    new:
-      method: 'POST'
-      params:
-        action: 'new'
-
-    delete:
-      method: 'GET'
-      params:
-        action: 'delete'
-
-    events:
-      method: 'GET'
-      params:
-        action: 'events'
-
-    thumbnails:
-      method: 'GET'
-      params:
-        id: 'thumbnails'
-
-    regenerate:
-      method: 'GET'
-      params:
-        action: 'regenerate'
+<span>Currently version <span style="font-weight: bolder">ui<span class="fa fa-at"></span>{{uiVersion}}</span> and <span style="font-weight: bolder">core<span class="fa fa-at"></span>{{coreVersion}}</span></span>

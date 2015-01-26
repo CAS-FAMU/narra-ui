@@ -21,7 +21,7 @@
 
 
 angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serviceToken) ->
-  $resource serviceServer.url + "/v1/projects/:name/:action",
+  $resource serviceServer.url + "/v1/projects/:name/:action0/:param/:action1",
     token: serviceToken.get()
   ,
     all:
@@ -33,10 +33,23 @@ angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serv
     new:
       method: 'POST'
       params:
-        action: 'new'
+        action0: 'new'
+
+    delete:
+      method: 'GET'
+      params:
+        action0: 'delete'
 
     update:
       method: 'POST'
       params:
         name: '@name'
-        action: 'update'
+        action0: 'update'
+
+    metadataUpdate:
+      method: 'POST'
+      params:
+        name: '@name'
+        param: '@param'
+        action0: 'metadata'
+        action1: 'update'

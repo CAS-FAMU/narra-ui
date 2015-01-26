@@ -1,0 +1,49 @@
+<!--
+#
+# Copyright (C) 2015 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div ng-show="events.length">
+    <ul class="nav navbar-nav nav-pills dropdown-toggle" data-toggle="dropdown"
+        role="tablist">
+        <li role="presentation"><a href="#">Queue <span class="badge">{{events.length}}</span></a></li>
+    </ul>
+    <ul class="dropdown-menu queue" role="menu" style="width: 300px;">
+        <li ng-repeat="event in events" ng-if="event.progress > 0">
+            <p>{{event.item.type | capitalize}} {{event.item.name}} is being processed</p>
+
+            <div class="progress">
+                <div class="progress-bar progress-bar-danger" role="progressbar"
+                     aria-valuenow="{{event.progress}}" aria-valuemin="0" aria-valuemax="100"
+                     ng-style="{width: event.progress + '%'}">
+                    <span>{{event.progress}} %</span>
+                </div>
+            </div>
+        </li>
+        <li>
+            <h1>
+                <ng-pluralize count="events.length"
+                              when="{'one': 'There is 1 item in queue.', 'other': 'There are {} items in queue.'}">
+                </ng-pluralize>
+            </h1>
+        </li>
+    </ul>
+</div>
