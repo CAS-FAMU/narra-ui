@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014 CAS / FAMU
+# Copyright (C) 2015 CAS / FAMU
 #
 # This file is part of narra-ui.
 #
@@ -19,33 +19,14 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui', [
-  'ngRoute',
-  'ngResource',
-  'ngSanitize',
-  'ngCookies',
-  'ui.bootstrap',
-  'ui.event',
-  'ui.validate',
-  'ui.scrollfix',
-  'ui.grid',
-  'ui.grid.edit',
-  'ui.grid.cellNav',
-  'ui.grid.autoResize',
-  'ui.select',
-  'dialogs.main',
-  'dialogs.default-translations',
-  'elzoido.auth',
-  'elzoido.navigation',
-  'elzoido.messages',
-  'elzoido.promises',
-  'wu.masonry',
-  'duScroll',
-  'com.2fdevs.videogular',
-  'com.2fdevs.videogular.plugins.controls',
-  'com.2fdevs.videogular.plugins.overlayplay',
-  'com.2fdevs.videogular.plugins.poster',
-  'com.2fdevs.videogular.plugins.buffering',
-  'uiGmapgoogle-maps',
-  'google.places'
-])
+angular.module('narra.ui').directive 'narraMetadata', ->
+  restrict: 'A'
+  transclude: true
+  scope:
+    api: '=narraMetadataApi'
+    data: '=narraMetadataData'
+    player: '=narraMetadataPlayer'
+    type: '@narraMetadataType'
+  controller: 'MetadataCtrl'
+  templateUrl: 'partials/metadata/metadata.html'
+  replace: false

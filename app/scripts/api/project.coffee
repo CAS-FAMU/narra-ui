@@ -46,10 +46,17 @@ angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serv
         name: '@name'
         action0: 'update'
 
+    metadataNew:
+      method: 'POST'
+      params:
+        name: '@name'
+        action0: 'metadata'
+        action1: 'new'
+
     metadataUpdate:
       method: 'POST'
       params:
         name: '@name'
-        param: '@param'
+        param: '@meta'
         action0: 'metadata'
         action1: 'update'

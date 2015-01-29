@@ -64,20 +64,8 @@
             <div class="bs-docs-section" id="meta">
                 <h5 class="page-header">Metadata</h5>
 
-                <div ng-hide="filtered.length == 0" class="well" ng-repeat="generator in meta | orderBy:'name'"
-                     id="meta-{{generator.name}}">
-                    <dl class="dl-horizontal">
-                        <dt class="block-header">{{generator.name}}</dt>
-                        <dd></dd>
-                    </dl>
-                    <dl class="dl-horizontal" ng-repeat="entry in filtered = (generator.data | filter:search)">
-                        <dt>{{entry.name}}</dt>
-                        <dd><span ng-show="isLink(entry.value)"><a href="{{entry.value}}" target="_blank">{{entry.value}}</a></span><span
-                                ng-hide="isLink(entry.value)">{{entry.value}}</span><span
-                                ng-repeat="mark in entry.marks" class="fa fa-bookmark bookmark-hover"
-                                ng-click="seek(mark.in)"></span></dd>
-                    </dl>
-                </div>
+                <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="item" narra-metadata-data="item"
+                     narra-metadata-player="api" narra-metadata></div>
             </div>
         </div>
 
@@ -89,26 +77,39 @@
                 </div>
                 <ul class="side-buttons">
                     <li>
-                        <button class="btn btn-danger btn-xs" type="button"><span class="fa fa-plus"></span> Add Meta</button>
+                        <button class="btn btn-danger btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
+                                aria-expanded="false">
+                            <span class="fa fa-plus"></span> Add Meta <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="provider in metadataProviders | orderBy:'name'">
+                                <a href="#" ng-click="narraMetadataAPI.add(provider)">{{provider.name}}</a>
+                            </li>
+                        </ul>
                     </li>
                     <li ng-show="generators.length">
-                        <button class="btn btn-danger btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-danger btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
+                                aria-expanded="false">
                             <span class="fa fa-repeat"></span> Regenerate <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu" role="menu" ng-controller="AddCtrl">
+                        <ul class="dropdown-menu" role="menu">
                             <li ng-repeat="generator in generators">
-                                <a href="#" ng-click="regenerate(generator.identifier)">{{generator.title}}</a>
+                                <a href="#" ng-click="narraMetadataAPI.regenerate(generator.identifier)">{{generator.title}}</a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <button class="btn btn-danger btn-xs" ng-click="delete()"><span class="fa fa-remove"></span> Delete</button>
+                        <button class="btn btn-danger btn-xs" ng-click="delete()"><span class="fa fa-remove"></span>
+                            Delete
+                        </button>
                     </li>
                     <li>
-                        <a class="btn btn-default btn-xs" href="/libraries/{{library}}#{{from}}"><span class="fa fa-angle-double-left"></span> Back To Library</a>
+                        <a class="btn btn-default btn-xs" href="/libraries/{{library}}#{{from}}"><span
+                                class="fa fa-angle-double-left"></span> Back To Library</a>
                     </li>
                     <li>
-                        <a class="btn btn-default btn-xs" href="#top"><span class="fa fa-angle-double-up"></span> Back To Top</a>
+                        <a class="btn btn-default btn-xs" href="#top"><span class="fa fa-angle-double-up"></span> Back
+                            To Top</a>
                     </li>
                 </ul>
             </div>

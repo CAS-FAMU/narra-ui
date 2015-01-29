@@ -50,35 +50,54 @@
                     <dl class="dl-horizontal">
                         <dt>contributors</dt>
                         <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
-                                ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0" class="text-muted">There is no contributors in this library.</span></dd>
+                                ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0"
+                                                                      class="text-muted">There is no contributors in this library.</span>
+                        </dd>
                     </dl>
                     <dl class="dl-horizontal">
                         <dt>generators</dt>
                         <dd><span ng-repeat="generator in library.generators">{{generator.title}}<span
-                                ng-hide="$last">, </span></span><span ng-show="library.generators.length == 0" class="text-muted">There is no generators assigned to this library.</span></dd>
+                                ng-hide="$last">, </span></span><span ng-show="library.generators.length == 0"
+                                                                      class="text-muted">There is no generators assigned to this library.</span>
+                        </dd>
                     </dl>
                 </div>
+            </div>
+
+            <div ng-show="library.metadata.length" class="bs-docs-section" id="meta">
+                <h5 class="page-header">Metadata</h5>
+
+                <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="library" narra-metadata-data="library"
+                     narra-metadata></div>
             </div>
 
             <div class="bs-docs-section" id="items">
                 <h5 class="page-header">Items</h5>
 
-                <div ng-hide="items.length > 0" class="dashboard-item-empty">This library doesn't contain any item.</div>
+                <div ng-hide="items.length > 0" class="dashboard-item-empty">This library doesn't contain any item.
+                </div>
 
-                <div ng-hide="filtered.length > 0 || items.length == 0" class="dashboard-item-empty">Any item meets you search criteria.</div>
+                <div ng-hide="filtered.length > 0 || items.length == 0" class="dashboard-item-empty">Any item meets you
+                    search criteria.
+                </div>
 
                 <div class="row">
-                    <div ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'" class="col-sm-4" id="items-{{$index}}" on-render-finished>
-                        <div ng-show="item.prepared" class="well well-hover" ng-click="detail(item, $index)" ng-mouseover="startRotation(item)" ng-mouseleave="stopRotation(item)">
-                            <div class="background-cover" style="background-image: url('{{thumbnail[item.name]}}'); width: 100%; height: 150px;"></div>
+                    <div ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'" class="col-sm-4"
+                         id="items-{{$index}}" on-render-finished>
+                        <div ng-show="item.prepared" class="well well-hover" ng-click="detail(item, $index)"
+                             ng-mouseover="startRotation(item)" ng-mouseleave="stopRotation(item)">
+                            <div class="background-cover"
+                                 style="background-image: url('{{thumbnail[item.name]}}'); width: 100%; height: 150px;"></div>
 
                             <h3 class="libraries-item">{{item.name}}</h3>
                         </div>
 
                         <div ng-hide="item.prepared" class="well">
-                            <div class="background-cover" style="background-image: url('/images/bars.png'); width: 100%; height: 150px; opacity: 0.9;">
+                            <div class="background-cover"
+                                 style="background-image: url('/images/bars.png'); width: 100%; height: 150px; opacity: 0.9;">
                                 <div class="text-center" style="padding-top: 50px;">
                                     <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
+
                                     <p>PREPARING</p>
                                 </div>
                             </div>
@@ -101,10 +120,14 @@
                     <li du-scrollspy="information">
                         <a href="#information" du-smooth-scroll>Library Information</a>
                     </li>
+                    <li du-scrollspy="meta" ng-show="library.metadata.length">
+                        <a href="#meta" du-smooth-scroll>Metadata</a>
+                    </li>
                     <li du-spy-context du-scrollspy="items">
                         <a href="#items" du-smooth-scroll>Items</a>
                         <ul class="nav">
-                            <li ng-repeat="item in filtered | orderBy:'name'" du-spy-context du-scrollspy="items-{{$index}}">
+                            <li ng-repeat="item in filtered | orderBy:'name'" du-spy-context
+                                du-scrollspy="items-{{$index}}">
                                 <a href="#items-{{$index}}" du-smooth-scroll>{{item.name}}</a>
                             </li>
                         </ul>
@@ -112,27 +135,37 @@
                 </ul>
 
                 <ul class="side-buttons">
+                    <li>
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="narraMetadataAPI.add()">
+                            <span class="fa fa-plus"></span> Add Meta
+                        </button>
+                    </li>
                     <li ng-show="library.generators.length">
                         <button class="btn btn-danger btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
                             <span class="fa fa-repeat"></span> Regenerate <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu" ng-controller="AddCtrl">
                             <li ng-repeat="generator in library.generators">
-                                <a href="#" ng-click="regenerate(generator.identifier)">{{generator.title}}</a>
+                                <a href="#" ng-click="narraMetadataAPI.regenerate(generator.identifier)">{{generator.title}}</a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <button class="btn btn-danger btn-xs" type="button" ng-click="delete()"><span class="fa fa-remove"></span> Delete</button>
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="delete()"><span
+                                class="fa fa-remove"></span> Delete
+                        </button>
                     </li>
                     <li ng-hide="project">
-                        <a class="btn btn-default btn-xs" type="button" href="/libraries"><span class="fa fa-angle-double-left"></span> Back To Libraries</a>
+                        <a class="btn btn-default btn-xs" type="button" href="/libraries"><span
+                                class="fa fa-angle-double-left"></span> Back To Libraries</a>
                     </li>
                     <li ng-show="project">
-                        <a class="btn btn-default btn-xs" type="button" href="/projects/{{project}}#{{from}}"><span class="fa fa-angle-double-left"></span> Back To Project</a>
+                        <a class="btn btn-default btn-xs" type="button" href="/projects/{{project}}#{{from}}"><span
+                                class="fa fa-angle-double-left"></span> Back To Project</a>
                     </li>
                     <li>
-                        <a class="btn btn-default btn-xs" type="button" href="#top"><span class="fa fa-angle-double-up"></span> Back To Top</a>
+                        <a class="btn btn-default btn-xs" type="button" href="#top"><span
+                                class="fa fa-angle-double-up"></span> Back To Top</a>
                     </li>
                 </ul>
             </div>

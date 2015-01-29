@@ -31,6 +31,9 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
         library.thumbnails = [] if _.isUndefined(library.thumbnails)
         while library.thumbnails.length < 5
           library.thumbnails.push('/images/bars.png'))
+      data.project.metadata = _.filter(data.project.metadata, (meta) ->
+        !_.isEqual(meta.name, 'public')
+      )
       $scope.project = data.project
       project.resolve true
 

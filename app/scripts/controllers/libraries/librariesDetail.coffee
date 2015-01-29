@@ -60,20 +60,6 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
         # fire event
         $rootScope.$broadcast 'event:narra-library-updated', $routeParams.library
 
-  $scope.regenerate = (generator) ->
-      # open confirmation dialog
-    confirm = dialogs.confirm('Please Confirm',
-      'You are about to regenerate the library ' + $scope.library.name + ', this will erase all metadata by the generator. Do you want to continue ?')
-
-    # result
-    confirm.result.then ->
-      # regenerate item for the selected generator
-      apiLibrary.regenerate {id: $scope.library.id, param: generator}, ->
-        # send message
-        elzoidoMessages.send('success', 'Success!', 'Library ' + $scope.library.name + ' was successfully regenerated.')
-        # brodcast event
-        $rootScope.$broadcast 'event:narra-library-updated', $scope.library.library
-
   $scope.delete = ->
     # open confirmation dialog
     confirm = dialogs.confirm('Please Confirm',

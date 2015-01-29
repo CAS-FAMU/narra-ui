@@ -1,0 +1,46 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Add new Location Metadata</h4></div>
+<div class="modal-body">
+    <form name="newMeta" class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Location</label>
+
+            <div class="col-sm-10">
+                <input name="url" ng-model="meta.value" class="form-control" ng-trim="false" ng-change="update()"
+                       type="text" placeholder="Enter a name here" g-places-autocomplete required/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <ui-gmap-google-map ng-if="render" center="map.center" zoom="map.zoom" boudns="map.bounds"></ui-gmap-google-map>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <span class="btn btn-default" ng-click="close()">Cancel</span>
+    <button class="btn btn-danger" ng-disabled="!newMeta.$valid"
+            ng-click="add()">Add Meta
+    </button>
+</div>

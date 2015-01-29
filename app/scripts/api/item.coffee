@@ -21,7 +21,7 @@
 
 
 angular.module('narra.ui').factory "apiItem", ($resource, serviceServer, serviceToken) ->
-  $resource serviceServer.url + "/v1/items/:id/:action/:param",
+  $resource serviceServer.url + "/v1/items/:id/:action0/:param/:action1",
     token: serviceToken.get()
   ,
     all:
@@ -33,17 +33,17 @@ angular.module('narra.ui').factory "apiItem", ($resource, serviceServer, service
     new:
       method: 'POST'
       params:
-        action: 'new'
+        action0: 'new'
 
     delete:
       method: 'GET'
       params:
-        action: 'delete'
+        action0: 'delete'
 
     events:
       method: 'GET'
       params:
-        action: 'events'
+        action0: 'events'
 
     thumbnails:
       method: 'GET'
@@ -53,4 +53,25 @@ angular.module('narra.ui').factory "apiItem", ($resource, serviceServer, service
     regenerate:
       method: 'GET'
       params:
-        action: 'regenerate'
+        action0: 'regenerate'
+
+    metadata:
+      method: 'GET'
+      params:
+        id: '@id'
+        action0: 'metadata'
+
+    metadataNew:
+      method: 'POST'
+      params:
+        id: '@id'
+        action0: 'metadata'
+        action1: 'new'
+
+    metadataUpdate:
+      method: 'POST'
+      params:
+        id: '@id'
+        param: '@meta'
+        action0: 'metadata'
+        action1: 'update'

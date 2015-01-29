@@ -26,7 +26,7 @@ angular.module('narra.ui').controller 'DashboardCtrl', ($scope, $rootScope, $q, 
     projects = $q.defer()
 
     # data
-    apiItem.thumbnails { action: 10 }, (data) ->
+    apiItem.thumbnails { param: 10 }, (data) ->
       $scope.thumbnails = if _.isEmpty(data.thumbnails) then ['/images/empty_carousel.png'] else data.thumbnails
       thumbnails.resolve true
     apiProject.all (data) ->

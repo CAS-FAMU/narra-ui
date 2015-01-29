@@ -19,33 +19,13 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui', [
-  'ngRoute',
-  'ngResource',
-  'ngSanitize',
-  'ngCookies',
-  'ui.bootstrap',
-  'ui.event',
-  'ui.validate',
-  'ui.scrollfix',
-  'ui.grid',
-  'ui.grid.edit',
-  'ui.grid.cellNav',
-  'ui.grid.autoResize',
-  'ui.select',
-  'dialogs.main',
-  'dialogs.default-translations',
-  'elzoido.auth',
-  'elzoido.navigation',
-  'elzoido.messages',
-  'elzoido.promises',
-  'wu.masonry',
-  'duScroll',
-  'com.2fdevs.videogular',
-  'com.2fdevs.videogular.plugins.controls',
-  'com.2fdevs.videogular.plugins.overlayplay',
-  'com.2fdevs.videogular.plugins.poster',
-  'com.2fdevs.videogular.plugins.buffering',
-  'uiGmapgoogle-maps',
-  'google.places'
-])
+angular.module('narra.ui').filter 'metadata', ->
+  (text) ->
+    # split into separate words
+    words = text.split('_')
+    # capitalize each
+    _.forEach(words, (word, index) ->
+      words[index] = word.charAt(0).toUpperCase() + word.substr(1).toLowerCase()
+    )
+    # return
+    words.join(' ')

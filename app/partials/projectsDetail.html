@@ -63,6 +63,12 @@
                 </div>
             </div>
 
+            <div ng-show="project.metadata.length" class="bs-docs-section" id="meta">
+                <h5 class="page-header">Metadata</h5>
+
+                <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="project" narra-metadata-data="project" narra-metadata></div>
+            </div>
+
             <div class="bs-docs-section" id="libraries">
                 <h5 class="page-header">Libraries</h5>
 
@@ -105,6 +111,9 @@
                     <li du-scrollspy="information">
                         <a href="#information" du-smooth-scroll>Project Information</a>
                     </li>
+                    <li du-scrollspy="meta" ng-show="project.metadata.length">
+                        <a href="#meta" du-smooth-scroll>Metadata</a>
+                    </li>
                     <li du-spy-context du-scrollspy="libraries">
                         <a href="#libraries" du-smooth-scroll>Libraries</a>
                         <ul class="nav">
@@ -116,6 +125,11 @@
                 </ul>
 
                 <ul class="side-buttons">
+                    <li>
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="narraMetadataAPI.add()">
+                            <span class="fa fa-plus"></span> Add Meta
+                        </button>
+                    </li>
                     <li>
                         <button class="btn btn-danger btn-xs" type="button" ng-click="delete()"><span class="fa fa-remove"></span> Delete</button>
                     </li>

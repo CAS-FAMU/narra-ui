@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014 CAS / FAMU
+# Copyright (C) 2015 CAS / FAMU
 #
 # This file is part of narra-ui.
 #
@@ -19,33 +19,9 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui', [
-  'ngRoute',
-  'ngResource',
-  'ngSanitize',
-  'ngCookies',
-  'ui.bootstrap',
-  'ui.event',
-  'ui.validate',
-  'ui.scrollfix',
-  'ui.grid',
-  'ui.grid.edit',
-  'ui.grid.cellNav',
-  'ui.grid.autoResize',
-  'ui.select',
-  'dialogs.main',
-  'dialogs.default-translations',
-  'elzoido.auth',
-  'elzoido.navigation',
-  'elzoido.messages',
-  'elzoido.promises',
-  'wu.masonry',
-  'duScroll',
-  'com.2fdevs.videogular',
-  'com.2fdevs.videogular.plugins.controls',
-  'com.2fdevs.videogular.plugins.overlayplay',
-  'com.2fdevs.videogular.plugins.poster',
-  'com.2fdevs.videogular.plugins.buffering',
-  'uiGmapgoogle-maps',
-  'google.places'
-])
+angular.module('narra.ui').constant 'constantMetadata',
+  providers: [
+    {id: 'user_shot_type', name: 'Shot Type', templateAdd: 'partials/metadata/metadataShotTypeAdd.html', templateEdit: 'partials/metadata/metadataShotTypeEdit.html', controller: 'MetadataShotTypeCtrl'}
+    {id: 'user_custom', name: 'Custom', templateAdd: 'partials/metadata/metadataCustomAdd.html', templateEdit: 'partials/metadata/metadataCustomEdit.html', controller: 'MetadataCustomCtrl'},
+    {id: 'user_location', name: 'Location', templateAdd: 'partials/metadata/metadataLocationAdd.html', templateEdit: 'partials/metadata/metadataLocationEdit.html', controller: 'MetadataLocationCtrl'}
+  ]

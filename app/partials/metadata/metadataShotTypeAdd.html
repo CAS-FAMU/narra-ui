@@ -1,0 +1,51 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Add new Shot Type Metadata</h4></div>
+<div class="modal-body">
+    <form name="newMeta" class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Shot Type</label>
+
+            <div class="col-sm-10">
+                <ui-select name="value" multiple ng-model="meta.value" style="width: 100%;" rows="5">
+                    <ui-select-match placeholder="Select shot types">{{$item}}</ui-select-match>
+                    <ui-select-choices repeat="shot in shots | filter:$select.search">{{shot}}</ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div ng-show="newMeta.value.$dirty && newMeta.value.$error.required" class="col-md-offset-2">
+            <p class="text-danger left-buffer-10">
+                <strong>Required!</strong>
+                <small>Value is required.</small>
+            </p>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <span class="btn btn-default" ng-click="close()">Cancel</span>
+    <button class="btn btn-danger" ng-disabled="!newMeta.$valid"
+            ng-click="add()">Add Meta
+    </button>
+</div>

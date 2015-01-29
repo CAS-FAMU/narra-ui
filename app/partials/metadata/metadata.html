@@ -1,0 +1,68 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div ng-switch="type">
+    <div ng-switch-when="item">
+        <div ng-hide="filtered.length == 0" class="well" ng-repeat="generator in meta | orderBy:'name'"
+             id="meta-{{generator.name}}">
+            <dl class="dl-horizontal">
+                <dt class="block-header">{{generator.name | generator}}</dt>
+                <dd></dd>
+            </dl>
+            <dl class="dl-horizontal" ng-repeat="entry in filtered = (generator.data | filter:search)">
+                <dt>{{ entry.name | metadata }}</dt>
+                <dd><span ng-show="isLink(entry.value)"><a href="{{entry.value}}"
+                                                           target="_blank">{{entry.value}}</a></span><span
+                        ng-hide="isLink(entry.value)">{{entry.value}}</span><span
+                        ng-repeat="mark in entry.marks" class="fa fa-bookmark bookmark-hover"
+                        ng-click="seek(mark.in)"></span></dd>
+            </dl>
+        </div>
+    </div>
+    <div ng-switch-when="library">
+        <div ng-hide="filtered.length == 0" class="well">
+            <dl class="dl-horizontal" ng-repeat="entry in filtered = (meta | filter:search)">
+                <dt>{{ entry.name | metadata }}</dt>
+                <dd>
+                    <span ng-show="isLink(entry.value)">
+                        <a href="{{entry.value}}" target="_blank">{{entry.value}}</a>
+                    </span>
+                    <span ng-hide="isLink(entry.value)">{{entry.value}}</span>
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div ng-switch-when="project">
+        <div ng-hide="filtered.length == 0" class="well">
+            <dl class="dl-horizontal" ng-repeat="entry in filtered = (meta | filter:search)">
+                <dt>{{ entry.name | metadata }}</dt>
+                <dd>
+                    <span ng-show="isLink(entry.value)">
+                        <a href="{{entry.value}}" target="_blank">{{entry.value}}</a>
+                    </span>
+                    <span ng-hide="isLink(entry.value)">{{entry.value}}</span>
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>
