@@ -57,7 +57,7 @@ angular.module('narra.ui').controller 'ProjectsAddCtrl', ($scope, $filter, $moda
       contributors: _.pluck($scope.project.contributors, 'username')
     }, (data) ->
       # close wait dialog
-      wait.close()
+      wait.close(data.project.name)
       # fire message
       elzoidoMessages.send('success', 'Success!', 'Project ' + data.project.title + ' was successfully created.')
     )

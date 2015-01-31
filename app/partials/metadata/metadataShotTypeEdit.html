@@ -21,22 +21,25 @@
 #
 -->
 
-<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Add new Location Metadata</h4></div>
+<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Edit Shot Type Metadata</h4></div>
 <div class="modal-body">
-    <form name="newMeta" class="form-horizontal">
+    <form name="editMeta" class="form-horizontal">
         <div class="form-group">
-            <label class="col-sm-2 control-label">Location</label>
+            <label class="col-sm-2 control-label">Shot Type</label>
 
             <div class="col-sm-10">
-                <input name="location" ng-model="meta.value" class="form-control" ng-trim="false"
-                       type="text" placeholder="Enter a name here" g-places-autocomplete required/>
+                <ui-select name="value" multiple ng-model="meta.value" style="width: 100%;" rows="5" ui-validate=" '$value.length' ">
+                    <ui-select-match placeholder="Select shot types">{{$item}}</ui-select-match>
+                    <ui-select-choices repeat="shot in shots | filter:$select.search">{{shot}}</ui-select-choices>
+                </ui-select>
             </div>
         </div>
     </form>
 </div>
 <div class="modal-footer">
     <span class="btn btn-default" ng-click="close()">Cancel</span>
-    <button class="btn btn-danger" ng-disabled="!newMeta.$valid"
-            ng-click="add()">Add Meta
+    <button class="btn btn-danger" ng-click="delete()">Delete</button>
+    <button class="btn btn-danger" ng-disabled="!editMeta.$valid"
+            ng-click="edit()">Update Meta
     </button>
 </div>

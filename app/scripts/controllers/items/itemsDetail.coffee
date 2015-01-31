@@ -23,7 +23,6 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
   # set up context
   $scope.library = $routeParams.library
   $scope.from = $routeParams.from
-  $scope.metadataProviders = constantMetadata.providers
   # player
   $scope.player =
     preload: true
@@ -58,13 +57,19 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
       # get cuepoints
       $scope.cuepoints = _.reduce(data.item.metadata, (result, meta) ->
         if !_.isUndefined(meta.marks) && meta.marks.length > 0 && !_.isEqual(meta.generator,
-          'thumbnail') && !_.isEqual(meta.generator, 'transcoder') && !_.isEqual(meta.generator, 'speech')
+          'thumbnail') && !_.isEqual(meta.generator, 'transcoder') && !_.isEqual(meta.generator, 'att_speech')
           cuepoint = {in: meta.marks[0].in, position: meta.marks[0].in * (100 / $scope.duration), name: meta.name}
           if !_.isUndefined(meta.marks[0].out)
             cuepoint = _.merge(cuepoint, {out: meta.marks[0].out})
           result.push(cuepoint)
         return result
       , [])
+      # item's used generators
+      generators = _.uniq(_.pluck($scope.item.metadata, 'generator'))
+      # resolve metadata providers
+      $scope.metadataProviders = _.filter(constantMetadata.providers, (provider) ->
+        !_.include(generators, provider.id) || _.isEqual(provider.id, 'user_custom')
+      )
       # resolve
       item.resolve true
 
@@ -90,10 +95,13 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
   $scope.onPlayerReady = (api) ->
     $scope.api = api
 
+  $scope.seek = (position) ->
+    $scope.api.seekTime(position)
+
   $scope.isLink = (text) ->
     text.indexOf('http') == 0
 
-  $rootScope.$on 'event:narra-item-updated', (event, item) ->
+  $scope.$on 'event:narra-item-updated', (event, item) ->
     if _.isEqual($routeParams.item, item)
       $scope.refresh()
 

@@ -21,9 +21,9 @@
 #
 -->
 
-<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Add new Location Metadata</h4></div>
+<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Edit Location Metadata</h4></div>
 <div class="modal-body">
-    <form name="newMeta" class="form-horizontal">
+    <form name="editMeta" class="form-horizontal">
         <div class="form-group">
             <label class="col-sm-2 control-label">Location</label>
 
@@ -36,7 +36,8 @@
 </div>
 <div class="modal-footer">
     <span class="btn btn-default" ng-click="close()">Cancel</span>
-    <button class="btn btn-danger" ng-disabled="!newMeta.$valid"
-            ng-click="add()">Add Meta
+    <button class="btn btn-danger" ng-click="delete()">Delete</button>
+    <button class="btn btn-danger" ng-disabled="!editMeta.$valid"
+            ng-click="edit()">Update Meta
     </button>
 </div>

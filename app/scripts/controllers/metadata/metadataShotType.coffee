@@ -19,9 +19,16 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'MetadataShotTypeCtrl', ($scope, $modalInstance, dialogs, elzoidoMessages, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'MetadataShotTypeCtrl', ($scope, $modalInstance, dialogs, elzoidoMessages, elzoidoAuthUser, data) ->
   $scope.user = elzoidoAuthUser.get()
-  $scope.meta = {name: 'shot_type', value: '' }
+  # init data
+  if _.isUndefined(data.meta)
+    $scope.meta = {name: 'shot_type', value: ''}
+  else
+    $scope.meta = data.meta
+    $scope.meta.value = _.map(data.meta.value.split(','), (type) ->
+      type.trim()
+    )
 
   $scope.shots = [
     'Aerial Shot', 'Arc Shot', 'Bridging Shot', 'Close Up', 'Medium Shot', 'Long Shot', 'Cowboy Shot', 'Deep Focus',
@@ -38,3 +45,11 @@ angular.module('narra.ui').controller 'MetadataShotTypeCtrl', ($scope, $modalIns
   $scope.add = ->
     # add meta
     $modalInstance.close($scope.meta)
+
+  $scope.edit = ->
+    # update meta
+    $modalInstance.close({action: 'update', meta: $scope.meta})
+
+  $scope.delete = ->
+    # delete meta
+    $modalInstance.close({action: 'delete', meta: $scope.meta})

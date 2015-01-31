@@ -53,7 +53,7 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
         $rootScope.$broadcast 'event:narra-project-updated', project.name
 
   $scope.delete = ->
-      # open confirmation dialog
+    # open confirmation dialog
     confirm = dialogs.confirm('Please Confirm',
       'You are about to delete the project ' + $scope.project.title + ', this procedure is irreversible. Do you want to continue ?')
 
@@ -71,7 +71,7 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
     $location.url('/libraries/' + library.id + '?project=' + $scope.project.name + '&from=libraries-' + index)
 
   # refresh when new library is added
-  $rootScope.$on 'event:narra-library-created', (event, status) ->
+  $scope.$on 'event:narra-library-created', (event) ->
     if !_.isUndefined($routeParams.project)
       $scope.refresh()
 
@@ -80,7 +80,7 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
       $document.duScrollToElement(document.getElementById($location.hash()))
 
   # refresh when new library is added
-  $rootScope.$on 'event:narra-project-updated', (event, project) ->
+  $scope.$on 'event:narra-project-updated', (event, project) ->
     if _.isEqual($routeParams.project, project)
       $scope.refresh()
 

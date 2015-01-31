@@ -63,7 +63,7 @@ angular.module('narra.ui').controller 'LibrariesAddCtrl', ($scope, $filter, $mod
       project: $scope.library.project.name
     }, (data) ->
       # close wait dialog
-      wait.close()
+      wait.close(data.library.id)
       # fire message
       elzoidoMessages.send('success', 'Success!', 'Library ' + data.library.name + ' was successfully created.')
     )

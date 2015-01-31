@@ -75,3 +75,9 @@ angular.module('narra.ui').factory "apiItem", ($resource, serviceServer, service
         param: '@meta'
         action0: 'metadata'
         action1: 'update'
+
+    metadataDelete:
+      method: 'GET'
+      params:
+        action0: 'metadata'
+        action1: 'delete'

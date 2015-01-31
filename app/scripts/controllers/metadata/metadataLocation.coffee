@@ -19,28 +19,13 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'MetadataLocationCtrl', ($scope, $modalInstance, dialogs, elzoidoAuthUser, uiGmapGoogleMapApi) ->
+angular.module('narra.ui').controller 'MetadataLocationCtrl', ($scope, $modalInstance, dialogs, elzoidoAuthUser, data) ->
   $scope.user = elzoidoAuthUser.get()
-  $scope.meta = {name: 'location', value: '' }
-  $scope.render = true
-
-  $scope.map =
-    center:
-      latitude: 50.0755381
-      longitude: 14.43780049999998
-    zoom: 3
-    options:
-      scrollwheel: true
-
-  uiGmapGoogleMapApi.then (maps) ->
-    maps.visualRefresh = true
-
-  $scope.$watch 'meta.value', (value) ->
-    if !_.isUndefined(value) && !_.isUndefined(value.geometry)
-      $scope.map.center =
-        latitude: value.geometry.location.lat()
-        longitude: value.geometry.location.lng()
-      $scope.map.zoom = 12
+  # init data
+  if _.isUndefined(data.meta)
+    $scope.meta = {name: 'location', value: ''}
+  else
+    $scope.meta = data.meta
 
   $scope.close = ->
     # cancel dialog
@@ -52,3 +37,14 @@ angular.module('narra.ui').controller 'MetadataLocationCtrl', ($scope, $modalIns
       $scope.meta.value = $scope.meta.value.formatted_address
     # add meta
     $modalInstance.close($scope.meta)
+
+  $scope.edit = ->
+    # process meta if it is a google object
+    if !_.isUndefined($scope.meta.value.formatted_address)
+      $scope.meta.value = $scope.meta.value.formatted_address
+    # update meta
+    $modalInstance.close({action: 'update', meta: $scope.meta})
+
+  $scope.delete = ->
+    # delete meta
+    $modalInstance.close({action: 'delete', meta: $scope.meta})

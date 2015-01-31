@@ -26,6 +26,7 @@ angular.module('narra.ui').directive 'narraMetadata', ->
     api: '=narraMetadataApi'
     data: '=narraMetadataData'
     player: '=narraMetadataPlayer'
+    search: '=narraMetadataSearch'
     type: '@narraMetadataType'
   controller: 'MetadataCtrl'
   templateUrl: 'partials/metadata/metadata.html'

@@ -102,17 +102,17 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
       $scope.thumbnail[item.name] = item.thumbnails[0]
 
   # refresh when new library is added
-  $rootScope.$on 'event:narra-item-created', (event, item) ->
+  $scope.$on 'event:narra-item-created', (event) ->
     if !_.isUndefined($routeParams.library)
       $scope.refresh()
 
   # refresh when new library is added
-  $rootScope.$on 'event:narra-item-updated', (event, item) ->
-    if !_.isUndefined($routeParams.library) && _.find($scope.items, { id: item })
+  $scope.$on 'event:narra-item-updated', (event, item) ->
+    if !_.isUndefined($routeParams.library) && _.find($scope.items, {id: item})
       $scope.refresh()
 
   # refresh when new library is added
-  $rootScope.$on 'event:narra-library-updated', (event, library) ->
+  $scope.$on 'event:narra-library-updated', (event, library) ->
     if !_.isUndefined($routeParams.library) && _.isEqual($routeParams.library, library)
       $scope.refresh()
 

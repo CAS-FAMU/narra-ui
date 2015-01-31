@@ -25,7 +25,7 @@ angular.module('narra.ui').controller 'AddCtrl', ($scope, $rootScope, dialogs) -
       {size: 'lg', keyboard: false})
     # result
     confirm.result.then (wait) ->
-      wait.result.then ->
+      wait.result.then (project) ->
         $rootScope.$broadcast 'event:narra-project-created'
 
   $scope.addLibrary = ->
@@ -33,7 +33,7 @@ angular.module('narra.ui').controller 'AddCtrl', ($scope, $rootScope, dialogs) -
       {size: 'lg', keyboard: false})
     # result
     confirm.result.then (wait) ->
-      wait.result.then ->
+      wait.result.then (library) ->
         $rootScope.$broadcast 'event:narra-library-created'
 
   $scope.addItem = ->

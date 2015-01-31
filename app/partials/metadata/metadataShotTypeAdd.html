@@ -28,18 +28,11 @@
             <label class="col-sm-2 control-label">Shot Type</label>
 
             <div class="col-sm-10">
-                <ui-select name="value" multiple ng-model="meta.value" style="width: 100%;" rows="5">
+                <ui-select name="value" multiple ng-model="meta.value" style="width: 100%;" rows="5" ui-validate=" '$value.length' ">
                     <ui-select-match placeholder="Select shot types">{{$item}}</ui-select-match>
                     <ui-select-choices repeat="shot in shots | filter:$select.search">{{shot}}</ui-select-choices>
                 </ui-select>
             </div>
-        </div>
-
-        <div ng-show="newMeta.value.$dirty && newMeta.value.$error.required" class="col-md-offset-2">
-            <p class="text-danger left-buffer-10">
-                <strong>Required!</strong>
-                <small>Value is required.</small>
-            </p>
         </div>
     </form>
 </div>

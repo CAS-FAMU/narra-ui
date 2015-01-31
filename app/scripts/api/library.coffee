@@ -62,3 +62,17 @@ angular.module('narra.ui').factory "apiLibrary", ($resource, serviceServer, serv
         id: '@id'
         action0: 'metadata'
         action1: 'new'
+
+    metadataUpdate:
+      method: 'POST'
+      params:
+        id: '@id'
+        param: '@meta'
+        action0: 'metadata'
+        action1: 'update'
+
+    metadataDelete:
+      method: 'GET'
+      params:
+        action0: 'metadata'
+        action1: 'delete'

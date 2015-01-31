@@ -23,7 +23,7 @@ angular.module('narra.ui').controller 'EventsCtrl', ($scope, $rootScope, $interv
   $scope.refresh = ->
     apiEvent.user {param: elzoidoAuthUser.get().username}, (data) ->
       _.forEach(data.events, (event) ->
-        event.progress = Math.floor(event.progress*100))
+        event.progress = Math.floor(event.progress * 100))
       $scope.events = data.events
 
   $scope.startRefreshInterval = ->
@@ -44,11 +44,11 @@ angular.module('narra.ui').controller 'EventsCtrl', ($scope, $rootScope, $interv
       $scope.refreshInterval = undefined
 
   # refresh when user is logged
-  $rootScope.$on 'event:elzoido-auth-user', (event, status) ->
+  $scope.$on 'event:elzoido-auth-user', ->
     # refresh
     $scope.startRefreshInterval()
 
-  $scope.$on '$destroy', () ->
+  $scope.$on '$destroy', ->
     # stop current refresh
     $scope.stopRefreshInterval()
 
@@ -59,7 +59,7 @@ angular.module('narra.ui').controller 'EventsCtrl', ($scope, $rootScope, $interv
     if finished.length > 0
       _.forEach(finished, (id) ->
         # find event
-        event = _.find(oldEvents, { id: id })
+        event = _.find(oldEvents, {id: id})
         # check for the item or project
         if !_.isUndefined(event.item)
           $rootScope.$broadcast 'event:narra-item-updated', event.item.id

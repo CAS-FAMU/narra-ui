@@ -32,10 +32,14 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
         $scope.item = $scope.data
         # temporary meta container
         meta = {}
+        generators = []
         # prepare metadata
         _.forEach(_.filter(_.uniq(_.pluck($scope.item.metadata, 'generator')), (generator) ->
             !_.isEqual(generator, 'thumbnail') && !_.isEqual(generator, 'transcoder')
           ), (generator) ->
+          # assign generator
+          generators.push(generator)
+          # check
           if generator.indexOf('user') > -1
             # init
             meta['user'] = {name: 'user', data: []} if _.isUndefined(meta['user'])
@@ -46,7 +50,52 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
         )
         # assign meta
         $scope.meta = meta
-
+        # assign used generators
+        $scope.generators = generators
+        # local methods
+        $scope.edit = (meta) ->
+          # get relevant provider
+          provider = _.find(constantMetadata.providers, { id: meta.generator })
+          # switch to custom if there is no appropriate
+          if _.isUndefined(provider)
+            provider = _.find(constantMetadata.providers, { id: 'user_custom' })
+          # get mark object
+          mark =
+            use: !_.isEmpty(meta.marks)
+            in: if _.isEmpty(meta.marks) then Math.floor(($scope.player.currentTime.getTime() / 1000) + 3600) else meta.marks[0].in
+            out: if _.isEmpty(meta.marks) then undefined else meta.marks[0].out
+            max: Math.floor(($scope.player.totalTime.getTime() / 1000) + 3600)
+          # open confirmation dialog
+          confirm = dialogs.create(provider.templateEdit, provider.controller, { meta: meta, seek: $scope.seek, mark: mark },
+            {size: 'lg', keyboard: false})
+          # result
+          confirm.result.then (data) ->
+            switch(data.action)
+              when 'update'
+                # open waiting
+                waiting = dialogs.wait('Please Wait', 'Updating metadata ...')
+                # check for array
+                if _.isArray(data.meta.value)
+                  data.meta.value = data.meta.value.join(', ')
+                # update
+                apiItem.metadataUpdate {id: $scope.item.id, meta: data.meta.name, value: data.meta.value, marks: data.meta.marks, generator: meta.generator}, ->
+                  # close dialog
+                  waiting.close()
+                  # send message
+                  elzoidoMessages.send('success', 'Success!', 'Metadata was successfully updated.')
+                  # broadcast event
+                  $rootScope.$broadcast 'event:narra-item-updated', $scope.item.id
+              when 'delete'
+              # open waiting
+                waiting = dialogs.wait('Please Wait', 'Deleting metadata ...')
+                # update
+                apiItem.metadataDelete {id: $scope.item.id, param: data.meta.name, generator: meta.generator}, ->
+                  # close dialog
+                  waiting.close()
+                  # send message
+                  elzoidoMessages.send('success', 'Success!', 'Metadata was successfully deleted.')
+                  # broadcast event
+                  $rootScope.$broadcast 'event:narra-item-updated', $scope.item.id
         # API Methods
         # define methods
         $scope.api.regenerate = (generator) ->
@@ -65,7 +114,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
 
         $scope.api.add = (provider) ->
           # open confirmation dialog
-          confirm = dialogs.create(provider.templateAdd, provider.controller, {},
+          confirm = dialogs.create(provider.templateAdd, provider.controller, { all: _.pluck($scope.item.metadata, 'name'), seek: $scope.seek, mark: { use: false, in: Math.floor(($scope.player.currentTime.getTime() / 1000) + 3600), max: Math.floor(($scope.player.totalTime.getTime() / 1000) + 3600)}, out: undefined },
             {size: 'lg', keyboard: false})
           # result
           confirm.result.then (meta) ->
@@ -75,7 +124,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
             if _.isArray(meta.value)
               meta.value = meta.value.join(', ')
             # add
-            apiItem.metadataNew {id: $scope.item.id, meta: meta.name, value: meta.value, generator: provider.id}, ->
+            apiItem.metadataNew {id: $scope.item.id, meta: meta.name, value: meta.value, marks: meta.marks, generator: provider.id}, ->
               # close dialog
               waiting.close()
               # send message
@@ -87,6 +136,38 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
         $scope.library = $scope.data
         # init metadata
         $scope.meta = $scope.library.metadata
+        # local methods
+        $scope.edit = (meta) ->
+          # get custom provider
+          provider = _.find(constantMetadata.providers, { id: 'user_custom' })
+          # open confirmation dialog
+          confirm = dialogs.create(provider.templateEdit, provider.controller, { meta: meta },
+            {size: 'lg', keyboard: false})
+          # result
+          confirm.result.then (data) ->
+            switch(data.action)
+              when 'update'
+                # open waiting
+                waiting = dialogs.wait('Please Wait', 'Updating metadata ...')
+                # update
+                apiLibrary.metadataUpdate {id: $scope.library.id, meta: data.meta.name, value: data.meta.value}, ->
+                  # close dialog
+                  waiting.close()
+                  # send message
+                  elzoidoMessages.send('success', 'Success!', 'Metadata was successfully updated.')
+                  # broadcast event
+                  $rootScope.$broadcast 'event:narra-library-updated', $scope.library.id
+              when 'delete'
+              # open waiting
+                waiting = dialogs.wait('Please Wait', 'Deleting metadata ...')
+                # update
+                apiLibrary.metadataDelete {id: $scope.library.id, param: data.meta.name}, ->
+                  # close dialog
+                  waiting.close()
+                  # send message
+                  elzoidoMessages.send('success', 'Success!', 'Metadata was successfully deleted.')
+                  # broadcast event
+                  $rootScope.$broadcast 'event:narra-library-updated', $scope.library.id
         # API Methods
         # define methods
         $scope.api.regenerate = (generator) ->
@@ -105,7 +186,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
           # get custom provider
           provider = _.find(constantMetadata.providers, { id: 'user_custom' })
           # open confirmation dialog
-          confirm = dialogs.create(provider.templateAdd, provider.controller, {},
+          confirm = dialogs.create(provider.templateAdd, provider.controller, { all: _.pluck($scope.library.metadata, 'name') },
             {size: 'lg', keyboard: false})
           # result
           confirm.result.then (meta) ->
@@ -124,13 +205,45 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
         $scope.project = $scope.data
         # init metadata
         $scope.meta = $scope.project.metadata
+        # local methods
+        $scope.edit = (meta) ->
+          # get custom provider
+          provider = _.find(constantMetadata.providers, { id: 'user_custom' })
+          # open confirmation dialog
+          confirm = dialogs.create(provider.templateEdit, provider.controller, { meta: meta },
+            {size: 'lg', keyboard: false})
+          # result
+          confirm.result.then (data) ->
+            switch(data.action)
+              when 'update'
+              # open waiting
+                waiting = dialogs.wait('Please Wait', 'Updating metadata ...')
+                # update
+                apiProject.metadataUpdate {name: $scope.project.name, meta: data.meta.name, value: data.meta.value}, ->
+                  # close dialog
+                  waiting.close()
+                  # send message
+                  elzoidoMessages.send('success', 'Success!', 'Metadata was successfully updated.')
+                  # broadcast event
+                  $rootScope.$broadcast 'event:narra-project-updated', $scope.project.name
+              when 'delete'
+              # open waiting
+                waiting = dialogs.wait('Please Wait', 'Deleting metadata ...')
+                # update
+                apiProject.metadataDelete {name: $scope.project.name, param: data.meta.name}, ->
+                  # close dialog
+                  waiting.close()
+                  # send message
+                  elzoidoMessages.send('success', 'Success!', 'Metadata was successfully deleted.')
+                  # broadcast event
+                  $rootScope.$broadcast 'event:narra-project-updated', $scope.project.name
         # API Methods
         # define methods
         $scope.api.add = ->
           # get custom provider
           provider = _.find(constantMetadata.providers, { id: 'user_custom' })
           # open confirmation dialog
-          confirm = dialogs.create(provider.templateAdd, provider.controller, {},
+          confirm = dialogs.create(provider.templateAdd, provider.controller, { all: _.pluck($scope.project.metadata, 'name').concat(['public']) },
             {size: 'lg', keyboard: false})
           # result
           confirm.result.then (meta) ->
