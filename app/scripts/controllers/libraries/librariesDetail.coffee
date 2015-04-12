@@ -79,7 +79,13 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
 
   # click function for detail view
   $scope.detail = (item, index) ->
-    $location.url('/items/' + item.id + '?library=' + $scope.library.id + '&from=items-' + index)
+    # define basic url
+    url = '/items/' + item.id + '?library=' + $scope.library.id + '&from=items-' + index
+    # when comes from project
+    if !_.isUndefined($scope.project)
+      url = url + '&project=' + $scope.project + '&fromPrevious=' + $scope.from
+    # change location
+    $location.url(url)
 
   $scope.startRotation = (item) ->
     # don't start new refresh when it is already on

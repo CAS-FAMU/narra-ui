@@ -22,7 +22,9 @@
 angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $routeParams, $location, $sce, $document, $interval, $filter, $q, dialogs, apiProject, apiLibrary, apiItem, apiUser, uiGmapGoogleMapApi, constantMetadata, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
   # set up context
   $scope.library = $routeParams.library
+  $scope.project = $routeParams.project
   $scope.from = $routeParams.from
+  $scope.fromPrevious = $routeParams.fromPrevious
   # player
   $scope.player =
     preload: true
