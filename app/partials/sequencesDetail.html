@@ -46,24 +46,56 @@
                 </div>
             </div>
 
+            <div ng-if="player.ready" class="bs-docs-section" id="player">
+                <h5 class="page-header">Player</h5>
+
+                <div class="videogular-container">
+                    <videogular vg-player-ready="onPlayerReady($API)" vg-responsive="true"
+                                vg-cue-points="player.cuePoints" vg-update-time="playlistHandler($currentTime)">
+                        <vg-media vg-src="player.sources"
+                                  vg-tracks="player.tracks" vg-preload="player.preload">
+                        </vg-media>
+
+                        <vg-controls vg-autohide="player.autoHide" vg-autohide-time="player.autoHideTime">
+                            <vg-play-pause-button></vg-play-pause-button>
+                            <vg-scrub-bar>
+                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                            </vg-scrub-bar>
+                            <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                            <vg-volume>
+                                <vg-mute-button></vg-mute-button>
+                                <vg-volume-bar></vg-volume-bar>
+                            </vg-volume>
+                            <vg-fullscreen-button></vg-fullscreen-button>
+                        </vg-controls>
+
+                        <vg-overlay-play ng-hide="player.current"></vg-overlay-play>
+                    </videogular>
+                </div>
+            </div>
+
             <div class="bs-docs-section" id="items">
                 <h5 class="page-header">Items</h5>
 
-                <div ng-hide="sequence.marks.length > 0" class="dashboard-item-empty">This sequence doesn't contain any item.
+                <div ng-hide="sequence.marks.length > 0" class="dashboard-item-empty">This sequence doesn't contain any
+                    item.
                 </div>
 
                 <div class="row">
-                    <div ng-repeat="mark in filtered = (sequence.marks | filter:search) | orderBy:'name'" id="items-{{$index}}" style="padding-left: 15px; padding-right: 15px;" on-render-finished>
+                    <div ng-repeat="mark in filtered = (sequence.marks | filter:search) | orderBy:'name'"
+                         id="items-{{$index}}" style="padding-left: 15px; padding-right: 15px;" on-render-finished>
 
-                        <div class="well well-sm">
-                                <div class="pull-left">
-                                    <img src="{{mark.clip.thumbnail}}" style="height: 100px;">
-                                </div>
-                                <div style="margin-left: 200px;">
-                                    <h4>{{mark.clip.name}}</h4>
-                                    <p><span class="label label-danger">in</span> {{mark.in}}</p>
-                                    <p><span class="label label-danger">out</span> {{mark.out}}</p>
-                                </div>
+                        <div class="well well-sm" ng-class="{'well-active': isActive($index)}">
+                            <div class="pull-left">
+                                <img src="{{mark.clip.thumbnail}}" style="height: 100px;">
+                            </div>
+                            <div style="margin-left: 200px;">
+                                <h4>{{mark.clip.name}}</h4>
+
+                                <p><span class="label label-danger">in</span> {{mark.in}}</p>
+
+                                <p><span class="label label-danger">out</span> {{mark.out}}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -80,6 +112,9 @@
                 <ul class="nav bs-docs-sidenav">
                     <li du-scrollspy="information">
                         <a href="#information" du-smooth-scroll>Sequence Information</a>
+                    </li>
+                    <li ng-show="player.ready" du-scrollspy="player">
+                        <a href="#player" du-smooth-scroll>Player</a>
                     </li>
                     <li du-scrollspy="items">
                         <a href="#items" du-smooth-scroll>Items</a>

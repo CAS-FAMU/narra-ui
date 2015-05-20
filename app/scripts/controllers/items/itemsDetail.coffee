@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $routeParams, $location, $sce, $document, $interval, $filter, $q, dialogs, apiProject, apiLibrary, apiItem, apiUser, uiGmapGoogleMapApi, constantMetadata, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $routeParams, $location, $sce, $document, $interval, $timeout, $filter, $q, dialogs, apiProject, apiLibrary, apiItem, apiUser, uiGmapGoogleMapApi, constantMetadata, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
   # set up context
   $scope.library = $routeParams.library
   $scope.project = $routeParams.project
@@ -27,12 +27,15 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
   $scope.fromPrevious = $routeParams.fromPrevious
   # player
   $scope.player =
+    api: undefined
+    ready: false
     preload: true
     autoHide: false
     autoHideTime: 2000
     autoPlay: false
     sources: []
     tracks: []
+    cuePoints: {}
     plugins: {}
 
   # refresh data
@@ -60,9 +63,24 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
       $scope.cuepoints = _.reduce(data.item.metadata, (result, meta) ->
         if !_.isUndefined(meta.marks) && meta.marks.length > 0 && !_.isEqual(meta.generator,
           'thumbnail') && !_.isEqual(meta.generator, 'transcoder') && !_.isEqual(meta.generator, 'att_speech')
-          cuepoint = {in: meta.marks[0].in, position: meta.marks[0].in * (100 / $scope.duration), name: meta.name}
+          cuepoint = {
+            timeLapse: {
+              start: meta.marks[0].in
+            }
+            onUpdate: () ->
+              $scope.active = true
+              $scope.live = meta
+            onComplete: () ->
+              $scope.active = false
+              $timeout ->
+                if !$scope.active
+                  $scope.live = undefined
+              , 2000
+          }
           if !_.isUndefined(meta.marks[0].out)
-            cuepoint = _.merge(cuepoint, {out: meta.marks[0].out})
+            cuepoint.timeLapse.end = meta.marks[0].out
+          else
+            cuepoint.timeLapse.end = meta.marks[0].in + 0.3
           result.push(cuepoint)
         return result
       , [])
@@ -72,6 +90,11 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
       $scope.metadataProviders = _.filter(constantMetadata.providers, (provider) ->
         !_.include(generators, provider.id) || _.isEqual(provider.id, 'user_custom')
       )
+      # set up cuepoint
+      $scope.player.cuePoints = {
+        metadata: $scope.cuepoints
+      }
+      $scope.player.ready = true
       # resolve
       item.resolve true
 
@@ -95,7 +118,7 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
         elzoidoMessages.send('success', 'Success!', 'Item ' + $scope.item.name + ' was successfully deleted.')
 
   $scope.onPlayerReady = (api) ->
-    $scope.api = api
+    $scope.player.api = api
 
   $scope.seek = (position) ->
     $scope.api.seekTime(position)
@@ -105,6 +128,7 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
 
   $scope.$on 'event:narra-item-updated', (event, item) ->
     if _.isEqual($routeParams.item, item)
+      $scope.player.ready = false
       $scope.refresh()
 
   # initial data

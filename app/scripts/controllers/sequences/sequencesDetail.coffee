@@ -19,10 +19,24 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $rootScope, $routeParams, $location, $document, $interval, $filter, $q, dialogs, apiProject, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
+angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $timeout, $rootScope, $routeParams, $location, $document, $interval, $filter, $q, dialogs, apiProject, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
   # set up context
   $scope.project = $routeParams.project
   $scope.sequence = $routeParams.sequence
+  # player
+  $scope.player =
+    api: undefined
+    ready: false
+    preload: true
+    autoHide: false
+    autoHideTime: 2000
+    autoPlay: false
+    sources: []
+    playlist: []
+    current: 0
+    tracks: []
+    cuePoints: {}
+    plugins: {}
 
   # refresh data
   $scope.refresh = ->
@@ -32,13 +46,49 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $rootScope
     sequence = $q.defer()
 
     apiProject.sequences {name: $scope.project, param: $routeParams.sequence}, (data) ->
+      # get seauence
       $scope.sequence = data.sequence
+      # set playlist
+      _.forEach($scope.sequence.marks, (mark) ->
+        $scope.player.playlist.push({in: mark.in, out: mark.out, src: {src: $sce.trustAsResourceUrl(mark.clip.source), type: "video/webm"}})
+      )
+      # set first video
+      $scope.player.sources = [$scope.player.playlist[0].src]
+      # init player
+      $scope.player.ready = true
+      # resolve
       sequence.resolve true
 
     # register promises into one queue
     elzoidoPromises.register('sequence', [sequence.promise])
     # show wait dialog when the loading is taking long
     elzoidoPromises.wait('sequence', 'Loading sequence ...')
+
+  $scope.onPlayerReady = (api) ->
+    # set player's api
+    $scope.player.api = api
+    # set first video seek time
+    $scope.player.api.seekTime($scope.player.playlist[0].in)
+
+  $scope.playlistHandler = (currentTime) ->
+    if currentTime >= $scope.player.playlist[$scope.player.current].out
+      # set next video
+      $scope.player.current += 1
+      # check and process
+      if $scope.player.current != $scope.player.playlist.length
+        $scope.player.sources = [$scope.player.playlist[$scope.player.current].src]
+        $scope.player.api.seekTime($scope.player.playlist[$scope.player.current].in)
+        $timeout ->
+          $scope.player.api.play()
+        , 0
+      else
+        $scope.player.api.stop()
+        $scope.player.current = 0
+        $scope.player.sources = [$scope.player.playlist[$scope.player.current].src]
+        $scope.player.api.seekTime($scope.player.playlist[$scope.player.current].in)
+
+  $scope.isActive = (index) ->
+    $scope.player.current == index
 
   $scope.delete = ->
     # open confirmation dialog

@@ -31,33 +31,31 @@
 
     <div class="row">
         <div class="col-md-9" role="main">
-            <div class="videogular-container">
-                <videogular vg-player-ready="onPlayerReady" vg-responsive="true">
-                    <vg-video vg-src="player.sources"
+            <div ng-if="player.ready" class="videogular-container">
+                <videogular vg-player-ready="onPlayerReady($API)" vg-responsive="true" vg-cue-points="player.cuePoints">
+                    <vg-media vg-src="player.sources"
                               vg-tracks="player.tracks" vg-preload="player.preload">
-                    </vg-video>
+                    </vg-media>
 
                     <vg-controls vg-autohide="player.autoHide" vg-autohide-time="player.autoHideTime">
-                        <vg-play-pause-button></vg-play-pause-button>
-                        <vg-timedisplay>{{ currentTime | date:'mm:ss' }}</vg-timedisplay>
-                        <vg-scrubBar>
-                            <vg-scrubbarcurrenttime></vg-scrubbarcurrenttime>
-                            <div class="cuepoints hidden-xs hidden-sm">
-                                <div ng-repeat="cuepoint in cuepoints" class="cuepoint cuepoint-hover red-tooltip"
-                                     style="left: {{cuepoint.position}}%;" ng-click="seek(cuepoint.in)"
-                                     tooltip-trigger="mouseenter" tooltip="{{cuepoint.name}}"></div>
-                            </div>
-                        </vg-scrubBar>
-                        <vg-timedisplay>{{ timeLeft | date:'mm:ss' }}</vg-timedisplay>
+                        <vg-scrub-bar>
+                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                            <vg-scrub-bar-cue-points class="metadata" vg-cue-points="player.cuePoints.metadata"></vg-scrub-bar-cue-points>
+                        </vg-scrub-bar>
+                        <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
                         <vg-volume>
-                            <vg-mutebutton></vg-mutebutton>
-                            <vg-volumebar></vg-volumebar>
+                            <vg-mute-button></vg-mute-button>
+                            <vg-volume-bar></vg-volume-bar>
                         </vg-volume>
-                        <vg-fullscreenButton></vg-fullscreenButton>
+                        <vg-fullscreen-button></vg-fullscreen-button>
                     </vg-controls>
 
                     <vg-overlay-play></vg-overlay-play>
                     <vg-buffering></vg-buffering>
+
+                    <div ng-show="live" class="my-logo-layer">
+                        <div class="alert alert-danger" role="alert"><strong>{{live.name}}</strong></br>{{live.value}}</div>
+                    </div>
                 </videogular>
             </div>
 
@@ -65,7 +63,7 @@
                 <h5 class="page-header">Metadata</h5>
 
                 <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="item" narra-metadata-data="item"
-                     narra-metadata-player="api" narra-metadata-search="search" narra-metadata></div>
+                     narra-metadata-player="player.api" narra-metadata-search="search" narra-metadata></div>
             </div>
         </div>
 

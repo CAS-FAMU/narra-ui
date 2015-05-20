@@ -62,9 +62,9 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
           # get mark object
           mark =
             use: !_.isEmpty(meta.marks)
-            in: if _.isEmpty(meta.marks) then Math.floor(($scope.player.currentTime.getTime() / 1000) + 3600) else meta.marks[0].in
+            in: if _.isEmpty(meta.marks) then Math.floor($scope.player.currentTime / 1000) else meta.marks[0].in
             out: if _.isEmpty(meta.marks) then undefined else meta.marks[0].out
-            max: Math.floor(($scope.player.totalTime.getTime() / 1000) + 3600)
+            max: Math.floor($scope.player.totalTime / 1000)
           # open confirmation dialog
           confirm = dialogs.create(provider.templateEdit, provider.controller, { meta: meta, seek: $scope.seek, mark: mark },
             {size: 'lg', keyboard: false})
@@ -114,7 +114,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
 
         $scope.api.add = (provider) ->
           # open confirmation dialog
-          confirm = dialogs.create(provider.templateAdd, provider.controller, { all: _.pluck($scope.item.metadata, 'name'), seek: $scope.seek, mark: { use: false, in: Math.floor(($scope.player.currentTime.getTime() / 1000) + 3600), max: Math.floor(($scope.player.totalTime.getTime() / 1000) + 3600)}, out: undefined },
+          confirm = dialogs.create(provider.templateAdd, provider.controller, { all: _.pluck($scope.item.metadata, 'name'), seek: $scope.seek, mark: { use: false, in: Math.floor($scope.player.currentTime / 1000), max: Math.floor($scope.player.totalTime / 1000)}, out: undefined },
             {size: 'lg', keyboard: false})
           # result
           confirm.result.then (meta) ->
