@@ -34,6 +34,9 @@ angular.module('narra.ui').config ($routeProvider, $locationProvider) ->
   .when '/projects/:project',
     templateUrl: 'partials/projectsDetail.html'
     controller: 'ProjectsDetailCtrl'
+  .when '/sequences/:sequence',
+      templateUrl: 'partials/sequencesDetail.html'
+      controller: 'SequencesDetailCtrl'
   .when '/libraries',
     templateUrl: 'partials/libraries.html'
     controller: 'LibrariesCtrl'

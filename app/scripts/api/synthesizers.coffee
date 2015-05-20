@@ -1,4 +1,3 @@
-<!--
 #
 # Copyright (C) 2015 CAS / FAMU
 #
@@ -19,16 +18,11 @@
 #
 # Authors: Michal Mocnak <michal@marigan.net>
 #
--->
 
-<button class="btn btn-danger btn-xs navbar-btn dropdown-toggle" type="button" data-toggle="dropdown"
-        aria-expanded="false">
-    <span class="fa fa-plus"></span> Add New <span class="caret"></span>
-</button>
-<ul class="dropdown-menu" role="menu">
-    <li><a href="#" ng-click="addItem()">Add Item</a></li>
-    <li class="divider"></li>
-    <li><a href="#" ng-click="addLibrary()">Add Library</a></li>
-    <li><a href="#" ng-click="addProject()">Add Project</a></li>
-    <li><a href="#" ng-click="addSequence()">Add Sequence</a></li>
-</ul>
+
+angular.module('narra.ui').factory "apiSynthesizers", ($resource, serviceServer, serviceToken) ->
+  $resource serviceServer.url + "/v1/synthesizers",
+    token: serviceToken.get()
+  ,
+    all:
+      method: 'GET'

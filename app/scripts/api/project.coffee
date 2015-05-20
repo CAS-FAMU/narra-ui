@@ -46,6 +46,25 @@ angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serv
         name: '@name'
         action0: 'update'
 
+    sequences:
+      method: 'GET'
+      params:
+        action0: 'sequences'
+
+    sequencesNew:
+      method: 'POST'
+      headers: {'Content-Type': undefined}
+      params:
+        name: '@name'
+        action0: 'sequences'
+        action1: 'new'
+
+    sequencesDelete:
+      method: 'GET'
+      params:
+        action0: 'sequences'
+        action1: 'delete'
+
     metadataNew:
       method: 'POST'
       params:

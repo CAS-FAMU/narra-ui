@@ -25,6 +25,7 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
     $scope.user = elzoidoAuthUser.get()
     # get deffered
     project = $q.defer()
+    sequences = $q.defer()
 
     apiProject.get {name: $routeParams.project}, (data) ->
       _.forEach(data.project.libraries, (library) ->
@@ -37,8 +38,12 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
       $scope.project = data.project
       project.resolve true
 
+    apiProject.sequences {name: $routeParams.project}, (data) ->
+      $scope.sequences = data.sequences
+      sequences.resolve true
+
     # register promises into one queue
-    elzoidoPromises.register('project', [project.promise])
+    elzoidoPromises.register('project', [project.promise, sequences.promise])
     # show wait dialog when the loading is taking long
     elzoidoPromises.wait('project', 'Loading project ...')
 
@@ -67,11 +72,20 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
         elzoidoMessages.send('success', 'Success!', 'Project ' + $scope.project.name + ' was successfully deleted.')
 
   # click function for detail view
-  $scope.detail = (library, index) ->
+  $scope.detailLibrary = (library, index) ->
     $location.url('/libraries/' + library.id + '?project=' + $scope.project.name + '&from=libraries-' + index)
+
+  # click function for detail view
+  $scope.detailSequence = (sequence, index) ->
+    $location.url('/sequences/' + sequence.id + '?project=' + $scope.project.name)
 
   # refresh when new library is added
   $scope.$on 'event:narra-library-created', (event) ->
+    if !_.isUndefined($routeParams.project)
+      $scope.refresh()
+
+  # refresh when new sequence is added
+  $scope.$on 'event:narra-sequence-created', (event) ->
     if !_.isUndefined($routeParams.project)
       $scope.refresh()
 

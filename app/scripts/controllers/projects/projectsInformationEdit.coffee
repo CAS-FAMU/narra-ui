@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiUser, elzoidoMessages, elzoidoAuthUser, data) ->
+angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiUser, apiSynthesizers, elzoidoMessages, elzoidoAuthUser, data) ->
   $scope.user = elzoidoAuthUser.get()
   $scope.project = data.project
   $scope.initial = angular.copy(data.project)
@@ -29,6 +29,8 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
   apiUser.all (data) ->
     $scope.users = data.users
     $scope.filter()
+  apiSynthesizers.all (data) ->
+    $scope.synthesizers = data.synthesizers
 
   $scope.filter = ->
     $scope.contributors = _.filter($scope.users, (user) ->
@@ -55,6 +57,7 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
       title: $scope.project.title
       author: $scope.project.author.username
       description: $scope.project.description
+      synthesizers: _.pluck($scope.project.synthesizers, 'identifier')
       contributors: _.pluck($scope.project.contributors, 'username')
     }, (data) ->
       # update public metadata tag

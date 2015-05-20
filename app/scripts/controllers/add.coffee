@@ -43,3 +43,11 @@ angular.module('narra.ui').controller 'AddCtrl', ($scope, $rootScope, dialogs) -
     confirm.result.then (wait) ->
       wait.result.then ->
         $rootScope.$broadcast 'event:narra-item-created'
+
+  $scope.addSequence = ->
+    confirm = dialogs.create('partials/sequencesAdd.html', 'SequencesAddCtrl', {},
+      {size: 'lg', keyboard: false})
+    # result
+    confirm.result.then (wait) ->
+      wait.result.then ->
+        $rootScope.$broadcast 'event:narra-sequence-created'

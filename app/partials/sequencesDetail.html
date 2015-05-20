@@ -1,0 +1,108 @@
+<!--
+#
+# Copyright (C) 2015 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="bs-docs-header" id="content">
+    <div class="container">
+        <h1>{{sequence.name}}</h1>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+
+    <div class="row">
+        <div class="col-md-9" role="main">
+            <div class="bs-docs-section" id="information">
+                <h5 class="page-header">Sequence Information</h5>
+
+                <div class="well">
+                    <dl class="dl-horizontal">
+                        <dt class="block-header">{{sequence.name}}</dt>
+                        <dd></dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>author</dt>
+                        <dd>{{sequence.author.name}}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="bs-docs-section" id="items">
+                <h5 class="page-header">Items</h5>
+
+                <div ng-hide="sequence.marks.length > 0" class="dashboard-item-empty">This sequence doesn't contain any item.
+                </div>
+
+                <div class="row">
+                    <div ng-repeat="mark in filtered = (sequence.marks | filter:search) | orderBy:'name'" id="items-{{$index}}" style="padding-left: 15px; padding-right: 15px;" on-render-finished>
+
+                        <div class="well well-sm">
+                                <div class="pull-left">
+                                    <img src="{{mark.clip.thumbnail}}" style="height: 100px;">
+                                </div>
+                                <div style="margin-left: 200px;">
+                                    <h4>{{mark.clip.name}}</h4>
+                                    <p><span class="label label-danger">in</span> {{mark.in}}</p>
+                                    <p><span class="label label-danger">out</span> {{mark.out}}</p>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollfix="+230">
+                <div class="input-group input-group-sm" style="width: 200px;">
+                    <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                    <input type="text" class="form-control" ng-model="search" placeholder="Search">
+                </div>
+
+                <ul class="nav bs-docs-sidenav">
+                    <li du-scrollspy="information">
+                        <a href="#information" du-smooth-scroll>Sequence Information</a>
+                    </li>
+                    <li du-scrollspy="items">
+                        <a href="#items" du-smooth-scroll>Items</a>
+                    </li>
+                </ul>
+
+                <ul class="side-buttons">
+                    <li>
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="delete()"><span
+                                class="fa fa-remove"></span> Delete
+                        </button>
+                    </li>
+                    <li>
+                        <a class="btn btn-default btn-xs" type="button" href="/projects/{{project}}"><span
+                                class="fa fa-angle-double-left"></span> Back To Project</a>
+                    </li>
+                    <li>
+                        <a class="btn btn-default btn-xs" type="button" href="#top"><span
+                                class="fa fa-angle-double-up"></span> Back To Top</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
