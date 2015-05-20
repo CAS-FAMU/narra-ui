@@ -54,10 +54,12 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
       )
       # set first video
       $scope.player.sources = [$scope.player.playlist[0].src]
-      # init player
-      $scope.player.ready = true
       # resolve
       sequence.resolve true
+
+    sequence.promise.then ->
+      # init player
+      $scope.player.ready = true
 
     # register promises into one queue
     elzoidoPromises.register('sequence', [sequence.promise])
@@ -68,24 +70,37 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
     # set player's api
     $scope.player.api = api
     # set first video seek time
-    $scope.player.api.seekTime($scope.player.playlist[0].in)
+    $timeout ->
+      $scope.player.api.seekTime($scope.player.playlist[0].in)
+    , 0
 
   $scope.playlistHandler = (currentTime) ->
     if currentTime >= $scope.player.playlist[$scope.player.current].out
       # set next video
       $scope.player.current += 1
-      # check and process
-      if $scope.player.current != $scope.player.playlist.length
-        $scope.player.sources = [$scope.player.playlist[$scope.player.current].src]
+      # refresh
+      $scope.playerAction()
+
+  $scope.seek = (index) ->
+    # set current video
+    $scope.player.current = index
+    # refresh
+    $scope.playerAction()
+
+  $scope.playerAction = () ->
+    if $scope.player.current != $scope.player.playlist.length
+      $scope.player.sources = [$scope.player.playlist[$scope.player.current].src]
+      $timeout ->
         $scope.player.api.seekTime($scope.player.playlist[$scope.player.current].in)
-        $timeout ->
-          $scope.player.api.play()
-        , 0
-      else
-        $scope.player.api.stop()
-        $scope.player.current = 0
-        $scope.player.sources = [$scope.player.playlist[$scope.player.current].src]
+        $scope.player.api.play()
+      , 0
+    else
+      $scope.player.api.stop()
+      $scope.player.current = 0
+      $scope.player.sources = [$scope.player.playlist[$scope.player.current].src]
+      $timeout ->
         $scope.player.api.seekTime($scope.player.playlist[$scope.player.current].in)
+      , 0
 
   $scope.isActive = (index) ->
     $scope.player.current == index

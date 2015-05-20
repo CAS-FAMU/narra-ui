@@ -85,7 +85,7 @@
                     <div ng-repeat="mark in filtered = (sequence.marks | filter:search) | orderBy:'name'"
                          id="items-{{$index}}" style="padding-left: 15px; padding-right: 15px;" on-render-finished>
 
-                        <div class="well well-sm" ng-class="{'well-active': isActive($index)}">
+                        <div class="well well-sm well-hover" ng-class="{'well-active': isActive($index)}" ng-click="seek($index)">
                             <div class="pull-left">
                                 <img src="{{mark.clip.thumbnail}}" style="height: 100px;">
                             </div>
