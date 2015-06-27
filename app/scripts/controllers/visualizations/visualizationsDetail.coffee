@@ -29,7 +29,6 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
       enableLiveAutocompletion: true
     },
     onLoad: (editor) ->
-      console.log(editor)
       session = editor.getSession()
       # resolve mode
       if _.isEqual($scope.visualization.type, 'processing')
@@ -89,16 +88,14 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
     # create form data object
     data = new FormData()
 
-    file = new Blob([$scope.newContent])
-
-    console.log($scope.newContent)
-
-    file.lastModifiedDate = new Date();
-
+    # get file name
     if _.isEqual($scope.visualization.type, 'processing')
-      file.name = $scope.visualization.type + '.pde'
+      fileName = $scope.visualization.type + '.pde'
     else
-      file.name = $scope.visualization.type + '.js'
+      fileName = $scope.visualization.type + '.js'
+
+    # create file
+    file = new File([$scope.newContent], fileName)
 
     # set up
     data.append('file', file)
