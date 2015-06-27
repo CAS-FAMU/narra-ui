@@ -45,11 +45,12 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
       $scope.sequences = data.sequences
       sequences.resolve true
 
-    apiVisualization.all (data) ->
-      $scope.visualizations = _.filter(data.visualizations, (visualization) ->
-        visualization.public && !_.contains(_.pluck($scope.project.visualizations, 'id'), visualization.id)
-      )
-      visualizations.resolve true
+    project.promise.then () ->
+      apiVisualization.all (data) ->
+        $scope.visualizations = _.filter(data.visualizations, (visualization) ->
+          visualization.public && !_.contains(_.pluck($scope.project.visualizations, 'id'), visualization.id)
+        )
+        visualizations.resolve true
 
     # register promises into one queue
     elzoidoPromises.register('project', [project.promise, sequences.promise, visualizations.promise])
