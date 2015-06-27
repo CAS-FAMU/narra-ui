@@ -37,7 +37,10 @@
                 <div class="well well-hover" ng-click="edit()">
                     <dl class="dl-horizontal">
                         <dt class="block-header">{{project.title}}</dt>
-                        <dd></dd>
+                        <dd>
+                            <span ng-show="project.public" class="label label-success">public</span>
+                            <span ng-hide="project.public" class="label label-danger">private</span>
+                        </dd>
                     </dl>
                     <dl class="dl-horizontal">
                         <dt>name</dt>
@@ -52,13 +55,11 @@
                         <dd>{{project.author.name}}</dd>
                     </dl>
                     <dl class="dl-horizontal">
-                        <dt>public</dt>
-                        <dd>{{project.public}}</dd>
-                    </dl>
-                    <dl class="dl-horizontal">
                         <dt>contributors</dt>
                         <dd><span ng-repeat="contributor in project.contributors">{{contributor.name}}<span
-                                ng-hide="$last">, </span></span><span ng-show="project.contributors.length == 0" class="text-muted">There is no contributors in this project.</span></dd>
+                                ng-hide="$last">, </span></span><span ng-show="project.contributors.length == 0"
+                                                                      class="text-muted">There is no contributors in this project.</span>
+                        </dd>
                     </dl>
                     <dl class="dl-horizontal">
                         <dt>synthesizers</dt>
@@ -70,58 +71,92 @@
                 </div>
             </div>
 
-            <div ng-show="project.metadata.length" class="bs-docs-section" id="meta">
-                <h5 class="page-header">Metadata</h5>
+            <tabset>
+                <tab heading="Libraries">
+                    <div ng-hide="project.libraries.length > 0" class="item-empty">This project doesn't
+                        contain any library.
+                    </div>
 
-                <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="project" narra-metadata-data="project" narra-metadata></div>
-            </div>
-
-            <div class="bs-docs-section" id="sequences">
-                <h5 class="page-header">Sequences</h5>
-
-                <div ng-hide="sequences.length > 0" class="dashboard-item-empty">This project doesn't contain any sequence.</div>
-
-                <div id="sequences-{{$index}}" ng-repeat="sequence in filtered = (sequences | filter:search) | orderBy:'name'" ng-click="detailSequence(sequence)" on-render-finished>
-                    <div class="well well-sm well-hover">
-                        <div class="pull-left">
-                            <img src="{{sequence.thumbnail}}" style="height: 70px;">
-                        </div>
-                        <div style="margin-left: 140px;">
-                            <h4>{{sequence.name}}</h4>
-                            <p>by {{sequence.author.name}}</p>
+                    <div class="tab-content">
+                        <div id="libraries-{{$index}}"
+                             ng-repeat="library in filtered = (project.libraries | filter:search) | orderBy:'name'"
+                             class="well well-hover" ng-click="detailLibrary(library, $index)">
+                            <div ng-repeat="thumbnail in library.thumbnails track by $index"
+                                 class="background-cover"
+                                 style="background-image: url('{{thumbnail}}'); width: 20%; height: 80px; float: left; margin-bottom: 10px;"></div>
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{library.name}}</dt>
+                                <dd></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{library.description}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>author</dt>
+                                <dd>{{library.author.name}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>contributors</dt>
+                                <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
+                                        ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0"
+                                                                              class="text-muted">There is no contributors in this library.</span>
+                                </dd>
+                            </dl>
                         </div>
                     </div>
-                </div>
-            </div>
+                </tab>
+                <tab heading="Sequences">
+                    <div ng-hide="sequences.length > 0" class="item-empty">This project doesn't contain any
+                        sequence.
+                    </div>
 
-            <div class="bs-docs-section" id="libraries">
-                <h5 class="page-header">Libraries</h5>
+                    <div class="tab-content">
+                        <div id="sequences-{{$index}}"
+                             ng-repeat="sequence in filtered = (sequences | filter:search) | orderBy:'name'"
+                             ng-click="detailSequence(sequence)">
+                            <div class="well well-sm well-hover">
+                                <div class="pull-left">
+                                    <img src="{{sequence.thumbnail}}" style="height: 70px;">
+                                </div>
+                                <div style="margin-left: 140px;">
+                                    <h4>{{sequence.name}}</h4>
 
-                <div ng-hide="project.libraries.length > 0" class="dashboard-item-empty">This project doesn't contain any library.</div>
+                                    <p>by {{sequence.author.name}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+                <tab heading="Visualizations">
+                    <div ng-hide="project.visualizations.length > 0" class="item-empty">This project doesn't contain
+                        any visualization.
+                    </div>
 
-                <div id="libraries-{{$index}}" ng-repeat="library in filtered = (project.libraries | filter:search) | orderBy:'name'" class="well well-hover" ng-click="detailLibrary(library, $index)" on-render-finished>
-                    <div ng-repeat="thumbnail in library.thumbnails track by $index"
-                         class="background-cover"
-                         style="background-image: url('{{thumbnail}}'); width: 20%; height: 80px; float: left; margin-bottom: 10px;"></div>
-                    <dl class="dl-horizontal">
-                        <dt class="block-header">{{library.name}}</dt>
-                        <dd></dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>description</dt>
-                        <dd>{{library.description}}</dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>author</dt>
-                        <dd>{{library.author.name}}</dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>contributors</dt>
-                        <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
-                                ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0" class="text-muted">There is no contributors in this library.</span></dd>
-                    </dl>
-                </div>
-            </div>
+                    <div ng-repeat="visualization in filtered = (project.visualizations | filter:search) | orderBy:'name'">
+                        <div class="well well-sm well-hover" ng-click="removeVisualization(visualization)">
+                            <div class="pull-left">
+                                <img src="{{visualization.thumbnail}}" style="height: 70px;">
+                            </div>
+                            <div style="margin-left: 140px;">
+                                <h4>{{visualization.name}}</h4>
+
+                                <p>by {{visualization.author.name}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+                <tab heading="Metadata">
+                    <div ng-hide="project.metadata.length > 0" class="item-empty">This project doesn't contain
+                        any metadata.
+                    </div>
+
+                    <div class="tab-content">
+                        <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="project"
+                             narra-metadata-data="project" narra-metadata></div>
+                    </div>
+                </tab>
+            </tabset>
         </div>
 
         <div class="col-md-3">
@@ -130,30 +165,6 @@
                     <span class="input-group-addon"><span class="fa fa-search"></span></span>
                     <input type="text" class="form-control" ng-model="search" placeholder="Search">
                 </div>
-                <ul class="nav bs-docs-sidenav">
-                    <li du-scrollspy="information">
-                        <a href="#information" du-smooth-scroll>Project Information</a>
-                    </li>
-                    <li du-scrollspy="meta" ng-show="project.metadata.length">
-                        <a href="#meta" du-smooth-scroll>Metadata</a>
-                    </li>
-                    <li du-spy-context du-scrollspy="sequences">
-                        <a href="#sequences" du-smooth-scroll>Sequences</a>
-                        <ul class="nav">
-                            <li ng-repeat="sequence in sequences | orderBy:'name'" du-spy-context du-scrollspy="sequences-{{$index}}">
-                                <a href="#sequences-{{$index}}" du-smooth-scroll>{{sequence.name}}</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li du-spy-context du-scrollspy="libraries">
-                        <a href="#libraries" du-smooth-scroll>Libraries</a>
-                        <ul class="nav">
-                            <li ng-repeat="library in filtered | orderBy:'name'" du-spy-context du-scrollspy="libraries-{{$index}}">
-                                <a href="#libraries-{{$index}}" du-smooth-scroll>{{library.name}}</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
 
                 <ul class="side-buttons">
                     <li>
@@ -161,14 +172,29 @@
                             <span class="fa fa-plus"></span> Add Meta
                         </button>
                     </li>
-                    <li>
-                        <button class="btn btn-danger btn-xs" type="button" ng-click="delete()"><span class="fa fa-remove"></span> Delete</button>
+                    <li ng-if="visualizations.length">
+                        <button class="btn btn-danger btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
+                                aria-expanded="false">
+                            <span class="fa fa-plus"></span> Assign Visualization <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="visualization in visualizations | orderBy:'name'">
+                                <a href="#" ng-click="addVisualization(visualization)">{{visualization.name}}</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
-                        <a class="btn btn-default btn-xs" type="button" href="/projects"><span class="fa fa-angle-double-left"></span> Back To Projects</a>
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="delete()"><span
+                                class="fa fa-remove"></span> Delete
+                        </button>
                     </li>
                     <li>
-                        <a class="btn btn-default btn-xs" type="button" href="#top"><span class="fa fa-angle-double-up"></span> Back To Top</a>
+                        <a class="btn btn-default btn-xs" type="button" href="/projects"><span
+                                class="fa fa-angle-double-left"></span> Back To Projects</a>
+                    </li>
+                    <li>
+                        <a class="btn btn-default btn-xs" type="button" href="#top"><span
+                                class="fa fa-angle-double-up"></span> Back To Top</a>
                     </li>
                 </ul>
             </div>

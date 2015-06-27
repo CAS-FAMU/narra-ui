@@ -31,7 +31,7 @@
 
     <div class="row">
         <div class="col-md-9" role="main">
-            <div class="bs-docs-section" id="information">
+            <div class="bs-docs-section">
                 <h5 class="page-header">Sequence Information</h5>
 
                 <div class="well">
@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <div ng-if="player.ready" class="bs-docs-section" id="player">
+            <div ng-if="player.ready" class="bs-docs-section">
                 <h5 class="page-header">Player</h5>
 
                 <div class="videogular-container">
@@ -77,15 +77,16 @@
             <div class="bs-docs-section" id="items">
                 <h5 class="page-header">Items</h5>
 
-                <div ng-hide="sequence.marks.length > 0" class="dashboard-item-empty">This sequence doesn't contain any
+                <div ng-hide="sequence.marks.length > 0" class="item-empty">This sequence doesn't contain any
                     item.
                 </div>
 
                 <div class="row">
                     <div ng-repeat="mark in filtered = (sequence.marks | filter:search) | orderBy:'name'"
-                         id="items-{{$index}}" style="padding-left: 15px; padding-right: 15px;" on-render-finished>
+                         style="padding-left: 15px; padding-right: 15px;" on-render-finished>
 
-                        <div class="well well-sm well-hover" ng-class="{'well-active': isActive($index)}" ng-click="seek($index)">
+                        <div class="well well-sm well-hover" ng-class="{'well-active': isActive($index)}"
+                             ng-click="seek($index)">
                             <div class="pull-left">
                                 <img src="{{mark.clip.thumbnail}}" style="height: 100px;">
                             </div>
@@ -108,18 +109,6 @@
                     <span class="input-group-addon"><span class="fa fa-search"></span></span>
                     <input type="text" class="form-control" ng-model="search" placeholder="Search">
                 </div>
-
-                <ul class="nav bs-docs-sidenav">
-                    <li du-scrollspy="information">
-                        <a href="#information" du-smooth-scroll>Sequence Information</a>
-                    </li>
-                    <li ng-show="player.ready" du-scrollspy="player">
-                        <a href="#player" du-smooth-scroll>Player</a>
-                    </li>
-                    <li du-scrollspy="items">
-                        <a href="#items" du-smooth-scroll>Items</a>
-                    </li>
-                </ul>
 
                 <ul class="side-buttons">
                     <li>

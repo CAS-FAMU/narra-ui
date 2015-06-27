@@ -27,14 +27,14 @@
         <li role="presentation"><a href="#">Queue <span class="badge">{{events.length}}</span></a></li>
     </ul>
     <ul class="dropdown-menu queue" role="menu" style="width: 300px;">
-        <li ng-repeat="event in events" ng-if="event.progress > 0">
+        <li ng-repeat="event in events" ng-if="event.status == 'running'">
             <p>{{event.item.type | capitalize}} {{event.item.name}} is being processed</p>
 
-            <div class="progress">
-                <div class="progress-bar progress-bar-danger" role="progressbar"
+            <div ng-show="event.progress > 0" class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-danger active" role="progressbar"
                      aria-valuenow="{{event.progress}}" aria-valuemin="0" aria-valuemax="100"
                      ng-style="{width: event.progress + '%'}">
-                    <span>{{event.progress}} %</span>
+                    <span>{{event.message}}</span>
                 </div>
             </div>
         </li>

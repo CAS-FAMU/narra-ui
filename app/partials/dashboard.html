@@ -21,27 +21,14 @@
 #
 -->
 
-<div class="bs-docs-header" id="content">
-    <div style="height: 100px;">
-        <carousel interval="5000" style="top: 0; left: 0; position: absolute; width: 100%;" class="hidden-xs">
-            <div class="carousel-inner">
-                <slide ng-repeat="thumbnail in thumbnails">
-                    <div class="background-cover grayscale"
-                         style="background-image: url('{{thumbnail}}'); width: 100%; height: 100%;"></div>
-                </slide>
-            </div>
-        </carousel>
-    </div>
-</div>
-
 <div class="container bs-docs-container" style="margin-top: 60px;">
     <div class="row">
         <div class="col-md-12">
 
             <div ng-hide="projects.length" class="col-md-12 dashboard-item-empty"><img src="/images/logo_header.png"></div>
 
-            <div ng-repeat="project in projects" class="col-md-12 dashboard-item" style="width: 100%; height: 150px;"
-                 ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false">
+            <div ng-repeat="project in projects" class="col-md-12 dashboard-item pointer-hand" style="width: 100%; height: 150px;"
+                 ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false" ng-click="view(project)">
                 <div ng-repeat="thumbnail in project.thumbnails track by $index"
                      ng-class="{'dashboard-item-image': hover$index}"
                      class="background-cover"

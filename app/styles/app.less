@@ -53,6 +53,7 @@ body {
   position: fixed;
   top: 10px;
 }
+
 .page-header {
   text-transform: uppercase;
   padding-top: 20px;
@@ -74,24 +75,53 @@ body {
   text-align: left;
 }
 
-.dashboard-item {
-  float: none!important;
+.tab-content {
+  margin-top: 20px;
 }
+
+.label-stamp {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+}
+
+.drop-zone {
+  border: dotted 3px lightgray;
+  text-align: center;
+  color: darkgrey;
+  line-height: 150px;
+}
+
+/* Default class applied to drop zones on over */
+.drop-zone-over {
+  border: dotted 3px green;
+}
+
+.dashboard-item {
+  float: none !important;
+}
+
 .dashboard-item-empty {
+  line-height: 500px;
+  text-align: center;
+}
+
+.item-empty {
   width: 100%;
   height: 100%;
   text-align: center;
   font-weight: lighter;
   font-size: x-large;
+  margin-top: 50px;
 }
 
 .dashboard-item-image {
   -webkit-filter: grayscale(100%) opacity(0.2);
   -moz-filter: grayscale(100%) opacity(0.2);
   filter: grayscale(100%) opacity(0.2);
-  -webkit-transition:all linear 0.2s;
-  -moz-transition:all linear 0.2s;
-  transition:all linear 0.2s;
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  transition: all linear 0.2s;
 }
 
 .dashboard-item-title {
@@ -104,9 +134,9 @@ body {
 
 .dashboard-item-title-anim {
   opacity: 1.0;
-  -webkit-transition:all linear 0.2s;
-  -moz-transition:all linear 0.2s;
-  transition:all linear 0.2s;
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  transition: all linear 0.2s;
 }
 
 .dashboard-item-title h1 {
@@ -116,6 +146,14 @@ body {
   font-size: x-large;
   font-weight: lighter;
   margin-top: 50px;
+}
+
+.viewer-title h1 {
+  color: #000000;
+  text-transform: uppercase;
+  font-size: x-large;
+  font-weight: lighter;
+  margin-top: 10px;
 }
 
 .dashboard-item-title p {
@@ -147,18 +185,22 @@ body {
 }
 
 .well-hover:hover {
-  -webkit-transition:all linear 0.2s;
-  -moz-transition:all linear 0.2s;
-  transition:all linear 0.2s;
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  transition: all linear 0.2s;
   cursor: pointer;
   cursor: hand;
   background-color: #e6e6e6;
 }
 
+.ace_editor {
+  height: 800px;
+}
+
 .well-active {
-  -webkit-transition:all linear 0.2s;
-  -moz-transition:all linear 0.2s;
-  transition:all linear 0.2s;
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  transition: all linear 0.2s;
   background-color: #e9d1d3;
 }
 
@@ -204,9 +246,9 @@ body {
 }
 
 .cuepoint:hover {
-  -webkit-transition:all linear 0.1s;
-  -moz-transition:all linear 0.1s;
-  transition:all linear 0.1s;
+  -webkit-transition: all linear 0.1s;
+  -moz-transition: all linear 0.1s;
+  transition: all linear 0.1s;
   background-color: red;
   width: 16px;
   margin-left: -4px;
@@ -218,9 +260,9 @@ body {
 
 .narra-tooltip-anim {
   opacity: 1.0;
-  -webkit-transition:all linear 2s;
-  -moz-transition:all linear 2s;
-  transition:all linear 2s;
+  -webkit-transition: all linear 2s;
+  -moz-transition: all linear 2s;
+  transition: all linear 2s;
 }
 
 .side-buttons {
@@ -240,8 +282,9 @@ body {
 .red-tooltip + .tooltip > .tooltip-inner {
   background-color: #c12e2a;
 }
+
 .red-tooltip + .tooltip > .tooltip-arrow {
-  border-bottom-color:#c12e2a;
+  border-bottom-color: #c12e2a;
 }
 
 .angular-google-map-container {
@@ -251,6 +294,15 @@ body {
 
 .pac-container {
   z-index: 1100 !important;
+}
+
+canvas:focus {
+  outline: none;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
 }
 
 /* CUSTOMIZE IMAGES

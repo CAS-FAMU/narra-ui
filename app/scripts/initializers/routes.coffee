@@ -28,6 +28,9 @@ angular.module('narra.ui').config ($routeProvider, $locationProvider) ->
   .when '/',
     templateUrl: 'partials/dashboard.html'
     controller: 'DashboardCtrl'
+  .when '/viewer/:project',
+    templateUrl: 'partials/viewer.html'
+    controller: 'ViewerCtrl'
   .when '/projects',
     templateUrl: 'partials/projects.html'
     controller: 'ProjectsCtrl'
@@ -35,8 +38,14 @@ angular.module('narra.ui').config ($routeProvider, $locationProvider) ->
     templateUrl: 'partials/projectsDetail.html'
     controller: 'ProjectsDetailCtrl'
   .when '/sequences/:sequence',
-      templateUrl: 'partials/sequencesDetail.html'
-      controller: 'SequencesDetailCtrl'
+    templateUrl: 'partials/sequencesDetail.html'
+    controller: 'SequencesDetailCtrl'
+  .when '/visualizations',
+    templateUrl: 'partials/visualizations.html'
+    controller: 'VisualizationsCtrl'
+  .when '/visualizations/:visualization',
+    templateUrl: 'partials/visualizationsDetail.html'
+    controller: 'VisualizationsDetailCtrl'
   .when '/libraries',
     templateUrl: 'partials/libraries.html'
     controller: 'LibrariesCtrl'

@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'DashboardCtrl', ($scope, $rootScope, $q, apiProject, apiItem, elzoidoPromises) ->
+angular.module('narra.ui').controller 'DashboardCtrl', ($scope, $rootScope, $location, $q, apiProject, apiItem, elzoidoPromises) ->
   $scope.refresh = ->
     # get deffered
     thumbnails = $q.defer()
@@ -34,13 +34,17 @@ angular.module('narra.ui').controller 'DashboardCtrl', ($scope, $rootScope, $q, 
         project.thumbnails = [] if _.isUndefined(project.thumbnails)
         while project.thumbnails.length < 5
           project.thumbnails.push('/images/bars.png'))
-      $scope.projects = _.where(data.projects, { public: 'true' })
+      $scope.projects = _.where(data.projects, { public: true })
       projects.resolve true
 
     # register promises into one queue
     elzoidoPromises.register('dashboard', [projects.promise, thumbnails.promise])
     # show wait dialog when the loading is taking long
     elzoidoPromises.wait('dashboard', 'Loading dashboard ...')
+
+  # shwo in viewer
+  $scope.view = (project) ->
+    $location.path('/viewer/' + project.name)
 
   # refresh when new project is added
   $rootScope.$on 'event:narra-project-created', (event, status) ->

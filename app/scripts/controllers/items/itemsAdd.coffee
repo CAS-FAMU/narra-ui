@@ -35,12 +35,12 @@ angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $
   $scope.close = ->
     $modalInstance.dismiss('canceled')
 
-  # save action
-  $scope.new = ->
+  # next action
+  $scope.next = ->
+    # setup collections
+    $scope.items = []
     # open waiting
-    waiting = dialogs.wait('Please Wait', 'Registering new items ...')
-    # close dialog
-    $modalInstance.close(waiting)
+    waiting = dialogs.wait('Please Wait', 'Checking new items ...')
     # promises
     promises = []
     # parse items
@@ -53,24 +53,71 @@ angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $
       promises.push(wait.promise)
       # add item
       $timeout(->
+        apiItem.check({ url: item }, (data) ->
+          # thumbnail check
+          data.item.thumbnail = '/images/bars.png' if _.isNull(data.item.thumbnail)
+          # push into the collection
+          $scope.items.push(data.item)
+          # resolve
+          wait.resolve true
+        , (error) ->
+          wait.resolve true
+        )
+      , 100)
+    )
+
+    # register promises into one queue
+    elzoidoPromises.register('check-items', promises)
+    # close dialog
+    elzoidoPromises.promise('check-items').then ->
+      # close
+      waiting.close()
+      # and setup for the next slide
+      $scope.second = true
+
+  # back action
+  $scope.back = ->
+    # setup collections
+    $scope.items = []
+    # back to the first slide
+    $scope.second = false
+
+  # save action
+  $scope.new = ->
+    # open waiting
+    waiting = dialogs.wait('Please Wait', 'Registering new items ...')
+    # close dialog
+    $modalInstance.close(waiting)
+    # promises
+    promises = []
+    # iterate over
+    _.forEach($scope.items, (item) ->
+      # get deffered
+      wait = $q.defer()
+      # register promise
+      promises.push(wait.promise)
+      # add item
+      $timeout(->
         apiItem.new({
-            url: item
+            url: item.url
             author: $scope.item.author.name
             library: $scope.item.library.id
+            connector: item.connector
           }, (data) ->
           wait.resolve true
-          # fire message
-          elzoidoMessages.send('success', 'Success!', 'Item ' + data.item.name + ' was successfully created.')
         , (error) ->
           wait.resolve true
           # fire message
-          elzoidoMessages.send('danger', 'Error!', 'Item on ' + item + ' encountered problem.')
+          elzoidoMessages.send('danger', 'Error!', 'Item ' + item.name + ' encountered problem.')
         )
-      , 500)
+      , 100)
     )
 
     # register promises into one queue
     elzoidoPromises.register('add-items', promises)
     # close dialog
     elzoidoPromises.promise('add-items').then ->
+      # fire message
+      elzoidoMessages.send('success', 'Success!', 'Items were successfully created.')
+      # close dialog
       waiting.close()

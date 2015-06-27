@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014 CAS / FAMU
+# Copyright (C) 2015 CAS / FAMU
 #
 # This file is part of narra-ui.
 #
@@ -19,10 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').run ($rootScope, $window, dialogs, serviceServer) ->
-  # Set up viewer mode
-  $rootScope.$on "$routeChangeStart", (event, next, current) ->
-    if next.templateUrl == "partials/viewer.html"
-      $rootScope.viewer = true
-    else
-      $rootScope.viewer = false
+angular.module('narra.ui').directive 'processing', ->
+  scope: true
+  link: (scope, element, attrs) ->
+    scope.$sketch = Processing.loadSketchFromSources(element[0], [attrs.processing])

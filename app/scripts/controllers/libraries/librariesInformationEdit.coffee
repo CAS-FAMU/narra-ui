@@ -58,10 +58,12 @@ angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $
       generators: _.pluck($scope.library.generators, 'identifier')
       contributors: _.pluck($scope.library.contributors, 'username')
     }, (data) ->
-      # close wait dialog
-      wait.close()
-      # fire message
-      elzoidoMessages.send('success', 'Success!', 'Library ' + data.library.name + ' was successfully saved.')
+      # update public metadata tag
+      apiLibrary.metadataUpdate { id: data.library.id, meta: 'shared', value: $scope.library.shared.toString() }, ->
+        # close wait dialog
+        wait.close(data.library)
+        # fire message
+        elzoidoMessages.send('success', 'Success!', 'Library ' + data.library.name + ' was successfully saved.')
     )
 
   $scope.validateName = (value) ->

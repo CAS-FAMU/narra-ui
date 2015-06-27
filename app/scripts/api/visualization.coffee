@@ -1,6 +1,5 @@
-<!--
 #
-# Copyright (C) 2015 CAS / FAMU
+# Copyright (C) 2014 CAS / FAMU
 #
 # This file is part of Narra Core.
 #
@@ -19,17 +18,32 @@
 #
 # Authors: Michal Mocnak <michal@marigan.net>
 #
--->
 
-<button class="btn btn-danger btn-xs navbar-btn dropdown-toggle" type="button" data-toggle="dropdown"
-        aria-expanded="false">
-    <span class="fa fa-plus"></span> Add New <span class="caret"></span>
-</button>
-<ul class="dropdown-menu" role="menu">
-    <li><a href="#" ng-click="addItem()">Add Item</a></li>
-    <li class="divider"></li>
-    <li><a href="#" ng-click="addLibrary()">Add Library</a></li>
-    <li><a href="#" ng-click="addProject()">Add Project</a></li>
-    <li><a href="#" ng-click="addSequence()">Add Sequence</a></li>
-    <li><a href="#" ng-click="addVisualization()">Add Visualization</a></li>
-</ul>
+
+angular.module('narra.ui').factory "apiVisualization", ($resource, serviceServer, serviceToken) ->
+  $resource serviceServer.url + "/v1/visualizations/:id/:action0",
+    token: serviceToken.get()
+  ,
+    all:
+      method: 'GET'
+
+    get:
+      method: 'GET'
+
+    new:
+      method: 'POST'
+      headers: {'Content-Type': undefined}
+      params:
+        action0: 'new'
+
+    delete:
+      method: 'GET'
+      params:
+        action0: 'delete'
+
+    update:
+      method: 'POST'
+      headers: {'Content-Type': undefined}
+      params:
+        id: '@id'
+        action0: 'update'

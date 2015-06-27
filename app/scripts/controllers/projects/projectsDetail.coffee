@@ -19,15 +19,18 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope, $document, $routeParams, $location, $filter, $q, dialogs, apiProject, apiUser, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope, $document, $routeParams, $location, $filter, $q, dialogs, apiProject, apiVisualization, apiUser, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
   $scope.refresh = ->
     # get current user
     $scope.user = elzoidoAuthUser.get()
     # get deffered
     project = $q.defer()
     sequences = $q.defer()
+    visualizations = $q.defer()
 
     apiProject.get {name: $routeParams.project}, (data) ->
+      _.forEach(data.project.visualizations, (visualization) ->
+        visualization.thumbnail = '/images/bars.png')
       _.forEach(data.project.libraries, (library) ->
         library.thumbnails = [] if _.isUndefined(library.thumbnails)
         while library.thumbnails.length < 5
@@ -42,8 +45,14 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
       $scope.sequences = data.sequences
       sequences.resolve true
 
+    apiVisualization.all (data) ->
+      $scope.visualizations = _.filter(data.visualizations, (visualization) ->
+        visualization.public && !_.contains(_.pluck($scope.project.visualizations, 'id'), visualization.id)
+      )
+      visualizations.resolve true
+
     # register promises into one queue
-    elzoidoPromises.register('project', [project.promise, sequences.promise])
+    elzoidoPromises.register('project', [project.promise, sequences.promise, visualizations.promise])
     # show wait dialog when the loading is taking long
     elzoidoPromises.wait('project', 'Loading project ...')
 
@@ -79,6 +88,20 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
   $scope.detailSequence = (sequence, index) ->
     $location.url('/sequences/' + sequence.id + '?project=' + $scope.project.name)
 
+  $scope.addVisualization = (visualization) ->
+    apiProject.visualizationsAction {name: $scope.project.name, action: 'add', visualizations: [visualization.id]}, ->
+      # send message
+      elzoidoMessages.send('success', 'Success!', 'Visualization ' + visualization.name + ' was successfully added.')
+      # refresh
+      $scope.refresh()
+
+  $scope.removeVisualization = (visualization) ->
+    apiProject.visualizationsAction {name: $scope.project.name, action: 'remove', visualizations: [visualization.id]}, ->
+      # send message
+      elzoidoMessages.send('success', 'Success!', 'Visualization ' + visualization.name + ' was successfully removed.')
+      # refresh
+      $scope.refresh()
+
   # refresh when new library is added
   $scope.$on 'event:narra-library-created', (event) ->
     if !_.isUndefined($routeParams.project)
@@ -88,10 +111,6 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
   $scope.$on 'event:narra-sequence-created', (event) ->
     if !_.isUndefined($routeParams.project)
       $scope.refresh()
-
-  $scope.$on 'event:narra-render-finished', ->
-    if !_.isEmpty($location.hash())
-      $document.duScrollToElement(document.getElementById($location.hash()))
 
   # refresh when new library is added
   $scope.$on 'event:narra-project-updated', (event, project) ->

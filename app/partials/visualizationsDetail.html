@@ -1,0 +1,99 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="bs-docs-header" id="content">
+    <div class="container">
+        <h1>{{visualization.name}}</h1>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+
+    <div class="row">
+        <div class="col-md-9" role="main">
+            <div class="bs-docs-section" id="information">
+                <h5 class="page-header">Visualization Information</h5>
+
+                <div class="well well-hover" ng-click="edit()">
+                    <dl class="dl-horizontal">
+                        <dt class="block-header">{{visualization.name}}</dt>
+                        <dd>
+                            <span ng-show="visualization.public" class="label label-success">public</span>
+                            <span ng-hide="visualization.public" class="label label-danger">private</span>
+                        </dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>type</dt>
+                        <dd>{{visualization.type}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>description</dt>
+                        <dd>{{visualization.description}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>author</dt>
+                        <dd>{{visualization.author.name}}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>type</dt>
+                        <dd>{{visualization.type}}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <tabset>
+                <tab heading="Editor">
+                    <div ng-if="ready" ui-ace="editorOption" ng-model="content"></div>
+                    <div class="pull-right" style="margin-top: 20px;">
+                        <button class="btn btn-danger" ng-click="save()">Save Script</button>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+
+        <div class="col-md-3">
+            <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollfix="+230">
+                <ul class="side-buttons">
+                    <li>
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="delete()"><span
+                                class="fa fa-remove"></span> Delete
+                        </button>
+                    </li>
+                    <li ng-hide="project">
+                        <a class="btn btn-default btn-xs" type="button" href="/visualizations"><span
+                                class="fa fa-angle-double-left"></span> Back To Visualizations</a>
+                    </li>
+                    <li ng-show="project">
+                        <a class="btn btn-default btn-xs" type="button" href="/projects/{{project}}#{{from}}"><span
+                                class="fa fa-angle-double-left"></span> Back To Project</a>
+                    </li>
+                    <li>
+                        <a class="btn btn-default btn-xs" type="button" href="#top"><span
+                                class="fa fa-angle-double-up"></span> Back To Top</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -24,48 +24,71 @@
 <div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Add new items</h4></div>
 <div class="modal-body">
     <form name="newItem" class="form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-2 control-label">URL</label>
+        <div ng-if="!second">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">URL</label>
 
-            <div class="col-sm-10">
-                <textarea name="url" ng-model="item.url" class="form-control"
-                          placeholder="Enter an url here" rows="10" required></textarea>
+                <div class="col-sm-10">
+                    <textarea name="url" ng-model="item.url" class="form-control"
+                              placeholder="Enter an url here" rows="10" required></textarea>
+                </div>
+            </div>
+
+            <div ng-show="newItem.url.$dirty && newItem.url.$error.required" class="col-md-offset-2">
+                <p class="text-danger left-buffer-10">
+                    <strong>Required!</strong>
+                    <small>URL is required.</small>
+                </p>
             </div>
         </div>
 
-        <div ng-show="newItem.url.$dirty && newItem.url.$error.required" class="col-md-offset-2">
-            <p class="text-danger left-buffer-10">
-                <strong>Required!</strong>
-                <small>URL is required.</small>
-            </p>
-        </div>
+        <div ng-if="second">
+            <div style="max-height: 400px; overflow-y: scroll; margin-bottom: 20px;">
+                <div ng-repeat="item in items">
+                    <div class="well well-sm">
+                        <div class="pull-left">
+                            <img src="{{item.thumbnail}}" style="height: 70px;">
+                        </div>
+                        <div style="margin-left: 120px;">
+                            <h4>{{item.name}}</h4>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Library</label>
-
-            <div class="col-sm-10">
-                <ui-select ng-model="item.library" required>
-                    <ui-select-match placeholder="Pick a library">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="library in libraries | filter:$select.search">{{library.name}}</ui-select-choices>
-                </ui-select>
+                            <p><span class="label label-danger">{{item.type}}</span> <span class="label label-danger">{{item.connector}}</span></p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Author</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Library</label>
 
-            <div class="col-sm-10">
-                <ui-select ng-model="item.author" required>
-                    <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}</ui-select-choices>
-                </ui-select>
+                <div class="col-sm-10">
+                    <ui-select ng-model="item.library" required>
+                        <ui-select-match placeholder="Pick a library">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="library in libraries | filter:$select.search">{{library.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Author</label>
+
+                <div class="col-sm-10">
+                    <ui-select ng-model="item.author" required>
+                        <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
             </div>
         </div>
     </form>
 </div>
 <div class="modal-footer">
     <span class="btn btn-default" ng-click="close()">Cancel</span>
-    <button class="btn btn-danger" ng-disabled="!newItem.$valid"
+    <span ng-if="!second" class="btn btn-danger" ng-click="next()" ng-disabled="!newItem.$valid">Next</span>
+    <span ng-if="second" class="btn btn-default" ng-click="back()">Back</span>
+    <button ng-if="second" class="btn btn-danger" ng-disabled="!newItem.$valid"
             ng-click="new()">Add Items
     </button>
 </div>

@@ -30,6 +30,11 @@ angular.module('narra.ui').factory "apiItem", ($resource, serviceServer, service
     get:
       method: 'GET'
 
+    check:
+      method: 'POST'
+      params:
+        action0: 'check'
+
     new:
       method: 'POST'
       params:

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014 CAS / FAMU
+# Copyright (C) 2015 CAS / FAMU
 #
 # This file is part of narra-ui.
 #
@@ -19,10 +19,13 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').run ($rootScope, $window, dialogs, serviceServer) ->
-  # Set up viewer mode
-  $rootScope.$on "$routeChangeStart", (event, next, current) ->
-    if next.templateUrl == "partials/viewer.html"
-      $rootScope.viewer = true
-    else
-      $rootScope.viewer = false
+angular.module('narra.ui').directive 'p5', (p5Factory) ->
+  scope: true
+  link: (scope, element) ->
+    factory = p5Factory()
+
+    scope.$watch 'sketch', (sketch) ->
+      factory.init(sketch, element[0])
+
+    scope.$on '$destroy', ->
+      factory.destroy()

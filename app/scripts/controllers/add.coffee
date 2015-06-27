@@ -51,3 +51,11 @@ angular.module('narra.ui').controller 'AddCtrl', ($scope, $rootScope, dialogs) -
     confirm.result.then (wait) ->
       wait.result.then ->
         $rootScope.$broadcast 'event:narra-sequence-created'
+
+  $scope.addVisualization = ->
+    confirm = dialogs.create('partials/visualizationsAdd.html', 'VisualizationsAddCtrl', {},
+      {size: 'lg', keyboard: false})
+    # result
+    confirm.result.then (wait) ->
+      wait.result.then ->
+        $rootScope.$broadcast 'event:narra-visualization-created'

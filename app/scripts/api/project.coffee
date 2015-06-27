@@ -46,6 +46,22 @@ angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serv
         name: '@name'
         action0: 'update'
 
+    items:
+      method: 'GET'
+      params:
+        action0: 'items'
+
+    junctions:
+      method: 'GET'
+      params:
+        action0: 'junctions'
+
+    junctionsItems:
+      method: 'GET'
+      params:
+       action0: 'junctions'
+       action1: 'items'
+
     sequences:
       method: 'GET'
       params:
@@ -85,3 +101,10 @@ angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serv
       params:
         action0: 'metadata'
         action1: 'delete'
+
+    visualizationsAction:
+      method: 'POST'
+      params:
+        name: '@name'
+        action0: 'visualizations'
+        action1: '@action'

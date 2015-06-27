@@ -36,6 +36,9 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
     items = $q.defer()
 
     apiLibrary.get {id: $routeParams.library}, (data) ->
+      data.library.metadata = _.filter(data.library.metadata, (meta) ->
+        !_.isEqual(meta.name, 'shared')
+      )
       $scope.library = data.library
       library.resolve true
     apiLibrary.items {id: $routeParams.library}, (data) ->

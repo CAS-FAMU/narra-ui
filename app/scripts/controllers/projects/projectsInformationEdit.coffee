@@ -61,7 +61,7 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
       contributors: _.pluck($scope.project.contributors, 'username')
     }, (data) ->
       # update public metadata tag
-      apiProject.metadataUpdate { name: data.project.name, meta: 'public', value: $scope.project.public }, ->
+      apiProject.metadataUpdate { name: data.project.name, meta: 'public', value: $scope.project.public.toString() }, ->
         # close wait dialog
         wait.close(data.project)
         # fire message

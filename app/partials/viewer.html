@@ -20,16 +20,10 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 -->
+<div ng-if="visualization.type == 'p5.js'">
+    <p5 sketch="sketch"></p5>
+</div>
 
-<button class="btn btn-danger btn-xs navbar-btn dropdown-toggle" type="button" data-toggle="dropdown"
-        aria-expanded="false">
-    <span class="fa fa-plus"></span> Add New <span class="caret"></span>
-</button>
-<ul class="dropdown-menu" role="menu">
-    <li><a href="#" ng-click="addItem()">Add Item</a></li>
-    <li class="divider"></li>
-    <li><a href="#" ng-click="addLibrary()">Add Library</a></li>
-    <li><a href="#" ng-click="addProject()">Add Project</a></li>
-    <li><a href="#" ng-click="addSequence()">Add Sequence</a></li>
-    <li><a href="#" ng-click="addVisualization()">Add Visualization</a></li>
-</ul>
+<div ng-if="visualization.type == 'processing' && ready">
+    <canvas processing="{{visualization.script}}"></canvas>
+</div>

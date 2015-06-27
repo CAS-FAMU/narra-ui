@@ -35,6 +35,12 @@ angular.module('narra.ui').config (elzoidoNavigationModule) ->
       access: 'admin,author'
       items: []},
     {
+      name: 'visualizations'
+      title: 'Visualizations'
+      url: '/visualizations'
+      access: 'admin,author'
+      items: []},
+    {
       name: 'system'
       title: 'System'
       access: 'admin'

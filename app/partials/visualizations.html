@@ -1,0 +1,77 @@
+<!--
+#
+# Copyright (C) 2015 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="bs-docs-header" id="content">
+    <div class="container">
+        <h1>Visualizations</h1>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+
+    <div class="row">
+        <div class="col-md-12" role="main">
+            <div class="bs-docs-section">
+                <h5 class="page-header">My Visualizations</h5>
+
+                <div ng-hide="myVisualizations.length > 0" class="col-md-12 dashboard-item-empty">You are not an author
+                    of any visualization.
+                </div>
+
+                <div class="row">
+                    <div ng-repeat="visualization in myVisualizations" class="col-sm-4">
+                        <div class="well well-hover" ng-click="detail(visualization)">
+                            <div class="background-cover"
+                                 style="background-image: url('{{visualization.thumbnail}}'); width: 100%; height: 150px;"></div>
+
+                            <h3 class="text-center">{{visualization.name}}</h3>
+                            <span ng-show="visualization.public" class="label label-stamp label-success">public</span>
+                            <span ng-hide="visualization.public" class="label label-stamp label-danger">private</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bs-docs-section" id="contributions-section">
+                <h5 class="page-header">Public Visualizations</h5>
+
+                <div ng-hide="publicVisualizations.length > 0" class="col-md-12 dashboard-item-empty">There are no
+                    public visualization.
+                </div>
+
+                <div class="row">
+                    <div ng-repeat="visualization in publicVisualizations" class="col-sm-4">
+                        <div class="well">
+                            <div class="background-cover"
+                                 style="background-image: url('{{visualization.thumbnail}}'); width: 100%; height: 150px;"></div>
+
+                            <h3 class="text-center">{{visualization.name}}</h3>
+                            <h5 class="text-center">by {{visualization.author.name}}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

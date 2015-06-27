@@ -37,7 +37,10 @@
                 <div class="well well-hover" ng-click="edit()">
                     <dl class="dl-horizontal">
                         <dt class="block-header">{{library.name}}</dt>
-                        <dd></dd>
+                        <dd>
+                            <span ng-show="library.shared" class="label label-success">shared</span>
+                            <span ng-hide="library.shared" class="label label-danger">private</span>
+                        </dd>
                     </dl>
                     <dl class="dl-horizontal">
                         <dt>description</dt>
@@ -64,49 +67,52 @@
                 </div>
             </div>
 
-            <div ng-show="library.metadata.length" class="bs-docs-section" id="meta">
-                <h5 class="page-header">Metadata</h5>
+            <tabset>
+                <tab heading="Items">
+                    <div ng-hide="items.length > 0" class="item-empty">This library doesn't contain any item.
+                    </div>
 
-                <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="library" narra-metadata-data="library"
-                     narra-metadata></div>
-            </div>
+                    <div class="tab-content">
+                        <div class="row">
+                            <div ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'"
+                                 class="col-sm-4"
+                                 id="items-{{$index}}" on-render-finished>
+                                <div ng-show="item.prepared" class="well well-hover" ng-click="detail(item, $index)"
+                                     ng-mouseover="startRotation(item)" ng-mouseleave="stopRotation(item)">
+                                    <div class="background-cover"
+                                         style="background-image: url('{{thumbnail[item.name]}}'); width: 100%; height: 150px;"></div>
 
-            <div class="bs-docs-section" id="items">
-                <h5 class="page-header">Items</h5>
+                                    <h3 class="libraries-item">{{item.name}}</h3>
+                                </div>
 
-                <div ng-hide="items.length > 0" class="dashboard-item-empty">This library doesn't contain any item.
-                </div>
+                                <div ng-hide="item.prepared" class="well">
+                                    <div class="background-cover"
+                                         style="background-image: url('/images/bars.png'); width: 100%; height: 150px; opacity: 0.9;">
+                                        <div class="text-center" style="padding-top: 50px;">
+                                            <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
 
-                <div ng-hide="filtered.length > 0 || items.length == 0" class="dashboard-item-empty">Any item meets you
-                    search criteria.
-                </div>
+                                            <p>PREPARING</p>
+                                        </div>
+                                    </div>
 
-                <div class="row">
-                    <div ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'" class="col-sm-4"
-                         id="items-{{$index}}" on-render-finished>
-                        <div ng-show="item.prepared" class="well well-hover" ng-click="detail(item, $index)"
-                             ng-mouseover="startRotation(item)" ng-mouseleave="stopRotation(item)">
-                            <div class="background-cover"
-                                 style="background-image: url('{{thumbnail[item.name]}}'); width: 100%; height: 150px;"></div>
-
-                            <h3 class="libraries-item">{{item.name}}</h3>
-                        </div>
-
-                        <div ng-hide="item.prepared" class="well">
-                            <div class="background-cover"
-                                 style="background-image: url('/images/bars.png'); width: 100%; height: 150px; opacity: 0.9;">
-                                <div class="text-center" style="padding-top: 50px;">
-                                    <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
-
-                                    <p>PREPARING</p>
+                                    <h3 class="libraries-item">{{item.name}}</h3>
                                 </div>
                             </div>
-
-                            <h3 class="libraries-item">{{item.name}}</h3>
                         </div>
                     </div>
-                </div>
-            </div>
+                </tab>
+                <tab heading="Metadata">
+                    <div ng-hide="library.metadata.length > 0" class="item-empty">This library doesn't contain
+                        any metadata.
+                    </div>
+                    <div class="tab-content">
+                        <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="library"
+                             narra-metadata-data="library"
+                             narra-metadata></div>
+                    </div>
+                </tab>
+
+            </tabset>
         </div>
 
         <div class="col-md-3">
@@ -115,24 +121,6 @@
                     <span class="input-group-addon"><span class="fa fa-search"></span></span>
                     <input type="text" class="form-control" ng-model="search" placeholder="Search">
                 </div>
-
-                <ul class="nav bs-docs-sidenav">
-                    <li du-scrollspy="information">
-                        <a href="#information" du-smooth-scroll>Library Information</a>
-                    </li>
-                    <li du-scrollspy="meta" ng-show="library.metadata.length">
-                        <a href="#meta" du-smooth-scroll>Metadata</a>
-                    </li>
-                    <li du-spy-context du-scrollspy="items">
-                        <a href="#items" du-smooth-scroll>Items</a>
-                        <ul class="nav">
-                            <li ng-repeat="item in filtered | orderBy:'name'" du-spy-context
-                                du-scrollspy="items-{{$index}}">
-                                <a href="#items-{{$index}}" du-smooth-scroll>{{item.name}}</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
 
                 <ul class="side-buttons">
                     <li>
