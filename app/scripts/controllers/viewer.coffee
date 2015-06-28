@@ -20,21 +20,27 @@
 #
 
 angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $window, $rootScope, $q, apiProject, elzoidoPromises, angularLoad) ->
-  # narra api for processing
+# narra api for processing
   $window.narra =
     width: $window.innerWidth - 5
     height: $window.innerHeight - 5
     getProject: ->
       $scope.project
-    getJunctions: (synthesizer) ->
-      $scope.junctions[synthesizer]
-    getItems: ->
-      $scope.items
+    getItems: (synthesizer, item) ->
+      if _.isUndefined(synthesizer)
+        $scope.items
+      else
+        _.reject(_.flatten(_.pluck(_.where($scope.junctions[synthesizer], {items: [{id: item}]}), 'items')), {id: item})
     getItem: (item) ->
-      _.find($scope.items, { id: item })
+      _.find($scope.items, {id: item})
+    getJunctions: (synthesizer, item) ->
+      if _.isUndefined(item)
+        $scope.junctions[synthesizer]
+      else
+        _.where($scope.junctions[synthesizer], {items: [{id: item}]})
 
   $scope.refresh = ->
-    # get deffered
+# get deffered
     project = $q.defer()
     junctions = $q.defer()
     items = $q.defer()
@@ -55,21 +61,23 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
       project.resolve true
 
     project.promise.then ->
-      # get junctions
+# get junctions
       _.forEach($scope.project.synthesizers, (synthesizer, index) ->
         apiProject.junctions {name: $routeParams.project, param: synthesizer.identifier}, (data) ->
           $scope.junctions[synthesizer.identifier] = data.junctions
-          if index+1 == $scope.project.synthesizers.length
+          if index + 1 == $scope.project.synthesizers.length
             junctions.resolve true
       )
 
     junctions.promise.then ->
-      # get all items used in junctions
-        apiProject.items {name: $routeParams.project}, (data) ->
-          $scope.items = data.items
-          items.resolve true
+# get all items used in junctions
+      apiProject.items {name: $routeParams.project}, (data) ->
+        $scope.items = data.items
+        items.resolve true
 
     items.promise.then ->
+      console.log()
+
       $scope.ready = true
       if ($scope.visualization.type == 'p5.js')
         angularLoad.loadScript($scope.visualization.script).then ->

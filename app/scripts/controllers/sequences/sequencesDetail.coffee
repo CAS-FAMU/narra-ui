@@ -50,7 +50,7 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
       $scope.sequence = data.sequence
       # set playlist
       _.forEach($scope.sequence.marks, (mark) ->
-        $scope.player.playlist.push({in: mark.in, out: mark.out, src: {src: $sce.trustAsResourceUrl(mark.clip.source), type: "video/webm"}})
+        $scope.player.playlist.push({in: mark.in, out: mark.out, src: {src: $sce.trustAsResourceUrl(mark.clip.source), type: "video/mp4"}})
       )
       # set first video
       $scope.player.sources = [$scope.player.playlist[0].src]

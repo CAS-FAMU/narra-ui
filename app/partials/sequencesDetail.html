@@ -82,7 +82,7 @@
                 </div>
 
                 <div class="row">
-                    <div ng-repeat="mark in filtered = (sequence.marks | filter:search) | orderBy:'name'"
+                    <div ng-repeat="mark in filtered = (sequence.marks | filter:search) | orderBy:'row'"
                          style="padding-left: 15px; padding-right: 15px;" on-render-finished>
 
                         <div class="well well-sm well-hover" ng-class="{'well-active': isActive($index)}"
