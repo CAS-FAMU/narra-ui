@@ -30,6 +30,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
       when 'item'
         # assign data
         $scope.item = $scope.data
+        $scope.connector = _.result(_.find($scope.item.metadata, { 'name': 'connector', 'generator': 'source' }), 'value')
         # temporary meta container
         meta = {}
         generators = []

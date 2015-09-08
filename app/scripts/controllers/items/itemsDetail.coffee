@@ -62,7 +62,7 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
       # get cuepoints
       $scope.cuepoints = _.reduce(data.item.metadata, (result, meta) ->
         if !_.isUndefined(meta.marks) && meta.marks.length > 0 && !_.isEqual(meta.generator,
-          'thumbnail') && !_.isEqual(meta.generator, 'transcoder') && !_.isEqual(meta.generator, 'att_speech')
+          'thumbnail') && !_.isEqual(meta.generator, 'transcoder')
           cuepoint = {
             timeLapse: {
               start: meta.marks[0].in

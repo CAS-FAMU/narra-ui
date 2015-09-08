@@ -37,7 +37,7 @@
                 <dd><span ng-show="isLink(entry.value)"><a href="{{entry.value}}"
                                                            target="_blank">{{entry.value}}</a></span><span
                         ng-hide="isLink(entry.value)">{{entry.value}}</span>
-                    <button ng-show="hover$index && generator.name != 'source'" class="btn btn-danger btn-xs"
+                    <button ng-show="hover$index && generator.name != 'source' && generator.name != connector" class="btn btn-danger btn-xs"
                             ng-click="edit(entry)">Edit
                     </button>
                     <span ng-repeat="mark in entry.marks" class="fa fa-bookmark bookmark-hover"

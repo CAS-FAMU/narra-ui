@@ -55,9 +55,11 @@ angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $
       $timeout(->
         apiItem.check({ url: item }, (data) ->
           # thumbnail check
-          data.item.thumbnail = '/images/bars.png' if _.isNull(data.item.thumbnail)
-          # push into the collection
-          $scope.items.push(data.item)
+          _.forEach(data.items, (x) ->
+            x.thumbnail = '/images/bars.png' if _.isNull(x.thumbnail)
+            # push into collection
+            $scope.items.push(x)
+          )
           # resolve
           wait.resolve true
         , (error) ->
@@ -103,6 +105,7 @@ angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $
             author: $scope.item.author.name
             library: $scope.item.library.id
             connector: item.connector
+            options: item[item.connector]
           }, (data) ->
           wait.resolve true
         , (error) ->

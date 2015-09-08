@@ -70,8 +70,12 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
 
     # result
     confirm.result.then ->
+      # open waiting
+      waiting = dialogs.wait('Please Wait', 'Deleting library and its items ...')
       # delete storage and its projects
       apiLibrary.delete {id: $scope.library.id}, ->
+        # close dialog
+        waiting.close()
         # send message
         elzoidoMessages.send('success', 'Success!', 'Library ' + $scope.library.name + ' was successfully deleted.')
         # redirect back to libraries
