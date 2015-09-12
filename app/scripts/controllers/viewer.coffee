@@ -85,8 +85,6 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
 
     # register promises into one queue
     elzoidoPromises.register('viewer', [project.promise, junctions.promise, items.promise])
-    # show wait dialog when the loading is taking long
-    elzoidoPromises.wait('viewer', 'Loading viewer ...')
 
   # initial data
   $scope.refresh()

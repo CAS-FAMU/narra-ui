@@ -21,42 +21,44 @@
 #
 -->
 
-<div class="bs-docs-header" id="content">
-    <div class="container">
-        <h1>{{item.name}}</h1>
-    </div>
-</div>
-
 <div class="container bs-docs-container">
 
     <div class="row">
         <div class="col-md-9" role="main">
-            <div ng-if="player.ready" class="videogular-container">
-                <videogular vg-player-ready="onPlayerReady($API)" vg-responsive="true" vg-cue-points="player.cuePoints">
-                    <vg-media vg-src="player.sources"
-                              vg-tracks="player.tracks" vg-preload="player.preload">
-                    </vg-media>
+            <div class="bs-docs-section" id="player">
+                <h5 class="page-header">{{item.name}}</h5>
 
-                    <vg-controls vg-autohide="player.autoHide" vg-autohide-time="player.autoHideTime">
-                        <vg-scrub-bar>
-                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                            <vg-scrub-bar-cue-points class="metadata" vg-cue-points="player.cuePoints.metadata"></vg-scrub-bar-cue-points>
-                        </vg-scrub-bar>
-                        <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
-                        <vg-volume>
-                            <vg-mute-button></vg-mute-button>
-                            <vg-volume-bar></vg-volume-bar>
-                        </vg-volume>
-                        <vg-fullscreen-button></vg-fullscreen-button>
-                    </vg-controls>
+                <div ng-if="player.ready" class="videogular-container">
+                    <videogular vg-player-ready="onPlayerReady($API)" vg-responsive="true"
+                                vg-cue-points="player.cuePoints">
+                        <vg-media vg-src="player.sources"
+                                  vg-tracks="player.tracks" vg-preload="player.preload">
+                        </vg-media>
 
-                    <vg-overlay-play></vg-overlay-play>
-                    <vg-buffering></vg-buffering>
+                        <vg-controls vg-autohide="player.autoHide" vg-autohide-time="player.autoHideTime">
+                            <vg-scrub-bar>
+                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                <vg-scrub-bar-cue-points class="metadata"
+                                                         vg-cue-points="player.cuePoints.metadata"></vg-scrub-bar-cue-points>
+                            </vg-scrub-bar>
+                            <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                            <vg-volume>
+                                <vg-mute-button></vg-mute-button>
+                                <vg-volume-bar></vg-volume-bar>
+                            </vg-volume>
+                            <vg-fullscreen-button></vg-fullscreen-button>
+                        </vg-controls>
 
-                    <div ng-show="live" class="my-logo-layer">
-                        <div class="alert alert-danger" role="alert"><strong>{{live.name}}</strong></br>{{live.value}}</div>
-                    </div>
-                </videogular>
+                        <vg-overlay-play></vg-overlay-play>
+                        <vg-buffering></vg-buffering>
+
+                        <div ng-show="live" class="my-logo-layer">
+                            <div class="alert alert-danger" role="alert"><strong>{{live.name}}</strong></br>
+                                {{live.value}}
+                            </div>
+                        </div>
+                    </videogular>
+                </div>
             </div>
 
             <div class="bs-docs-section" id="meta">
@@ -68,7 +70,7 @@
         </div>
 
         <div class="col-md-3">
-            <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollfix="+230">
+            <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollpoint="+230">
                 <div class="input-group input-group-sm" style="width: 200px;">
                     <span class="input-group-addon"><span class="fa fa-search"></span></span>
                     <input type="text" class="form-control" ng-model="search" placeholder="Search">
@@ -106,7 +108,8 @@
                                 class="fa fa-angle-double-left"></span> Back To Library</a>
                     </li>
                     <li ng-show="project">
-                        <a class="btn btn-default btn-xs" href="/libraries/{{library}}?project={{project}}&from={{fromPrevious}}#{{from}}"><span
+                        <a class="btn btn-default btn-xs"
+                           href="/libraries/{{library}}?project={{project}}&from={{fromPrevious}}#{{from}}"><span
                                 class="fa fa-angle-double-left"></span> Back To Library</a>
                     </li>
                     <li>

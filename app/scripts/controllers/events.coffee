@@ -35,7 +35,7 @@ angular.module('narra.ui').controller 'EventsCtrl', ($scope, $rootScope, $interv
     $scope.refreshInterval = $interval(->
       # reload data
       $scope.refresh()
-    , 5000)
+    , 10000)
 
   $scope.stopRefreshInterval = ->
     # don't start new refresh when it is already on
@@ -65,4 +65,6 @@ angular.module('narra.ui').controller 'EventsCtrl', ($scope, $rootScope, $interv
           $rootScope.$broadcast 'event:narra-item-updated', event.item.id
         if !_.isUndefined(event.project)
           $rootScope.$broadcast 'event:narra-project-updated', event.project.name
+        if !_.isUndefined(event.library)
+          $rootScope.$broadcast 'event:narra-library-purged', event.library.id
       )

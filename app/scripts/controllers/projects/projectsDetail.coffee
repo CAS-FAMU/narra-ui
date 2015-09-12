@@ -54,8 +54,6 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
 
     # register promises into one queue
     elzoidoPromises.register('project', [project.promise, sequences.promise, visualizations.promise])
-    # show wait dialog when the loading is taking long
-    elzoidoPromises.wait('project', 'Loading project ...')
 
   $scope.edit = ->
     confirm = dialogs.create('partials/projectsInformationEdit.html', 'ProjectsInformationEditCtrl',
@@ -107,6 +105,10 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
   $scope.$on 'event:narra-library-created', (event) ->
     if !_.isUndefined($routeParams.project)
       $scope.refresh()
+
+  # refresh when new library is added
+  $rootScope.$on 'event:narra-library-purged', (event, status) ->
+    $scope.refresh()
 
   # refresh when new sequence is added
   $scope.$on 'event:narra-sequence-created', (event) ->

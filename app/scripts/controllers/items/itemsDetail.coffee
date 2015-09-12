@@ -100,8 +100,6 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
 
     # register promises into one queue
     elzoidoPromises.register('item', [item.promise, library.promise])
-    # show wait dialog when the loading is taking long
-    elzoidoPromises.wait('item', 'Loading item ...')
 
   $scope.delete = ->
     # open confirmation dialog

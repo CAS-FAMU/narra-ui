@@ -56,8 +56,6 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
 
     # register promises into one queue
     elzoidoPromises.register('visualization', [visualization.promise])
-    # show wait dialog when the loading is taking long
-    elzoidoPromises.wait('visualization', 'Loading visualization ...')
 
   $scope.edit = ->
     confirm = dialogs.create('partials/visualizationsInformationEdit.html', 'VisualizationsInformationEditCtrl',

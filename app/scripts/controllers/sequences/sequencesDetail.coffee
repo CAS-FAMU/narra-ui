@@ -63,8 +63,6 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
 
     # register promises into one queue
     elzoidoPromises.register('sequence', [sequence.promise])
-    # show wait dialog when the loading is taking long
-    elzoidoPromises.wait('sequence', 'Loading sequence ...')
 
   $scope.onPlayerReady = (api) ->
     # set player's api

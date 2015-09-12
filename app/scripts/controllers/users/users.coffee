@@ -31,8 +31,6 @@ angular.module('narra.ui').controller 'UsersCtrl', ($scope, $rootScope, $q, $loc
       users.resolve true
     # register promises into one queue
     elzoidoPromises.register('users', users.promise)
-    # show wait dialog when the loading is taking long
-    elzoidoPromises.wait('users', 'Loading users ...')
 
   $scope.edit = (user) ->
     confirm = dialogs.create('partials/usersEdit.html', 'UsersEditCtrl', {user: user},

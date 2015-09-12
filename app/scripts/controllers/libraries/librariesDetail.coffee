@@ -50,8 +50,6 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
 
     # register promises into one queue
     elzoidoPromises.register('library', [library.promise, items.promise])
-    # show wait dialog when the loading is taking long
-    elzoidoPromises.wait('library', 'Loading library ...')
 
   $scope.edit = ->
     confirm = dialogs.create('partials/librariesInformationEdit.html', 'LibrariesInformationEditCtrl',
@@ -70,12 +68,8 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
 
     # result
     confirm.result.then ->
-      # open waiting
-      waiting = dialogs.wait('Please Wait', 'Deleting library and its items ...')
       # delete storage and its projects
       apiLibrary.delete {id: $scope.library.id}, ->
-        # close dialog
-        waiting.close()
         # send message
         elzoidoMessages.send('success', 'Success!', 'Library ' + $scope.library.name + ' was successfully deleted.')
         # redirect back to libraries

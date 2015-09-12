@@ -19,15 +19,15 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').factory 'serviceToken', ($location, $cookieStore) ->
+angular.module('narra.ui').factory 'serviceToken', ($location, $cookies) ->
   # resolve token from cookie
-  token = $cookieStore.get('_narra_ui_token')
+  token = $cookies.get('_narra_ui_token')
   # resolve token from the path or from cookie
   if !_.isUndefined($location.search().token)
     # resolve token from path
     token = $location.search().token
     # put token into cookie store
-    $cookieStore.put('_narra_ui_token', token)
+    $cookies.put('_narra_ui_token', token)
   # return functions
   get: ->
     # get token

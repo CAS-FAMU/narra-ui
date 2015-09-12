@@ -24,14 +24,11 @@ angular.module('narra.ui', [
   'ngResource',
   'ngSanitize',
   'ngCookies',
+  'ngAnimate',
   'ui.bootstrap',
   'ui.event',
   'ui.validate',
-  'ui.scrollfix',
-  'ui.grid',
-  'ui.grid.edit',
-  'ui.grid.cellNav',
-  'ui.grid.autoResize',
+  'ui.scrollpoint',
   'ui.select',
   'ui.ace',
   'dialogs.main',
@@ -50,5 +47,6 @@ angular.module('narra.ui', [
   'uiGmapgoogle-maps',
   'google.places',
   'angularFileUpload',
-  'angularLoad'
+  'angularLoad',
+  'angular-loading-bar'
 ])

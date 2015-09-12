@@ -21,16 +21,10 @@
 #
 -->
 
-<div class="bs-docs-header" id="content">
-    <div class="container">
-        <h1>Users</h1>
-    </div>
-</div>
-
 <div class="container bs-docs-container">
 
     <div class="row">
-        <div class="col-md-9" role="main">
+        <div class="col-md-12" role="main">
             <div class="bs-docs-section" id="users">
                 <h5 class="page-header">Users</h5>
 
@@ -38,7 +32,7 @@
                     criteria..
                 </div>
 
-                <div id="users-{{$index}}" ng-repeat="user in filtered = (users | filter:search) | orderBy:'name'"
+                <div ng-repeat="user in filtered = (users | filter:search) | orderBy:'name'"
                      class="well well-hover" ng-click="edit(user)">
                     <dl class="dl-horizontal">
                         <dt class="block-header">{{user.name}}</dt>
@@ -61,27 +55,5 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-3">
-            <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollfix="+230">
-                <div class="input-group input-group-sm" style="width: 200px;">
-                    <span class="input-group-addon"><span class="fa fa-search"></span></span>
-                    <input type="text" class="form-control" ng-model="search" placeholder="Search">
-                </div>
-                <ul class="nav bs-docs-sidenav">
-                    <li du-spy-context du-scrollspy="users">
-                        <a href="#users" du-smooth-scroll>Users</a>
-                        <ul class="nav">
-                            <li ng-repeat="user in filtered | orderBy:'name'" du-spy-context
-                                du-scrollspy="users-{{$index}}">
-                                <a href="#users-{{$index}}" du-smooth-scroll>{{user.name}}</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <a class="back-to-top" href="#top" du-smooth-scroll>Back to top</a>
-            </div>
-        </div>
-
     </div>
 </div>

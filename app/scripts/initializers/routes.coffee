@@ -61,8 +61,5 @@ angular.module('narra.ui').config ($routeProvider, $locationProvider) ->
   .when '/system/info',
     templateUrl: 'partials/info.html'
     controller: 'InfoCtrl'
-  .when '/system/settings',
-    templateUrl: 'partials/settings.html'
-    controller: 'SettingsCtrl'
   .otherwise
       redirectTo: '/'

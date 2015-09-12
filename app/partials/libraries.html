@@ -21,12 +21,6 @@
 #
 -->
 
-<div class="bs-docs-header" id="content">
-    <div class="container">
-        <h1>Libraries</h1>
-    </div>
-</div>
-
 <div class="container bs-docs-container">
 
     <div class="row">
@@ -40,12 +34,23 @@
 
                 <div class="row">
                     <div ng-repeat="library in libraries" class="col-sm-4">
-                        <div class="well well-hover" ng-click="detail(library)" ng-mouseover="startRotation(library)" ng-mouseleave="stopRotation(library)">
+                        <div ng-hide="library.purged" class="well well-hover" ng-click="detail(library)" ng-mouseover="startRotation(library)" ng-mouseleave="stopRotation(library)">
                             <div class="background-cover" style="background-image: url('{{thumbnail[library.name]}}'); width: 100%; height: 150px;"></div>
 
                             <h3 class="libraries-item">{{library.name}}</h3>
                             <span ng-show="library.shared" class="label label-stamp label-success">shared</span>
                             <span ng-hide="library.shared" class="label label-stamp label-danger">private</span>
+                        </div>
+
+                        <div ng-show="library.purged" class="well">
+                            <div class="background-cover" style="background-image: url('/images/bars.png'); width: 100%; height: 150px;">
+                                <div class="text-center" style="padding-top: 50px;">
+                                    <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
+
+                                    <p>PURGED</p>
+                                </div>
+                            </div>
+                            <h3 class="libraries-item">{{library.name}}</h3>
                         </div>
                     </div>
                 </div>

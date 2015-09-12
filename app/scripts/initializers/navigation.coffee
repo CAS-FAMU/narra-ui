@@ -55,11 +55,6 @@ angular.module('narra.ui').config (elzoidoNavigationModule) ->
           name: 'users'
           title: 'Users'
           url: '/users'
-        },
-        {
-          name: 'settings'
-          title: 'Settings'
-          url: '/system/settings'
         }
       ]}
   ]

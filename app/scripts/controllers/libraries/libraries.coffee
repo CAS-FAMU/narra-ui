@@ -44,8 +44,6 @@ angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $loc
 
     # register promises into one queue
     elzoidoPromises.register('libraries', [libraries.promise])
-    # show wait dialog when the loading is taking long
-    elzoidoPromises.wait('dashboard', 'Loading libraries ...')
 
   $scope.startRotation = (library) ->
     # don't start new refresh when it is already on
@@ -73,6 +71,10 @@ angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $loc
 
   # refresh when new library is added
   $rootScope.$on 'event:narra-library-created', (event, status) ->
+    $scope.refresh()
+
+  # refresh when new library is added
+  $rootScope.$on 'event:narra-library-purged', (event, status) ->
     $scope.refresh()
 
   # click function for detail view

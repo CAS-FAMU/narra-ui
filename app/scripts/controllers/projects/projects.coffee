@@ -39,8 +39,6 @@ angular.module('narra.ui').controller 'ProjectsCtrl', ($scope, $rootScope, $loca
 
     # register promises into one queue
     elzoidoPromises.register('dashboard', [projects.promise])
-    # show wait dialog when the loading is taking long
-    elzoidoPromises.wait('dashboard', 'Loading projects ...')
 
   # click functionfor detail view
   $scope.detailProject = (project) ->
