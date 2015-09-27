@@ -21,7 +21,7 @@
 
 
 angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serviceToken) ->
-  $resource serviceServer.url + "/v1/projects/:name/:action0/:param/:action1",
+  $resource serviceServer.url + "/v1/projects/:action0/:name/:action1/:param/:action2",
     token: serviceToken.get()
   ,
     all:
@@ -33,78 +33,83 @@ angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serv
     new:
       method: 'POST'
       params:
-        action0: 'new'
+        action1: 'new'
 
     delete:
       method: 'GET'
       params:
-        action0: 'delete'
+        action1: 'delete'
+
+    validate:
+      method: 'POST'
+      params:
+        action0: 'validate'
 
     update:
       method: 'POST'
       params:
         name: '@name'
-        action0: 'update'
+        action1: 'update'
 
     items:
       method: 'GET'
       params:
-        action0: 'items'
+        action1: 'items'
 
     junctions:
       method: 'GET'
       params:
-        action0: 'junctions'
+        action1: 'junctions'
 
     junctionsItems:
       method: 'GET'
       params:
-       action0: 'junctions'
-       action1: 'items'
+       action1: 'junctions'
+       action2: 'items'
 
     sequences:
       method: 'GET'
       params:
-        action0: 'sequences'
+        action1: 'sequences'
 
     sequencesNew:
       method: 'POST'
       headers: {'Content-Type': undefined}
       params:
         name: '@name'
-        action0: 'sequences'
-        action1: 'new'
+        action1: 'sequences'
+        action2: 'new'
 
     sequencesDelete:
       method: 'GET'
       params:
-        action0: 'sequences'
-        action1: 'delete'
+        action1: 'sequences'
+        action2: 'delete'
 
     metadataNew:
       method: 'POST'
       params:
         name: '@name'
-        action0: 'metadata'
-        action1: 'new'
+        action1: 'metadata'
+        action2: 'new'
 
     metadataUpdate:
       method: 'POST'
       params:
         name: '@name'
         param: '@meta'
-        action0: 'metadata'
-        action1: 'update'
+        action1: 'metadata'
+        action2: 'update'
 
     metadataDelete:
       method: 'GET'
       params:
-        action0: 'metadata'
-        action1: 'delete'
+        action1: 'metadata'
+        action2: 'delete'
 
     visualizationsAction:
       method: 'POST'
       params:
         name: '@name'
-        action0: 'visualizations'
-        action1: '@action'
+        action1: 'visualizations'
+        action2: '@action'

@@ -27,10 +27,6 @@ angular.module('narra.ui').controller 'ProjectsCtrl', ($scope, $rootScope, $loca
     projects = $q.defer()
 
     apiProject.all (data) ->
-      _.forEach(data.projects, (project) ->
-        project.thumbnails = [] if _.isUndefined(project.thumbnails)
-        while project.thumbnails.length < 5
-          project.thumbnails.push('/images/bars.png'))
       $scope.projects = _.filter(data.projects, (project) ->
         _.isEqual(project.author.username, $scope.user.username))
       $scope.contributions = _.filter(data.projects, (project) ->

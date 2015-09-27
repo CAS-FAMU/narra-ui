@@ -21,7 +21,7 @@
 
 angular.module('narra.ui').controller 'EventsCtrl', ($scope, $rootScope, $interval, dialogs, apiEvent, elzoidoAuthUser) ->
   $scope.refresh = ->
-    apiEvent.user {param: elzoidoAuthUser.get().username}, (data) ->
+    apiEvent.me {}, (data) ->
       _.forEach(data.events, (event) ->
         event.progress = Math.floor(event.progress * 100))
       $scope.events = data.events

@@ -19,15 +19,12 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-
-angular.module('narra.ui').factory "apiEvent", ($resource, serviceServer, serviceToken) ->
-  $resource serviceServer.url + "/v1/events/:scope",
-    token: serviceToken.get()
-  ,
-    all:
-      method: 'GET'
-
-    me:
-      method: 'GET'
-      params:
-        scope: 'me'
+angular.module('narra.ui').factory 'serviceThumbnail', (serviceServer) ->
+  getThumbnail = (type) ->
+    serviceServer.url + '/images/item_' + type + '.png'
+  thumbnail: (type) ->
+    getThumbnail(type)
+  text: getThumbnail('text')
+  video: getThumbnail('video')
+  audio: getThumbnail('audio')
+  image: getThumbnail('image')

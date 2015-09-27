@@ -32,9 +32,6 @@ angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $loc
 
     apiLibrary.all (data) ->
       _.forEach(data.libraries, (library) ->
-        library.thumbnails = [] if _.isUndefined(library.thumbnails)
-        while library.thumbnails.length < 5
-          library.thumbnails.push('/images/bars.png')
         $scope.thumbnail[library.name] = library.thumbnails[0])
       $scope.libraries = _.filter(data.libraries, (library) ->
         _.isEqual(library.author.username, $scope.user.username))

@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $timeout, $filter, $modalInstance, dialogs, apiItem, apiLibrary, apiUser, elzoidoMessages, elzoidoAuthUser, elzoidoPromises) ->
+angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $timeout, $filter, $modalInstance, dialogs, apiItem, apiLibrary, apiUser, elzoidoMessages, elzoidoAuthUser, elzoidoPromises, serviceThumbnail) ->
   $scope.user = elzoidoAuthUser.get()
   $scope.item = {url: '', library: '', author: $scope.user}
 
@@ -56,7 +56,7 @@ angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $
         apiItem.check({ url: item }, (data) ->
           # thumbnail check
           _.forEach(data.items, (x) ->
-            x.thumbnail = '/images/bars.png' if _.isNull(x.thumbnail)
+            x.thumbnail = serviceThumbnail.thumbnail(x.type) if _.isNull(x.thumbnail)
             # push into collection
             $scope.items.push(x)
           )
@@ -75,7 +75,7 @@ angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $
       # close
       waiting.close()
       # and setup for the next slide
-      $scope.second = true
+      $scope.second = true if !_.isEmpty($scope.items)
 
   # back action
   $scope.back = ->

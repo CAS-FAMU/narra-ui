@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'LibrariesAddCtrl', ($scope, $filter, $modalInstance, dialogs, apiLibrary, apiProject, apiUser, apiGenerator, elzoidoMessages, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'LibrariesAddCtrl', ($q, $scope, $filter, $modalInstance, dialogs, apiLibrary, apiProject, apiUser, apiGenerator, elzoidoMessages, elzoidoAuthUser) ->
   $scope.user = elzoidoAuthUser.get()
   $scope.library = { name: '', description: '', author: $scope.user, contributors: [], generators: [], project: '' }
 
@@ -69,4 +69,10 @@ angular.module('narra.ui').controller 'LibrariesAddCtrl', ($scope, $filter, $mod
     )
 
   $scope.validateName = (value) ->
-    !_.contains(_.pluck($scope.libraries, 'name'),  value)
+# get deffered object
+    validation = $q.defer()
+    # validate
+    apiLibrary.validate {name: value}, (data) ->
+      if data.validation then validation.resolve() else validation.reject()
+    # promise
+    validation.promise

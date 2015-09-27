@@ -38,6 +38,25 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
     cuePoints: {}
     plugins: {}
 
+  $scope.editorOption =
+    theme: 'kuroir',
+    require: ['ace/ext/language_tools', 'ace/ext/static_highlight', 'ace/ext/error_marker', 'ace/ext/searchbox'],
+    useWrapMode: true,
+    showGutter: false,
+    advanced: {
+      enableSnippets: true,
+      enableBasicAutocompletion: true,
+      enableLiveAutocompletion: true
+    },
+    onLoad: (editor) ->
+      # read only
+      editor.setReadOnly(true)
+      # get session
+      session = editor.getSession()
+      # resolve mode
+      session.setMode('ace/mode/text')
+
+
   # refresh data
   $scope.refresh = ->
     # get current user
@@ -53,48 +72,55 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
 
     # get item
     apiItem.get {id: $routeParams.item}, (data) ->
-      # set video
-      $scope.player.sources = [{src: $sce.trustAsResourceUrl(data.item.video_proxy_hq), type: "video/webm"}]
-      # get duration
-      $scope.duration = _.where(data.item.metadata, {name: 'duration'})[0].value
+      switch(data.item.type)
+        when 'video'
+          # set video
+          $scope.player.sources = [{src: $sce.trustAsResourceUrl(data.item.video_proxy_hq), type: "video/webm"}]
+          # get duration
+          $scope.duration = _.where(data.item.metadata, {name: 'duration'})[0].value
+          # get cuepoints
+          $scope.cuepoints = _.reduce(data.item.metadata, (result, meta) ->
+            if !_.isUndefined(meta.marks) && meta.marks.length > 0 && !_.isEqual(meta.generator,
+              'thumbnail') && !_.isEqual(meta.generator, 'transcoder')
+              cuepoint = {
+                timeLapse: {
+                  start: meta.marks[0].in
+                }
+                onUpdate: () ->
+                  $scope.active = true
+                  $scope.live = meta
+                onComplete: () ->
+                  $scope.active = false
+                  $timeout ->
+                    if !$scope.active
+                      $scope.live = undefined
+                  , 2000
+              }
+              if !_.isUndefined(meta.marks[0].out)
+                cuepoint.timeLapse.end = meta.marks[0].out
+              else
+                cuepoint.timeLapse.end = meta.marks[0].in + 0.3
+              result.push(cuepoint)
+            return result
+          , [])
+          # set up cuepoint
+          $scope.player.cuePoints = {
+            metadata: $scope.cuepoints
+          }
+          $scope.player.ready = true
+        when 'text'
+          $scope.text = _.where(data.item.metadata, {name: 'text'})[0].value
+          data.item.metadata = _.filter(data.item.metadata, (meta) ->
+            !_.isEqual(meta.name, 'text')
+          )
       # assign
       $scope.item = data.item
-      # get cuepoints
-      $scope.cuepoints = _.reduce(data.item.metadata, (result, meta) ->
-        if !_.isUndefined(meta.marks) && meta.marks.length > 0 && !_.isEqual(meta.generator,
-          'thumbnail') && !_.isEqual(meta.generator, 'transcoder')
-          cuepoint = {
-            timeLapse: {
-              start: meta.marks[0].in
-            }
-            onUpdate: () ->
-              $scope.active = true
-              $scope.live = meta
-            onComplete: () ->
-              $scope.active = false
-              $timeout ->
-                if !$scope.active
-                  $scope.live = undefined
-              , 2000
-          }
-          if !_.isUndefined(meta.marks[0].out)
-            cuepoint.timeLapse.end = meta.marks[0].out
-          else
-            cuepoint.timeLapse.end = meta.marks[0].in + 0.3
-          result.push(cuepoint)
-        return result
-      , [])
       # item's used generators
       generators = _.uniq(_.pluck($scope.item.metadata, 'generator'))
       # resolve metadata providers
       $scope.metadataProviders = _.filter(constantMetadata.providers, (provider) ->
         !_.include(generators, provider.id) || _.isEqual(provider.id, 'user_custom')
       )
-      # set up cuepoint
-      $scope.player.cuePoints = {
-        metadata: $scope.cuepoints
-      }
-      $scope.player.ready = true
       # resolve
       item.resolve true
 

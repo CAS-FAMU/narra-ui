@@ -31,10 +31,6 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
     apiProject.get {name: $routeParams.project}, (data) ->
       _.forEach(data.project.visualizations, (visualization) ->
         visualization.thumbnail = '/images/bars.png')
-      _.forEach(data.project.libraries, (library) ->
-        library.thumbnails = [] if _.isUndefined(library.thumbnails)
-        while library.thumbnails.length < 5
-          library.thumbnails.push('/images/bars.png'))
       data.project.metadata = _.filter(data.project.metadata, (meta) ->
         !_.isEqual(meta.name, 'public')
       )

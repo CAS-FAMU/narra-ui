@@ -40,6 +40,11 @@ angular.module('narra.ui').factory "apiLibrary", ($resource, serviceServer, serv
       params:
         action0: 'delete'
 
+    validate:
+      method: 'POST'
+      params:
+        action0: 'validate'
+
     items:
       method: 'GET'
       params:

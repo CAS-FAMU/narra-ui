@@ -19,9 +19,9 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ProjectsAddCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiUser, elzoidoMessages, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'ProjectsAddCtrl', ($q, $scope, $filter, $modalInstance, dialogs, apiProject, apiUser, elzoidoMessages, elzoidoAuthUser) ->
   $scope.user = elzoidoAuthUser.get()
-  $scope.project = { name: '', title: '', author: $scope.user, description: '', contributors: [] }
+  $scope.project = {name: '', title: '', author: $scope.user, description: '', contributors: []}
 
   apiProject.all (data) ->
     $scope.projects = data.projects
@@ -50,20 +50,32 @@ angular.module('narra.ui').controller 'ProjectsAddCtrl', ($scope, $filter, $moda
     project_name = $filter('projectname')($scope.project.name)
 
     apiProject.new({
-      name: project_name
-      title: $scope.project.title
-      author: $scope.project.author.username
-      description: $scope.project.description
-      contributors: _.pluck($scope.project.contributors, 'username')
-    }, (data) ->
-      # close wait dialog
-      wait.close(data.project.name)
-      # fire message
-      elzoidoMessages.send('success', 'Success!', 'Project ' + data.project.title + ' was successfully created.')
+        name: project_name
+        title: $scope.project.title
+        author: $scope.project.author.username
+        description: $scope.project.description
+        contributors: _.pluck($scope.project.contributors, 'username')
+      }, (data) ->
+        # close wait dialog
+        wait.close(data.project.name)
+        # fire message
+        elzoidoMessages.send('success', 'Success!', 'Project ' + data.project.title + ' was successfully created.')
     )
 
   $scope.validateName = (value) ->
-    !_.contains(_.pluck($scope.projects, 'name'),  $filter('projectname')(value))
+    # get deffered object
+    validation = $q.defer()
+    # validate
+    apiProject.validate {name: $filter('projectname')(value)}, (data) ->
+      if data.validation then validation.resolve() else validation.reject()
+    # promise
+    validation.promise
 
   $scope.validateTitle = (value) ->
-    !_.contains(_.pluck($scope.projects, 'title'),  value)
+    # get deffered object
+    validation = $q.defer()
+    # validate
+    apiProject.validate {title: value}, (data) ->
+      if data.validation then validation.resolve() else validation.reject()
+    # promise
+    validation.promise

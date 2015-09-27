@@ -43,7 +43,6 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
       library.resolve true
     apiLibrary.items {id: $routeParams.library}, (data) ->
       _.forEach(data.items, (item) ->
-        item.thumbnails = ['/images/bars.png'] if _.isUndefined(item.thumbnails)
         $scope.thumbnail[item.name] = item.thumbnails[0])
       $scope.items = data.items
       items.resolve true
