@@ -23,6 +23,7 @@ angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $
   $scope.user = elzoidoAuthUser.get()
   $scope.library = data.library
   $scope.initial = angular.copy(data.library)
+  $scope.contributor = {}
 
   apiLibrary.all (data) ->
     $scope.libraries = data.libraries
@@ -32,11 +33,46 @@ angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $
     $scope.users = data.users
     $scope.filter()
   apiGenerator.all (data) ->
+    # select first generator and activate
+    if !_.isEmpty($scope.library.generators)
+      # assign first as a selected
+      $scope.generator = $scope.project.generators[0]
+      # activate
+      _.forEach(data.generators, (generator) ->
+        generator.active = _.include(_.pluck($scope.project.generators, 'identifier'), generator.identifier)
+      )
+    # prepare data for session
     $scope.generators = data.generators
+
+  $scope.select = (generator) ->
+    if generator.active
+      $scope.generator = generator
+
+  $scope.activate = (generator) ->
+    if generator.active
+      $scope.generator = generator
+    else
+      $scope.generator = null
+
+  $scope.addContribution = (user) ->
+    $scope.library.contributors.push(user)
+    $scope.contributor.selected = undefined
+    # refresh
+    $scope.filter()
+
+  $scope.removeContribution = (user) ->
+    _.pull($scope.library.contributors, user)
+    # refresh
+    $scope.filter()
+
+  $scope.isSelected = (generator) ->
+    if $scope.generator
+      $scope.generator.identifier == generator.identifier
 
   $scope.filter = ->
     $scope.contributors = _.filter($scope.users, (user) ->
-      !_.isEqual($scope.library.author.username, user.username)
+      !_.isEqual($scope.library.author.username, user.username) && !_.include(_.pluck($scope.library.contributors,
+        'username'), user.username)
     )
 
   $scope.close = ->

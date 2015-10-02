@@ -24,79 +24,133 @@
 <div class="modal-header"><h4 class="modal-title"><span class="fa fa-edit"></span> {{initial.name}}</h4></div>
 <div class="modal-body">
     <form name="editLibrary" class="form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Name</label>
+        <tabset>
+            <tab heading="General">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Name</label>
 
-            <div class="col-sm-10">
-                <input name="name" ng-model="library.name" class="form-control" ng-trim="false"
-                       ui-validate="{exists: 'validateName($value)' }"
-                       type="text" placeholder="Enter a name here" required/>
-            </div>
-        </div>
+                    <div class="col-sm-10">
+                        <input name="name" ng-model="library.name" class="form-control" ng-trim="false"
+                               ui-validate="{exists: 'validateName($value)' }"
+                               type="text" placeholder="Enter a name here" required/>
+                    </div>
+                </div>
 
-        <div ng-show="editLibrary.name.$error.exists" class="col-md-offset-2">
-            <p class="text-danger left-buffer-10">
-                <strong>Already exists!</strong>
-                <small>Library already exists.</small>
-            </p>
-        </div>
+                <div ng-show="editLibrary.name.$error.exists" class="col-md-offset-2">
+                    <p class="text-danger left-buffer-10">
+                        <strong>Already exists!</strong>
+                        <small>Library already exists.</small>
+                    </p>
+                </div>
 
-        <div ng-show="editLibrary.name.$dirty && editLibrary.name.$error.required" class="col-md-offset-2">
-            <p class="text-danger left-buffer-10">
-                <strong>Required!</strong>
-                <small>Library name is required.</small>
-            </p>
-        </div>
+                <div ng-show="editLibrary.name.$dirty && editLibrary.name.$error.required" class="col-md-offset-2">
+                    <p class="text-danger left-buffer-10">
+                        <strong>Required!</strong>
+                        <small>Library name is required.</small>
+                    </p>
+                </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Description</label>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Description</label>
 
-            <div class="col-sm-10">
+                    <div class="col-sm-10">
                 <textarea name="description" ng-model="library.description" class="form-control"
                           placeholder="Enter a description here" rows="5"></textarea>
-            </div>
-        </div>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Author</label>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Author</label>
 
-            <div class="col-sm-10">
-                <ui-select ng-model="library.author" ng-disabled="!user.isAdmin()" ng-change="filter()" required>
-                    <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}</ui-select-choices>
-                </ui-select>
-            </div>
-        </div>
+                    <div class="col-sm-10">
+                        <ui-select ng-model="library.author" ng-disabled="!user.isAdmin()" ng-change="filter()"
+                                   required>
+                            <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Shared</label>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Shared</label>
 
-            <div class="col-sm-10">
-                <input type="checkbox" ng-model="library.shared"><span class="text-muted" style="margin-left: 10px;">Turn this library into the shared mode</span>
-            </div>
-        </div>
+                    <div class="col-sm-10">
+                        <input type="checkbox" ng-model="library.shared"><span class="text-muted"
+                                                                               style="margin-left: 10px;">Turn this library into the shared mode</span>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Contributors</label>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Contributors</label>
 
-            <div class="col-sm-10">
-                <ui-select multiple ng-model="library.contributors" style="width: 100%;">
-                    <ui-select-match placeholder="Select contributors">{{$item.name}}</ui-select-match>
-                    <ui-select-choices repeat="user in contributors | filter:$select.search">{{user.name}}</ui-select-choices>
-                </ui-select>
-            </div>
-        </div>
+                    <div class="col-sm-10">
+                        <ui-select multiple ng-model="library.contributors" style="width: 100%;">
+                            <ui-select-match placeholder="Select contributors">{{$item.name}}</ui-select-match>
+                            <ui-select-choices repeat="user in contributors | filter:$select.search">{{user.name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="Contributors">
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <ui-select ng-model="contributor.selected"
+                                   theme="bootstrap"
+                                   reset-search-input="true"
+                                   on-select="addContribution($select.selected)"
+                                   style="width: 300px;">
+                            <ui-select-match placeholder="Select a contributor...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="contributor in contributors"
+                                               refresh-delay="0">
+                                <div ng-bind-html="contributor.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Generators</label>
-
-            <div class="col-sm-10">
-                <ui-select multiple ng-model="library.generators" style="width: 100%;">
-                    <ui-select-match placeholder="Select generators">{{$item.title}}</ui-select-match>
-                    <ui-select-choices repeat="generator in generators | filter:$select.search">{{generator.title}}</ui-select-choices>
-                </ui-select>
-            </div>
-        </div>
+                    <div class="col-sm-7">
+                        <div class="well" style="max-height: 300px; overflow: auto;">
+                            <div ng-show="library.contributors.length == 0" style="text-align: center; color: grey;">Select
+                                a user you would like to be a part of the project.
+                            </div>
+                            <div ng-hide="library.contributors.length == 0">
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="contributor in library.contributors">
+                                        {{contributor.name}} <span class="fa fa-times pull-right pointer-hand" ng-click="removeContribution(contributor)"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="Generators">
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <div class="well" style="max-height: 300px; overflow: auto;">
+                            <ul class="list-group">
+                                <li class="list-group-item"
+                                    ng-class="{'plugin-selected': isSelected(s), 'pointer-hand': s.active}"
+                                    ng-repeat="g in generators"
+                                    ng-click="select(g)">
+                                    <input type="checkbox" ng-model="g.active" ng-change="activate(g)"> {{g.title}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="well" style="max-height: 300px; overflow: auto;">
+                            <div ng-if="!generator" style="text-align: center; color: grey;">Select generator you
+                                would like to set up.
+                            </div>
+                            <div ng-if="generator"
+                                 ng-include="'partials/generators/' + generator.identifier + '.html'"></div>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
     </form>
 </div>
 <div class="modal-footer">

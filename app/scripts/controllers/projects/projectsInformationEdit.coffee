@@ -23,6 +23,7 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
   $scope.user = elzoidoAuthUser.get()
   $scope.project = data.project
   $scope.initial = angular.copy(data.project)
+  $scope.contributor = {}
 
   apiProject.all (data) ->
     $scope.projects = data.projects
@@ -30,11 +31,46 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
     $scope.users = data.users
     $scope.filter()
   apiSynthesizers.all (data) ->
+    # select first synthesizer and activate
+    if !_.isEmpty($scope.project.synthesizers)
+      # assign first as a selected
+      $scope.synthesizer = $scope.project.synthesizers[0]
+      # activate
+      _.forEach(data.synthesizers, (synthesizer) ->
+        synthesizer.active = _.include(_.pluck($scope.project.synthesizers, 'identifier'), synthesizer.identifier)
+      )
+    # prepare data for session
     $scope.synthesizers = data.synthesizers
+
+  $scope.select = (synthesizer) ->
+    if synthesizer.active
+      $scope.synthesizer = synthesizer
+
+  $scope.activate = (synthesizer) ->
+    if synthesizer.active
+      $scope.synthesizer = synthesizer
+    else
+      $scope.synthesizer = null
+
+  $scope.addContribution = (user) ->
+    $scope.project.contributors.push(user)
+    $scope.contributor.selected = undefined
+    # refresh
+    $scope.filter()
+
+  $scope.removeContribution = (user) ->
+    _.pull($scope.project.contributors, user)
+    # refresh
+    $scope.filter()
+
+  $scope.isSelected = (synthesizer) ->
+    if $scope.synthesizer
+      $scope.synthesizer.identifier == synthesizer.identifier
 
   $scope.filter = ->
     $scope.contributors = _.filter($scope.users, (user) ->
-      !_.isEqual($scope.project.author.username, user.username)
+      !_.isEqual($scope.project.author.username, user.username) && !_.include(_.pluck($scope.project.contributors,
+        'username'), user.username)
     )
 
   $scope.close = ->
@@ -42,7 +78,7 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
 
   # save action
   $scope.edit = ->
-    # open waiting
+# open waiting
     wait = dialogs.wait('Please Wait', 'Saving project ...')
 
     # close dialog
@@ -51,25 +87,31 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
     # append date suffix
     project_name = $filter('projectname')($scope.project.name)
 
+    # process synthesizers
+    $scope.project.synthesizers = _.filter($scope.synthesizers, (synthesizer) ->
+      synthesizer.active
+    )
+
     apiProject.update({
-      name: $scope.initial.name
-      new_name: project_name
-      title: $scope.project.title
-      author: $scope.project.author.username
-      description: $scope.project.description
-      synthesizers: _.pluck($scope.project.synthesizers, 'identifier')
-      contributors: _.pluck($scope.project.contributors, 'username')
-    }, (data) ->
-      # update public metadata tag
-      apiProject.metadataUpdate { name: data.project.name, meta: 'public', value: $scope.project.public.toString() }, ->
-        # close wait dialog
+        name: $scope.initial.name
+        new_name: project_name
+        title: $scope.project.title
+        author: $scope.project.author.username
+        description: $scope.project.description
+        synthesizers: _.pluck($scope.project.synthesizers, 'identifier')
+        contributors: _.pluck($scope.project.contributors, 'username')
+      }, (data) ->
+# update public metadata tag
+      apiProject.metadataUpdate {name: data.project.name, meta: 'public', value: $scope.project.public.toString()}, ->
+# close wait dialog
         wait.close(data.project)
         # fire message
         elzoidoMessages.send('success', 'Success!', 'Project ' + data.project.title + ' was successfully saved.')
     )
 
   $scope.validateName = (value) ->
-    !(_.contains(_.pluck($scope.projects, 'name'),  $filter('projectname')(value)) && !_.isEqual(value, $scope.initial.name))
+    !(_.contains(_.pluck($scope.projects, 'name'), $filter('projectname')(value)) && !_.isEqual(value,
+      $scope.initial.name))
 
   $scope.validateTitle = (value) ->
-    !(_.contains(_.pluck($scope.projects, 'title'),  value) && !_.isEqual(value, $scope.initial.title))
+    !(_.contains(_.pluck($scope.projects, 'title'), value) && !_.isEqual(value, $scope.initial.title))
