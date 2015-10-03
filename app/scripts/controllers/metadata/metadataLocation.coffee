@@ -32,6 +32,7 @@ angular.module('narra.ui').controller 'MetadataLocationCtrl', ($scope, $modalIns
     $modalInstance.dismiss('canceled')
 
   $scope.add = ->
+    console.log($scope.meta.value)
     # process meta if it is a google object
     if !_.isUndefined($scope.meta.value.formatted_address)
       $scope.meta.value = $scope.meta.value.formatted_address

@@ -32,26 +32,27 @@
                     library.
                 </div>
 
-                <div class="row">
-                    <div ng-repeat="library in libraries" class="col-sm-4">
-                        <div ng-hide="library.purged" class="well well-hover" ng-click="detail(library)" ng-mouseover="startRotation(library)" ng-mouseleave="stopRotation(library)">
-                            <div class="background-cover" style="background-image: url('{{thumbnail[library.name]}}'); width: 100%; height: 150px;"></div>
-
-                            <h3 class="libraries-item">{{library.name}}</h3>
-                            <span ng-show="library.shared" class="label label-stamp label-success">shared</span>
-                            <span ng-hide="library.shared" class="label label-stamp label-danger">private</span>
-                        </div>
-
-                        <div ng-show="library.purged" class="well">
-                            <div class="background-cover" style="background-image: url('/images/bars.png'); width: 100%; height: 150px;">
-                                <div class="text-center" style="padding-top: 50px;">
-                                    <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
-
-                                    <p>PURGED</p>
-                                </div>
-                            </div>
-                            <h3 class="libraries-item">{{library.name}}</h3>
-                        </div>
+                <div class="tab-content">
+                    <div ng-repeat="library in libraries | orderBy:'name'"
+                         class="well well-hover" ng-click="detail(library)">
+                        <div ng-repeat="thumbnail in library.thumbnails track by $index"
+                             class="background-cover"
+                             style="background-image: url('{{thumbnail}}'); width: 20%; height: 80px; float: left; margin-bottom: 10px;"></div>
+                        <dl class="dl-horizontal">
+                            <dt class="block-header">{{library.name}}</dt>
+                            <dd></dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>description</dt>
+                            <dd>{{library.description}}</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>contributors</dt>
+                            <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
+                                    ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0"
+                                                                          class="text-muted">There is no contributors in this library.</span>
+                            </dd>
+                        </dl>
                     </div>
                 </div>
             </div>
@@ -63,13 +64,27 @@
                     contribution.
                 </div>
 
-                <div class="row">
-                    <div ng-repeat="library in contributions" class="col-sm-4">
-                        <div class="well well-hover" ng-click="detail(library)" ng-mouseover="startRotation(library)" ng-mouseleave="stopRotation(library)">
-                            <div class="background-cover" style="background-image: url('{{thumbnail[library.name]}}'); width: 100%; height: 150px;"></div>
-
-                            <h3 class="text-center">{{library.name}}</h3>
-                        </div>
+                <div class="tab-content">
+                    <div ng-repeat="library in contributions | orderBy:'name'"
+                         class="well well-hover" ng-click="detail(library)">
+                        <div ng-repeat="thumbnail in library.thumbnails track by $index"
+                             class="background-cover"
+                             style="background-image: url('{{thumbnail}}'); width: 20%; height: 80px; float: left; margin-bottom: 10px;"></div>
+                        <dl class="dl-horizontal">
+                            <dt class="block-header">{{library.name}}</dt>
+                            <dd></dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>description</dt>
+                            <dd>{{library.description}}</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>contributors</dt>
+                            <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
+                                    ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0"
+                                                                          class="text-muted">There is no contributors in this library.</span>
+                            </dd>
+                        </dl>
                     </div>
                 </div>
             </div>

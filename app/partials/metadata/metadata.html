@@ -21,58 +21,64 @@
 #
 -->
 
-<div ng-switch="type">
-    <div ng-switch-when="item">
-        <div ng-show="(generators | filter:search | orderBy:'name').length == 0" class="dashboard-item-empty">Any library meets you search criteria.</div>
+<div ng-if="ui">
+    <div ng-switch="type">
+        <div ng-switch-when="item">
+            <div ng-show="(generators | filter:search | orderBy:'name').length == 0" class="dashboard-item-empty">Any
+                library meets you search criteria.
+            </div>
 
-        <div ng-hide="filtered.length == 0" class="well" ng-repeat="generator in meta | orderBy:'name'"
-             id="meta-{{generator.name}}">
-            <dl class="dl-horizontal">
-                <dt class="block-header">{{generator.name | generator}}</dt>
-                <dd></dd>
-            </dl>
-            <dl class="dl-horizontal" ng-repeat="entry in filtered = (generator.data | filter:search | orderBy:'name')"
-                ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false">
-                <dt>{{ entry.name | metadata }}</dt>
-                <dd><span ng-show="isLink(entry.value)"><a href="{{entry.value}}"
-                                                           target="_blank">{{entry.value}}</a></span><span
-                        ng-hide="isLink(entry.value)">{{entry.value}}</span>
-                    <button ng-show="hover$index && generator.name != 'source' && generator.name != connector" class="btn btn-danger btn-xs"
-                            ng-click="edit(entry)">Edit
-                    </button>
+            <div ng-hide="filtered.length == 0" class="well" ng-repeat="generator in meta | orderBy:'name'"
+                 id="meta-{{generator.name}}">
+                <dl class="dl-horizontal">
+                    <dt class="block-header">{{generator.name | generator}}</dt>
+                    <dd></dd>
+                </dl>
+                <dl class="dl-horizontal"
+                    ng-repeat="entry in filtered = (generator.data | filter:search | orderBy:'name')"
+                    ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false">
+                    <dt>{{ entry.name | metadata }}</dt>
+                    <dd><span ng-show="isLink(entry.value)"><a href="{{entry.value}}"
+                                                               target="_blank">{{entry.value}}</a></span><span
+                            ng-hide="isLink(entry.value)">{{entry.value}}</span>
+                        <button ng-show="hover$index && generator.name != 'source' && generator.name != connector"
+                                class="btn btn-danger btn-xs"
+                                ng-click="edit(entry)">Edit
+                        </button>
                     <span ng-repeat="mark in entry.marks" class="fa fa-bookmark bookmark-hover"
                           ng-click="seek(mark.in)"></span></dd>
-            </dl>
+                </dl>
+            </div>
         </div>
-    </div>
-    <div ng-switch-when="library">
-        <div ng-hide="filtered.length == 0" class="well">
-            <dl class="dl-horizontal" ng-repeat="entry in filtered = (meta | filter:search | orderBy:'name')"
-                ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false">
-                <dt>{{ entry.name | metadata }}</dt>
-                <dd>
+        <div ng-switch-when="library">
+            <div ng-hide="filtered.length == 0" class="well">
+                <dl class="dl-horizontal" ng-repeat="entry in filtered = (meta | filter:search | orderBy:'name')"
+                    ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false">
+                    <dt>{{ entry.name | metadata }}</dt>
+                    <dd>
                     <span ng-show="isLink(entry.value)">
                         <a href="{{entry.value}}" target="_blank">{{entry.value}}</a>
                     </span>
-                    <span ng-hide="isLink(entry.value)">{{entry.value}}</span>
-                    <button ng-show="hover$index" class="btn btn-danger btn-xs" ng-click="edit(entry)">Edit</button>
-                </dd>
-            </dl>
+                        <span ng-hide="isLink(entry.value)">{{entry.value}}</span>
+                        <button ng-show="hover$index" class="btn btn-danger btn-xs" ng-click="edit(entry)">Edit</button>
+                    </dd>
+                </dl>
+            </div>
         </div>
-    </div>
-    <div ng-switch-when="project">
-        <div ng-hide="filtered.length == 0" class="well">
-            <dl class="dl-horizontal" ng-repeat="entry in filtered = (meta | filter:search | orderBy:'name')"
-                ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false">
-                <dt>{{ entry.name | metadata }}</dt>
-                <dd>
+        <div ng-switch-when="project">
+            <div ng-hide="filtered.length == 0" class="well">
+                <dl class="dl-horizontal" ng-repeat="entry in filtered = (meta | filter:search | orderBy:'name')"
+                    ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false">
+                    <dt>{{ entry.name | metadata }}</dt>
+                    <dd>
                     <span ng-show="isLink(entry.value)">
                         <a href="{{entry.value}}" target="_blank">{{entry.value}}</a>
                     </span>
-                    <span ng-hide="isLink(entry.value)">{{entry.value}}</span>
-                    <button ng-show="hover$index" class="btn btn-danger btn-xs" ng-click="edit(entry)">Edit</button>
-                </dd>
-            </dl>
+                        <span ng-hide="isLink(entry.value)">{{entry.value}}</span>
+                        <button ng-show="hover$index" class="btn btn-danger btn-xs" ng-click="edit(entry)">Edit</button>
+                    </dd>
+                </dl>
+            </div>
         </div>
     </div>
 </div>

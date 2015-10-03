@@ -67,7 +67,7 @@
                 <h5 class="page-header">Metadata</h5>
 
                 <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="item" narra-metadata-data="item"
-                     narra-metadata-player="player.api" narra-metadata-search="search" narra-metadata></div>
+                     narra-metadata-player="player.api" narra-metadata-search="search" narra-metadata-ui="true" narra-metadata></div>
             </div>
         </div>
 
@@ -106,12 +106,12 @@
                         </button>
                     </li>
                     <li ng-hide="project">
-                        <a class="btn btn-default btn-xs" href="/libraries/{{library}}#{{from}}"><span
+                        <a class="btn btn-default btn-xs" href="/libraries/{{library}}?tab=items"><span
                                 class="fa fa-angle-double-left"></span> Back To Library</a>
                     </li>
                     <li ng-show="project">
                         <a class="btn btn-default btn-xs"
-                           href="/libraries/{{library}}?project={{project}}&from={{fromPrevious}}#{{from}}"><span
+                           href="/libraries/{{library}}?project={{project}}&tab=items"><span
                                 class="fa fa-angle-double-left"></span> Back To Library</a>
                     </li>
                 </ul>

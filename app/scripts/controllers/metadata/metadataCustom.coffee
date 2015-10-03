@@ -21,7 +21,7 @@
 
 angular.module('narra.ui').controller 'MetadataCustomCtrl', ($scope, $modalInstance, dialogs, elzoidoMessages, elzoidoAuthUser, data) ->
   $scope.user = elzoidoAuthUser.get()
-  $scope.all = data.all
+  $scope.all = data.all || []
   # init data
   if _.isUndefined(data.meta)
     $scope.meta = {name: '', value: ''}

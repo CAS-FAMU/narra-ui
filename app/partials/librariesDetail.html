@@ -25,84 +25,69 @@
 
     <div class="row">
         <div class="col-md-9" role="main">
-            <div class="bs-docs-section" id="information">
-                <h5 class="page-header">Library Information</h5>
-
-                <div class="well well-hover" ng-click="edit()">
-                    <dl class="dl-horizontal">
-                        <dt class="block-header">{{library.name}}</dt>
-                        <dd>
-                            <span ng-show="library.shared" class="label label-success">shared</span>
-                            <span ng-hide="library.shared" class="label label-danger">private</span>
-                        </dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>description</dt>
-                        <dd>{{library.description}}</dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>author</dt>
-                        <dd>{{library.author.name}}</dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>contributors</dt>
-                        <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
-                                ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0"
-                                                                      class="text-muted">There is no contributors in this library.</span>
-                        </dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>generators</dt>
-                        <dd><span ng-repeat="generator in library.generators">{{generator.title}}<span
-                                ng-hide="$last">, </span></span><span ng-show="library.generators.length == 0"
-                                                                      class="text-muted">There is no generators assigned to this library.</span>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
+            <h5 class="page-header">{{library.name}}
+                <span ng-show="library.shared" class="label label-success">shared</span>
+                <span ng-hide="library.shared" class="label label-danger">private</span>
+            </h5>
 
             <tabset>
-                <tab heading="Items">
+                <tab heading="General" active="tabs.general.active">
+                    <div class="well well-hover" ng-click="edit()">
+                        <dl class="dl-horizontal">
+                            <dt class="block-header">{{library.name}}</dt>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>description</dt>
+                            <dd>{{library.description}}</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>author</dt>
+                            <dd>{{library.author.name}}</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>contributors</dt>
+                            <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
+                                    ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0"
+                                                                          class="text-muted">There is no contributors in this library.</span>
+                            </dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>generators</dt>
+                            <dd><span ng-repeat="generator in library.generators">{{generator.title}}<span
+                                    ng-hide="$last">, </span></span><span ng-show="library.generators.length == 0"
+                                                                          class="text-muted">There is no generators assigned to this library.</span>
+                            </dd>
+                        </dl>
+                    </div>
+                </tab>
+                <tab heading="Items" active="tabs.items.active">
                     <div ng-hide="items.length > 0" class="item-empty">This library doesn't contain any item.
                     </div>
 
                     <div class="tab-content">
                         <div class="row">
-                            <div ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'"
-                                 class="col-sm-4"
-                                 id="items-{{$index}}" on-render-finished>
-                                <div ng-show="item.prepared" class="well well-hover" ng-click="detail(item, $index)"
-                                     ng-mouseover="startRotation(item)" ng-mouseleave="stopRotation(item)">
-                                    <div class="background-cover"
-                                         style="background-image: url('{{thumbnail[item.name]}}'); width: 100%; height: 150px;"></div>
-
-                                    <h3 class="libraries-item">{{item.name}}</h3>
-                                </div>
-
-                                <div ng-hide="item.prepared" class="well">
-                                    <div class="background-cover"
-                                         style="background-image: url('/images/bars.png'); width: 100%; height: 150px; opacity: 0.9;">
-                                        <div class="text-center" style="padding-top: 50px;">
-                                            <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
-
-                                            <p>PREPARING</p>
-                                        </div>
-                                    </div>
-
-                                    <h3 class="libraries-item">{{item.name}}</h3>
-                                </div>
-                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover" ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'">
+                                    <span><input type="checkbox" ng-model="item.selected"></span>
+                                    <span ng-click="detail(item)">
+                                        <img style="margin-left: 20px;" src="{{thumbnail[item.name]}}" height="50"><span style="margin-left: 20px;">{{item.name}}</span>
+                                    </span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </tab>
-                <tab heading="Metadata">
+                <tab heading="Metadata" active="tabs.metadata.active">
                     <div ng-hide="library.metadata.length > 0" class="item-empty">This library doesn't contain
                         any metadata.
                     </div>
                     <div class="tab-content">
-                        <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="library"
-                             narra-metadata-data="library"
+                        <div narra-metadata-api="libraryMetadata" narra-metadata-type="library"
+                             narra-metadata-data="library" narra-metadata-ui="true"
                              narra-metadata></div>
+                        <span narra-metadata-api="itemsMetadata" narra-metadata-type="items"
+                             narra-metadata-data="selectedItems"
+                             narra-metadata></span>
                     </div>
                 </tab>
 
@@ -118,8 +103,8 @@
 
                 <ul class="side-buttons">
                     <li>
-                        <button class="btn btn-danger btn-xs" type="button" ng-click="narraMetadataAPI.add()">
-                            <span class="fa fa-plus"></span> Add Meta
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="libraryMetadata.add()">
+                            <span class="fa fa-plus"></span> Add Meta to Library
                         </button>
                     </li>
                     <li ng-show="library.generators.length">
@@ -128,21 +113,38 @@
                         </button>
                         <ul class="dropdown-menu" role="menu" ng-controller="AddCtrl">
                             <li ng-repeat="generator in library.generators">
-                                <a href="#" ng-click="narraMetadataAPI.regenerate(generator.identifier)">{{generator.title}}</a>
+                                <a href="#" ng-click="libraryMetadata.regenerate(generator.identifier)">{{generator.title}}</a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <button class="btn btn-danger btn-xs" type="button" ng-click="delete()"><span
-                                class="fa fa-remove"></span> Delete
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="deleteLibrary()"><span
+                                class="fa fa-remove"></span> Delete Library
                         </button>
                     </li>
+                    <li ng-show="isSelected()">
+                        <button class="btn btn-warning btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
+                                aria-expanded="false">
+                            <span class="fa fa-plus"></span> Add Meta to selected Items <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="provider in metadataProviders | orderBy:'name'">
+                                <a href="#" ng-click="itemsMetadata.add(provider)">{{provider.name}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li ng-show="isSelected()">
+                        <button class="btn btn-warning btn-xs" type="button" ng-click="deleteItems()"><span
+                                class="fa fa-remove"></span> Delete Selected Items
+                        </button>
+                    </li>
+                    <li style="height: 10px;"></li>
                     <li ng-hide="project">
                         <a class="btn btn-default btn-xs" type="button" href="/libraries"><span
                                 class="fa fa-angle-double-left"></span> Back To Libraries</a>
                     </li>
                     <li ng-show="project">
-                        <a class="btn btn-default btn-xs" type="button" href="/projects/{{project}}#{{from}}"><span
+                        <a class="btn btn-default btn-xs" type="button" href="/projects/{{project}}?tab=libraries"><span
                                 class="fa fa-angle-double-left"></span> Back To Project</a>
                     </li>
                 </ul>

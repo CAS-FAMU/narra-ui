@@ -28,6 +28,7 @@ angular.module('narra.ui').directive 'narraMetadata', ->
     player: '=narraMetadataPlayer'
     search: '=narraMetadataSearch'
     type: '@narraMetadataType'
+    ui: '@narraMetadataUi'
   controller: 'MetadataCtrl'
   templateUrl: 'partials/metadata/metadata.html'
   replace: false

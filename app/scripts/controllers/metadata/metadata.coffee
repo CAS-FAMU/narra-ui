@@ -24,9 +24,35 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
   $scope.refresh = ->
     # init api
     $scope.api = $scope.api || {}
+    $scope.player = $scope.api || {}
 
     # init data
     switch($scope.type)
+      when 'items'
+        # implement add function
+        $scope.api.add = (provider) ->
+          # open confirmation dialog
+          confirm = dialogs.create(provider.templateAdd, provider.controller, { },
+            {size: 'lg', keyboard: false})
+          # result
+          confirm.result.then (meta) ->
+            # open waiting
+            waiting = dialogs.wait('Please Wait', 'Adding new metadata ...')
+            # check for array
+            if _.isArray(meta.value)
+              meta.value = meta.value.join(', ')
+            # prepare items
+            items = $scope.data()
+            # add
+            apiItem.metadataNew {items: _.pluck(items, 'id'), meta: meta.name, value: meta.value, generator: provider.id}, ->
+              # close dialog
+              waiting.close()
+              # send message
+              elzoidoMessages.send('success', 'Success!', 'New metadata was successfully created.')
+              # broadcast event
+              _.forEach(items, (item) ->
+                $rootScope.$broadcast 'event:narra-item-updated', item.id
+              )
       when 'item'
         # assign data
         $scope.item = $scope.data
@@ -60,14 +86,22 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
           # switch to custom if there is no appropriate
           if _.isUndefined(provider)
             provider = _.find(constantMetadata.providers, { id: 'user_custom' })
-          # get mark object
-          mark =
-            use: !_.isEmpty(meta.marks)
-            in: if _.isEmpty(meta.marks) then Math.floor($scope.player.currentTime / 1000) else meta.marks[0].in
-            out: if _.isEmpty(meta.marks) then undefined else meta.marks[0].out
-            max: Math.floor($scope.player.totalTime / 1000)
+          # prepare data
+          data = { meta: meta }
+          # check if it is a video or audio
+          if $scope.player.ready
+            # get mark object
+            mark =
+              use: !_.isEmpty(meta.marks)
+              in: if _.isEmpty(meta.marks) then Math.floor($scope.player.currentTime / 1000) else meta.marks[0].in
+              out: if _.isEmpty(meta.marks) then undefined else meta.marks[0].out
+              max: Math.floor($scope.player.totalTime / 1000)
+            # merge
+            _.merge(data,  { seek: $scope.seek, mark: mark })
+
+
           # open confirmation dialog
-          confirm = dialogs.create(provider.templateEdit, provider.controller, { meta: meta, seek: $scope.seek, mark: mark },
+          confirm = dialogs.create(provider.templateEdit, provider.controller, data,
             {size: 'lg', keyboard: false})
           # result
           confirm.result.then (data) ->
@@ -114,8 +148,13 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
               $rootScope.$broadcast 'event:narra-item-updated', $scope.item.id
 
         $scope.api.add = (provider) ->
+          # prepare data
+          data = { all: _.pluck($scope.item.metadata, 'name')}
+          # check if it is a video or audio
+          if $scope.player.ready
+            _.merge(data,  { seek: $scope.seek, mark: { use: false, in: Math.floor($scope.player.currentTime / 1000), max: Math.floor($scope.player.totalTime / 1000)}, out: undefined })
           # open confirmation dialog
-          confirm = dialogs.create(provider.templateAdd, provider.controller, { all: _.pluck($scope.item.metadata, 'name'), seek: $scope.seek, mark: { use: false, in: Math.floor($scope.player.currentTime / 1000), max: Math.floor($scope.player.totalTime / 1000)}, out: undefined },
+          confirm = dialogs.create(provider.templateAdd, provider.controller, data,
             {size: 'lg', keyboard: false})
           # result
           confirm.result.then (meta) ->

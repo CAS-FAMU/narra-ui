@@ -19,13 +19,20 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope, $routeParams, $location, $document, $interval, $filter, $q, dialogs, apiProject, apiLibrary, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
+angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, $rootScope, $routeParams, $location, $document, $interval, $filter, $q, dialogs, apiProject, apiLibrary, apiUser, apiItem, elzoidoPromises, constantMetadata, elzoidoAuthUser, elzoidoMessages) ->
   # set up context
   $scope.project = $routeParams.project
   $scope.from = $routeParams.from
   # initialization
   $scope.rotation = {}
   $scope.thumbnail = {}
+  # init metadata providers
+  $scope.libraryMetadata = {}
+  $scope.itemsMetadata = {}
+  $scope.tabs = { general: { active: true }, items: { }, metadata: { } }
+
+  if !_.isUndefined($routeParams.tab)
+    $scope.tabs[$routeParams.tab].active = true
 
   # refresh data
   $scope.refresh = ->
@@ -45,10 +52,18 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
       _.forEach(data.items, (item) ->
         $scope.thumbnail[item.name] = item.thumbnails[0])
       $scope.items = data.items
+      # resolve metadata providers
+      $scope.metadataProviders = constantMetadata.providers
       items.resolve true
 
     # register promises into one queue
     elzoidoPromises.register('library', [library.promise, items.promise])
+
+  $scope.isSelected = ->
+    !_.isEmpty($scope.selectedItems())
+
+  $scope.selectedItems = ->
+    _.where($scope.items, { selected: true })
 
   $scope.edit = ->
     confirm = dialogs.create('partials/librariesInformationEdit.html', 'LibrariesInformationEditCtrl',
@@ -60,7 +75,49 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
         # fire event
         $rootScope.$broadcast 'event:narra-library-updated', $routeParams.library
 
-  $scope.delete = ->
+  $scope.deleteItems = ->
+    # open confirmation dialog
+    confirm = dialogs.confirm('Please Confirm',
+      'You are about to delete selected items, this procedure is irreversible. Do you want to continue ?')
+
+    # prepare items
+    itemsDelete = $scope.selectedItems()
+
+    # result
+    confirm.result.then ->
+      # open waiting
+      waiting = dialogs.wait('Please Wait', 'Deleting selected items ...')
+      # promises
+      promises = []
+      # delete items
+      _.forEach(itemsDelete, (item) ->
+        # get deffered
+        wait = $q.defer()
+        # register promise
+        promises.push(wait.promise)
+        # delete items
+        $timeout(->
+          apiItem.delete({id: item.id}, (data) ->
+            wait.resolve true
+          , (error) ->
+            wait.resolve true
+            # fire message
+            elzoidoMessages.send('danger', 'Error!', 'Item ' + item.name + ' encountered problem.')
+          )
+        , 100)
+      )
+      # register promises into one queue
+      elzoidoPromises.register('delete-items', promises)
+      # close dialog
+      elzoidoPromises.promise('delete-items').then ->
+        # refresh scope
+        $scope.refresh()
+        # fire message
+        elzoidoMessages.send('success', 'Success!', 'Items were successfully deleted.')
+        # close dialog
+        waiting.close()
+
+  $scope.deleteLibrary = ->
     # open confirmation dialog
     confirm = dialogs.confirm('Please Confirm',
       'You are about to delete the library ' + $scope.library.name + ', this procedure is irreversible. Do you want to continue ?')
@@ -78,34 +135,14 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($scope, $rootScope
           $location.url('/projects/' + $scope.project + '#' + $scope.from)
 
   # click function for detail view
-  $scope.detail = (item, index) ->
+  $scope.detail = (item) ->
     # define basic url
-    url = '/items/' + item.id + '?library=' + $scope.library.id + '&from=items-' + index
+    url = '/items/' + item.id + '?library=' + $scope.library.id
     # when comes from project
     if !_.isUndefined($scope.project)
       url = url + '&project=' + $scope.project + '&fromPrevious=' + $scope.from
     # change location
     $location.url(url)
-
-  $scope.startRotation = (item) ->
-    # don't start new refresh when it is already on
-    if angular.isDefined($scope.rotation[item.name]) then return
-    # counter
-    count = 0
-    # rotate
-    $scope.rotation[item.name] = $interval(->
-      # revalidate count
-      if count + 1 == item.thumbnails.length then count = 0 else count++
-      # rotate
-      $scope.thumbnail[item.name] = item.thumbnails[count]
-    , 600)
-
-  $scope.stopRotation = (item) ->
-    # don't start new refresh when it is already on
-    if angular.isDefined($scope.rotation[item.name])
-      $interval.cancel($scope.rotation[item.name])
-      $scope.rotation[item.name] = undefined
-      $scope.thumbnail[item.name] = item.thumbnails[0]
 
   # refresh when new library is added
   $scope.$on 'event:narra-item-created', (event) ->

@@ -25,48 +25,46 @@
 
     <div class="row">
         <div class="col-md-9" role="main">
-            <div class="bs-docs-section" id="information">
-                <h5 class="page-header">Project Information</h5>
 
-                <div class="well well-hover" ng-click="edit()">
-                    <dl class="dl-horizontal">
-                        <dt class="block-header">{{project.title}}</dt>
-                        <dd>
-                            <span ng-show="project.public" class="label label-success">public</span>
-                            <span ng-hide="project.public" class="label label-danger">private</span>
-                        </dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>name</dt>
-                        <dd>{{project.name}}</dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>description</dt>
-                        <dd>{{project.description}}</dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>author</dt>
-                        <dd>{{project.author.name}}</dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>contributors</dt>
-                        <dd><span ng-repeat="contributor in project.contributors">{{contributor.name}}<span
-                                ng-hide="$last">, </span></span><span ng-show="project.contributors.length == 0"
-                                                                      class="text-muted">There is no contributors in this project.</span>
-                        </dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt>synthesizers</dt>
-                        <dd><span ng-repeat="synthesizer in project.synthesizers">{{synthesizer.title}}<span
-                                ng-hide="$last">, </span></span><span ng-show="project.synthesizers.length == 0"
-                                                                      class="text-muted">There is no synthesizers assigned to this project.</span>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
+            <h5 class="page-header">{{project.title}} <span ng-show="project.public" class="label label-success">public</span>
+                <span ng-hide="project.public" class="label label-danger">private</span></h5>
 
             <tabset>
-                <tab heading="Libraries">
+                <tab heading="General" active="tabs.general.active">
+                        <div class="well well-hover" ng-click="edit()">
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{project.title}}</dt>
+                                <dd></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>name</dt>
+                                <dd>{{project.name}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{project.description}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>author</dt>
+                                <dd>{{project.author.name}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>contributors</dt>
+                                <dd><span ng-repeat="contributor in project.contributors">{{contributor.name}}<span
+                                        ng-hide="$last">, </span></span><span ng-show="project.contributors.length == 0"
+                                                                              class="text-muted">There is no contributors in this project.</span>
+                                </dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>synthesizers</dt>
+                                <dd><span ng-repeat="synthesizer in project.synthesizers">{{synthesizer.title}}<span
+                                        ng-hide="$last">, </span></span><span ng-show="project.synthesizers.length == 0"
+                                                                              class="text-muted">There is no synthesizers assigned to this project.</span>
+                                </dd>
+                            </dl>
+                        </div>
+                </tab>
+                <tab heading="Libraries" active="tabs.libraries.active">
                     <div ng-hide="project.libraries.length > 0" class="item-empty">This project doesn't
                         contain any library.
                     </div>
@@ -100,7 +98,7 @@
                         </div>
                     </div>
                 </tab>
-                <tab heading="Sequences">
+                <tab heading="Sequences" active="tabs.sequences.active">
                     <div ng-hide="sequences.length > 0" class="item-empty">This project doesn't contain any
                         sequence.
                     </div>
@@ -122,7 +120,7 @@
                         </div>
                     </div>
                 </tab>
-                <tab heading="Visualizations">
+                <tab heading="Visualizations" active="tabs.visualizations.active">
                     <div ng-hide="project.visualizations.length > 0" class="item-empty">This project doesn't contain
                         any visualization.
                     </div>
@@ -140,14 +138,14 @@
                         </div>
                     </div>
                 </tab>
-                <tab heading="Metadata">
+                <tab heading="Metadata" active="tabs.metadata.active">
                     <div ng-hide="project.metadata.length > 0" class="item-empty">This project doesn't contain
                         any metadata.
                     </div>
 
                     <div class="tab-content">
-                        <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="project"
-                             narra-metadata-data="project" narra-metadata></div>
+                        <div narra-metadata-api="projectMetadata" narra-metadata-type="project"
+                             narra-metadata-data="project" narra-metadata-ui="true" narra-metadata></div>
                     </div>
                 </tab>
             </tabset>
@@ -162,8 +160,8 @@
 
                 <ul class="side-buttons">
                     <li>
-                        <button class="btn btn-danger btn-xs" type="button" ng-click="narraMetadataAPI.add()">
-                            <span class="fa fa-plus"></span> Add Meta
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="projectMetadata.add()">
+                            <span class="fa fa-plus"></span> Add Meta to Project
                         </button>
                     </li>
                     <li ng-if="visualizations.length">
@@ -182,6 +180,7 @@
                                 class="fa fa-remove"></span> Delete
                         </button>
                     </li>
+                    <li style="margin-top: 10px;"></li>
                     <li>
                         <a class="btn btn-default btn-xs" type="button" href="/projects"><span
                                 class="fa fa-angle-double-left"></span> Back To Projects</a>

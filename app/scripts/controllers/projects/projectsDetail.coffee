@@ -27,6 +27,11 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
     project = $q.defer()
     sequences = $q.defer()
     visualizations = $q.defer()
+    $scope.projectMetadata = {}
+    $scope.tabs = { general: { active: true }, libraries: { }, sequences: { }, visualizations: { }, metadata: { } }
+
+    if !_.isUndefined($routeParams.tab)
+      $scope.tabs[$routeParams.tab].active = true
 
     apiProject.get {name: $routeParams.project}, (data) ->
       _.forEach(data.project.visualizations, (visualization) ->
@@ -77,7 +82,7 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
 
   # click function for detail view
   $scope.detailLibrary = (library, index) ->
-    $location.url('/libraries/' + library.id + '?project=' + $scope.project.name + '&from=libraries-' + index)
+    $location.url('/libraries/' + library.id + '?project=' + $scope.project.name)
 
   # click function for detail view
   $scope.detailSequence = (sequence, index) ->

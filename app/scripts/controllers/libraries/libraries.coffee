@@ -42,26 +42,6 @@ angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $loc
     # register promises into one queue
     elzoidoPromises.register('libraries', [libraries.promise])
 
-  $scope.startRotation = (library) ->
-    # don't start new refresh when it is already on
-    if angular.isDefined($scope.rotation[library.name]) then return
-    # counter
-    count = 0
-    # rotate
-    $scope.rotation[library.name] = $interval(->
-      # revalidate count
-      if count + 1 == library.thumbnails.length then count = 0 else count++
-      # rotate
-      $scope.thumbnail[library.name] = library.thumbnails[count]
-    , 600)
-
-  $scope.stopRotation = (library) ->
-    # don't start new refresh when it is already on
-    if angular.isDefined($scope.rotation[library.name])
-      $interval.cancel($scope.rotation[library.name])
-      $scope.rotation[library.name] = undefined
-      $scope.thumbnail[library.name] = library.thumbnails[0]
-
   # refresh when user is logged
   $rootScope.$on 'event:elzoido-auth-user', (event, status) ->
     $scope.refresh()
