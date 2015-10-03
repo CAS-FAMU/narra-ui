@@ -40,7 +40,7 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
         _.where($scope.junctions[synthesizer], {items: [{id: item}]})
 
   $scope.refresh = ->
-# get deffered
+    # get deffered
     project = $q.defer()
     junctions = $q.defer()
     items = $q.defer()
@@ -61,7 +61,7 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
       project.resolve true
 
     project.promise.then ->
-# get junctions
+      # get junctions
       _.forEach($scope.project.synthesizers, (synthesizer, index) ->
         apiProject.junctions {name: $routeParams.project, param: synthesizer.identifier}, (data) ->
           $scope.junctions[synthesizer.identifier] = data.junctions
@@ -69,15 +69,11 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
             junctions.resolve true
       )
 
-    junctions.promise.then ->
-# get all items used in junctions
-      apiProject.items {name: $routeParams.project}, (data) ->
-        $scope.items = data.items
-        items.resolve true
+    apiProject.items {name: $routeParams.project}, (data) ->
+      $scope.items = data.items
+      items.resolve true
 
     items.promise.then ->
-      console.log()
-
       $scope.ready = true
       if ($scope.visualization.type == 'p5.js')
         angularLoad.loadScript($scope.visualization.script).then ->
