@@ -24,8 +24,30 @@
 /* Put your CSS here */
 body {
   background: #ffffff;
-  font-family: 'Helvetica Neue', Helvetica, 'DejaVu Sans','Liberation Sans', sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, 'DejaVu Sans', 'Liberation Sans', sans-serif;
   color: #333333;
+}
+
+.small-item-overlay {
+  position: relative;
+}
+
+.small-item-overlay small {
+  position: absolute;
+  bottom: -5px;
+  right: 0px;
+  text-align: right;
+}
+
+.input-item-overlay {
+  position: relative;
+}
+
+.input-item-overlay input {
+  position: absolute;
+  top: 15px;
+  left: 0px;
+  text-align: right;
 }
 
 #loading-bar .bar {
@@ -110,6 +132,9 @@ body {
 
 .dashboard-item {
   float: none !important;
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  transition: all linear 0.2s;
 }
 
 .dashboard-item-empty {
@@ -195,7 +220,16 @@ body {
   margin-bottom: 0px;
 }
 
-.well-hover:hover {
+.well-hover:hover  {
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+  cursor: pointer;
+  cursor: hand;
+  background-color: #e6e6e6;
+}
+
+.well-hover div.well:hover {
   -webkit-transition: all linear 0.2s;
   -moz-transition: all linear 0.2s;
   transition: all linear 0.2s;
@@ -254,6 +288,9 @@ body {
   width: 4px;
   height: 50px;
   background-color: #c12e2a;
+  -webkit-transition: all linear 0.1s;
+  -moz-transition: all linear 0.1s;
+  transition: all linear 0.1s;
 }
 
 .cuepoint:hover {
@@ -267,10 +304,13 @@ body {
 
 .narra-tooltip {
   opacity: 0.0;
+  -webkit-transition: all linear 2s;
+  -moz-transition: all linear 2s;
+  transition: all linear 2s;
 }
 
 .narra-tooltip-anim {
-  opacity: 1.0;
+  backty: 1.0;
   -webkit-transition: all linear 2s;
   -moz-transition: all linear 2s;
   transition: all linear 2s;

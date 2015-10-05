@@ -32,32 +32,37 @@
 
             <tabset>
                 <tab heading="General" active="tabs.general.active">
-                    <div class="well well-hover" ng-click="edit()">
-                        <dl class="dl-horizontal">
-                            <dt class="block-header">{{library.name}}</dt>
-                        </dl>
-                        <dl class="dl-horizontal">
-                            <dt>description</dt>
-                            <dd>{{library.description}}</dd>
-                        </dl>
-                        <dl class="dl-horizontal">
-                            <dt>author</dt>
-                            <dd>{{library.author.name}}</dd>
-                        </dl>
-                        <dl class="dl-horizontal">
-                            <dt>contributors</dt>
-                            <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
-                                    ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0"
-                                                                          class="text-muted">There is no contributors in this library.</span>
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal">
-                            <dt>generators</dt>
-                            <dd><span ng-repeat="generator in library.generators">{{generator.title}}<span
-                                    ng-hide="$last">, </span></span><span ng-show="library.generators.length == 0"
-                                                                          class="text-muted">There is no generators assigned to this library.</span>
-                            </dd>
-                        </dl>
+                    <div class="well-hover" ng-click="edit()">
+                        <div ng-repeat="thumbnail in library.thumbnails track by $index"
+                             class="background-cover"
+                             style="background-image: url('{{thumbnail}}'); width: 20%; height: 100px; float: left; margin-bottom: 10px;"></div>
+                        <div class="well well-hover">
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{library.name}}</dt>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{library.description}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>author</dt>
+                                <dd>{{library.author.name}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>contributors</dt>
+                                <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
+                                        ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0"
+                                                                              class="text-muted">There is no contributors in this library.</span>
+                                </dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>generators</dt>
+                                <dd><span ng-repeat="generator in library.generators">{{generator.title}}<span
+                                        ng-hide="$last">, </span></span><span ng-show="library.generators.length == 0"
+                                                                              class="text-muted">There is no generators assigned to this library.</span>
+                                </dd>
+                            </dl>
+                        </div>
                     </div>
                 </tab>
                 <tab heading="Items" active="tabs.items.active">
@@ -67,11 +72,18 @@
                     <div class="tab-content">
                         <div class="row">
                             <ul class="list-group">
-                                <li class="list-group-item pointer-hand well-hover" ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'">
-                                    <span><input type="checkbox" ng-model="item.selected"></span>
-                                    <span ng-click="detail(item)">
-                                        <img style="margin-left: 20px;" src="{{thumbnail[item.name]}}" height="50"><span style="margin-left: 20px;">{{item.name}}</span>
-                                    </span>
+                                <li class="list-group-item pointer-hand well-hover"
+                                    ng-repeat="item in filtered = (items | filter:search) | orderBy:'name'">
+                                    <div class="input-item-overlay">
+                                        <input type="checkbox" ng-model="item.selected">
+
+                                        <div ng-click="detail(item)" class="small-item-overlay"
+                                             style="margin-left: 30px;">
+                                            <img src="{{thumbnail[item.name]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{item.name|uppercase}}</span>
+                                            <small ng-show="item.keywords">{{item.keywords}}</small>
+                                        </div>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -86,8 +98,8 @@
                              narra-metadata-data="library" narra-metadata-ui="true"
                              narra-metadata></div>
                         <span narra-metadata-api="itemsMetadata" narra-metadata-type="items"
-                             narra-metadata-data="selectedItems"
-                             narra-metadata></span>
+                              narra-metadata-data="selectedItems"
+                              narra-metadata></span>
                     </div>
                 </tab>
 

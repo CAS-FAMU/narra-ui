@@ -36,10 +36,10 @@ angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $
     # select first generator and activate
     if !_.isEmpty($scope.library.generators)
       # assign first as a selected
-      $scope.generator = $scope.project.generators[0]
+      $scope.generator = $scope.library.generators[0]
       # activate
       _.forEach(data.generators, (generator) ->
-        generator.active = _.include(_.pluck($scope.project.generators, 'identifier'), generator.identifier)
+        generator.active = _.include(_.pluck($scope.library.generators, 'identifier'), generator.identifier)
       )
     # prepare data for session
     $scope.generators = data.generators
@@ -86,12 +86,21 @@ angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $
     # close dialog
     $modalInstance.close(wait)
 
+    # process generators
+    $scope.library.generators = _.filter($scope.generators, (generator) ->
+      generator.active
+    )
+
+    console.log($scope.library.generators)
+
     apiLibrary.update({
       id: $scope.library.id
       name: $scope.library.name
       author: $scope.library.author.username
       description: $scope.library.description
-      generators: _.pluck($scope.library.generators, 'identifier')
+      generators: _.map($scope.library.generators, (g) ->
+        { identifier: g.identifier, options: g.options }
+      )
       contributors: _.pluck($scope.library.contributors, 'username')
     }, (data) ->
       # update public metadata tag
