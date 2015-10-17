@@ -10,7 +10,6 @@
   "scripts": {
     "compiler": "brunch watch -P",
     "test": "karma start test/karma.conf.js",
-    "app": "nodewebkit _public",
     "deploy": "grunt",
     "web": "brunch watch --server"
   },
@@ -25,7 +24,6 @@
     "css-brunch": "~1.7",
     "grunt": "~0.4.5",
     "grunt-cli": "~0.1.13",
-    "grunt-node-webkit-builder": "~1.0.0",
     "javascript-brunch": "~1.7.1",
     "karma": "~0.12.28",
     "karma-cli": "~0.0.4",
@@ -33,7 +31,6 @@
     "karma-ng-scenario": "~0.1.0",
     "less-brunch": "~1.7.2",
     "ng-annotate-uglify-js-brunch": "~1.7.4",
-    "nodewebkit": "~0.11.3",
     "stylus-brunch": "~1.8.1"
   }
 }

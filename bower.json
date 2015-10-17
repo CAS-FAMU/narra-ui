@@ -34,14 +34,14 @@
     "holderjs": "~2.8.2",
     "lodash": "~3.10.1",
     "momentjs": "~2.10.6",
-    "p5js": "~0.4.9",
+    "p5js": "~0.4.17",
     "processing": "~1.4.16",
-    "videogular": "~1.2.6",
-    "videogular-buffering": "~1.2.6",
-    "videogular-controls": "~1.2.6",
-    "videogular-overlay-play": "~1.2.6",
-    "videogular-poster": "~1.2.6",
-    "videogular-themes-default": "~1.2.6"
+    "videogular": "~1.2.8",
+    "videogular-buffering": "~1.2.8",
+    "videogular-controls": "~1.2.8",
+    "videogular-overlay-play": "~1.2.8",
+    "videogular-poster": "~1.2.8",
+    "videogular-themes-default": "~1.2.8"
   },
   "overrides": {}
 }

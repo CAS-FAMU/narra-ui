@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiUser, apiSynthesizers, elzoidoMessages, elzoidoAuthUser, data) ->
+angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiUser, apiSynthesizers, apiVisualization, elzoidoMessages, elzoidoAuthUser, data) ->
   $scope.user = elzoidoAuthUser.get()
   $scope.project = data.project
   $scope.initial = angular.copy(data.project)
@@ -41,16 +41,36 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
       )
     # prepare data for session
     $scope.synthesizers = data.synthesizers
+  apiVisualization.all (data) ->
+    $scope.visualizations = data.visualizations
 
-  $scope.select = (synthesizer) ->
+  $scope.selectSynthesizer = (synthesizer) ->
     if synthesizer.active
       $scope.synthesizer = synthesizer
 
-  $scope.activate = (synthesizer) ->
+  $scope.activateSynthesizer = (synthesizer) ->
     if synthesizer.active
       $scope.synthesizer = synthesizer
     else
       $scope.synthesizer = null
+
+  $scope.isSelectedSynthesizer = (synthesizer) ->
+    if $scope.synthesizer
+      $scope.synthesizer.identifier == synthesizer.identifier
+
+  $scope.selectVisualization = (visualization) ->
+    if visualization.active
+      $scope.visualization = visualization
+
+  $scope.activateVisualization = (visualization) ->
+    if visualization.active
+      $scope.visualization = visualization
+    else
+      $scope.visualization = null
+
+  $scope.isSelectedVisualization = (visualization) ->
+    if $scope.visualization
+      $scope.visualization.identifier == visualization.identifier
 
   $scope.addContribution = (user) ->
     $scope.project.contributors.push(user)
@@ -62,10 +82,6 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
     _.pull($scope.project.contributors, user)
     # refresh
     $scope.filter()
-
-  $scope.isSelected = (synthesizer) ->
-    if $scope.synthesizer
-      $scope.synthesizer.identifier == synthesizer.identifier
 
   $scope.filter = ->
     $scope.contributors = _.filter($scope.users, (user) ->

@@ -22,7 +22,7 @@
 angular.module('narra.ui').controller 'VisualizationsAddCtrl', ($scope, $modalInstance, $timeout, dialogs, apiVisualization, apiUser, elzoidoMessages, elzoidoAuthUser, FileUploader) ->
   # initialize
   $scope.user = elzoidoAuthUser.get()
-  $scope.visualization = { name: '', author: $scope.user, description: '', file: ''}
+  $scope.visualization = { name: '', author: $scope.user, description: '', file: undefined}
   $scope.uploader = new FileUploader()
 
   $scope.uploader.onAfterAddingFile = (file) ->
@@ -32,7 +32,7 @@ angular.module('narra.ui').controller 'VisualizationsAddCtrl', ($scope, $modalIn
     if _.isEqual(type, 'pde')
       $scope.visualization.type = 'processing'
     else if _.isEqual(type, 'js')
-      $scope.visualization.type = 'p5.js'
+      $scope.visualization.type = 'p5js'
 
     # save file
     $scope.visualization.file = file._file
@@ -43,6 +43,10 @@ angular.module('narra.ui').controller 'VisualizationsAddCtrl', ($scope, $modalIn
     $scope.users = data.users
   apiVisualization.all (data) ->
     $scope.visualizations = data.visualizations
+
+  $scope.select = (type) ->
+    $scope.visualization.type = type
+    $scope.second = true
 
   $scope.close = ->
     $modalInstance.dismiss('canceled')
@@ -62,7 +66,10 @@ angular.module('narra.ui').controller 'VisualizationsAddCtrl', ($scope, $modalIn
     data.append('type', $scope.visualization.type)
     data.append('author', $scope.visualization.author.username)
     data.append('description', $scope.visualization.description)
-    data.append('file', $scope.visualization.file)
+
+    # push file only if imported
+    if !_.isUndefined($scope.visualization.file)
+      data.append('file', $scope.visualization.file)
 
     # open waiting
     wait = dialogs.wait('Please Wait', 'Registering new visualization ...')

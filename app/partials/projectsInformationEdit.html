@@ -143,10 +143,10 @@
                         <div class="well" style="max-height: 300px; overflow: auto;">
                             <ul class="list-group">
                                 <li class="list-group-item"
-                                    ng-class="{'plugin-selected': isSelected(s), 'pointer-hand': s.active}"
+                                    ng-class="{'plugin-selected': isSelectedSynthesizer(s), 'pointer-hand': s.active}"
                                     ng-repeat="s in synthesizers"
-                                    ng-click="select(s)">
-                                    <input type="checkbox" ng-model="s.active" ng-change="activate(s)"> {{s.title}}
+                                    ng-click="selectSynthesizer(s)">
+                                    <input type="checkbox" ng-model="s.active" ng-change="activateSynthesizer(s)"> {{s.title}}
                                 </li>
                             </ul>
                         </div>
@@ -158,6 +158,31 @@
                             </div>
                             <div ng-if="synthesizer"
                                  ng-include="'partials/synthesizers/' + synthesizer.identifier + '.html'"></div>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="Visualizations">
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <div class="well" style="max-height: 300px; overflow: auto;">
+                            <ul class="list-group">
+                                <li class="list-group-item"
+                                    ng-class="{'plugin-selected': isSelectedVisualization(v), 'pointer-hand': s.active}"
+                                    ng-repeat="v in visualizations"
+                                    ng-click="selectVisualization(v)">
+                                    <input type="checkbox" ng-model="v.active" ng-change="activateVisualization(v)"> {{v.name}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="well" style="max-height: 300px; overflow: auto;">
+                            <div ng-if="!visualization" style="text-align: center; color: grey;">Select visualization you
+                                would like to set up.
+                            </div>
+                            <div ng-if="visualization"
+                                 ng-include="'partials/visualizations/generic.html'"></div>
                         </div>
                     </div>
                 </div>

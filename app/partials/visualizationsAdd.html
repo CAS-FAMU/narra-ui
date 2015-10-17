@@ -25,16 +25,25 @@
 <div class="modal-body">
     <form name="newVisualization" class="form-horizontal">
             <div ng-if="!second">
+                <div class="text-center">Select visualization type</div>
+
+                <div class="text-center">
+                    <span class="btn btn-danger" ng-click="select('processing')">Processing</span>
+                    <span class="btn btn-danger" ng-click="select('p5js')">p5.js</span>
+                </div>
+
+                <br/>
+
                 <div nv-file-drop="" uploader="uploader">
                     <div nv-file-over="" uploader="uploader" over-class="drop-zone-over"
                          class="well drop-zone">
-                        Drop your visualization script here
+                        or drop your visualization script here
                     </div>
                 </div>
             </div>
 
         <div ng-if="second">
-            <div class="form-group">
+            <div ng-show="visualization.file" class="form-group">
                 <label class="col-sm-2 control-label">Script</label>
 
                 <div class="col-sm-10">
