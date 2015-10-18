@@ -31,9 +31,9 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
     $scope.users = data.users
     $scope.filter()
   apiSynthesizers.all (data) ->
-    # select first synthesizer and activate
+# select first synthesizer and activate
     if !_.isEmpty($scope.project.synthesizers)
-      # assign first as a selected
+# assign first as a selected
       $scope.synthesizer = $scope.project.synthesizers[0]
       # activate
       _.forEach(data.synthesizers, (synthesizer) ->
@@ -108,18 +108,26 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
       synthesizer.active
     )
 
+    # process visualizations
+    $scope.project.visualizations = _.filter($scope.visualizations, (visualization) ->
+      visualization.active
+    )
+
     apiProject.update({
         name: $scope.initial.name
         new_name: project_name
         title: $scope.project.title
         author: $scope.project.author.username
         description: $scope.project.description
-        synthesizers: _.pluck($scope.project.synthesizers, 'identifier')
+        synthesizers: _.map($scope.project.synthesizers, (s) ->
+          {identifier: s.identifier, options: s.options}
+        )
+        visualizations: _.map($scope.project.visualizations, (v) ->
+          { id: v.id, identifier: v.identifier, options: v.options}
+        )
         contributors: _.pluck($scope.project.contributors, 'username')
       }, (data) ->
-# update public metadata tag
-      apiProject.metadataUpdate {name: data.project.name, meta: 'public', value: $scope.project.public.toString()}, ->
-# close wait dialog
+        # close wait dialog
         wait.close(data.project)
         # fire message
         elzoidoMessages.send('success', 'Success!', 'Project ' + data.project.title + ' was successfully saved.')
