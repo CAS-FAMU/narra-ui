@@ -24,19 +24,20 @@
 <div class="container bs-docs-container">
 
     <div class="row">
-        <div class="col-md-12" role="main">
-            <div class="bs-docs-section" id="libraries-section">
-                <h5 id="libraries" class="page-header">My Libraries</h5>
 
-                <div ng-hide="libraries.length > 0" class="col-md-12 item-empty">You are not an author of any
-                    library.
-                </div>
+        <div ng-hide="libraries.length > 0 || contributions.length > 0" class="col-md-12 item-empty">
+            Create a new library clicking the red button.
+        </div>
+
+        <div class="col-md-12" role="main">
+            <div class="bs-docs-section" id="libraries-section"  ng-show="libraries.length > 0">
+                <h5 id="libraries" class="page-header">My Libraries</h5>
 
                 <div class="tab-content">
                     <div ng-repeat="library in libraries | orderBy:'name'" ng-click="detail(library)" class="well-hover">
                         <div ng-repeat="thumbnail in library.thumbnails track by $index"
                              class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); background-size: cover; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
+                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
                         <div class="well">
                             <dl class="dl-horizontal">
                                 <dt class="block-header">{{library.name}}</dt>
@@ -51,34 +52,28 @@
                 </div>
             </div>
 
-            <div class="bs-docs-section" id="contributions-section">
+            <div class="bs-docs-section" id="contributions-section" ng-show="contributions.length > 0">
                 <h5 id="contributions" class="page-header">My Contributions</h5>
 
-                <div ng-hide="contributions.length > 0" class="col-md-12 item-empty">You don't have any
-                    contribution.
-                </div>
-
                 <div class="tab-content">
-                    <div ng-repeat="library in contributions | orderBy:'name'"
-                         class="well well-hover" ng-click="detail(library)">
+                    <div ng-repeat="library in contributions | orderBy:'name'" ng-click="detail(library)" class="well-hover">
                         <div ng-repeat="thumbnail in library.thumbnails track by $index"
                              class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); width: 20%; height: 80px; float: left; margin-bottom: 10px;"></div>
-                        <dl class="dl-horizontal">
-                            <dt class="block-header">{{library.name}}</dt>
-                            <dd></dd>
-                        </dl>
-                        <dl class="dl-horizontal">
-                            <dt>description</dt>
-                            <dd>{{library.description}}</dd>
-                        </dl>
-                        <dl class="dl-horizontal">
-                            <dt>contributors</dt>
-                            <dd><span ng-repeat="contributor in library.contributors">{{contributor.name}}<span
-                                    ng-hide="$last">, </span></span><span ng-show="library.contributors.length == 0"
-                                                                          class="text-muted">There is no contributors in this library.</span>
-                            </dd>
-                        </dl>
+                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
+                        <div class="well">
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{library.name}}</dt>
+                                <dd></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{library.description}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>author</dt>
+                                <dd>{{library.author.name}}</dd>
+                            </dl>
+                        </div>
                     </div>
                 </div>
             </div>

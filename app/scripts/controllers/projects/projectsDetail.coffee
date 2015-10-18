@@ -28,7 +28,7 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
     sequences = $q.defer()
     visualizations = $q.defer()
     $scope.projectMetadata = {}
-    $scope.tabs = { general: { active: true }, libraries: { }, sequences: { }, visualizations: { }, metadata: { } }
+    $scope.tabs = { project: { active: true }, libraries: { }, sequences: { }, metadata: { } }
 
     if !_.isUndefined($routeParams.tab)
       $scope.tabs[$routeParams.tab].active = true

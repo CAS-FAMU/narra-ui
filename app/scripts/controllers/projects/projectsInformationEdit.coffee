@@ -31,9 +31,9 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
     $scope.users = data.users
     $scope.filter()
   apiSynthesizers.all (data) ->
-# select first synthesizer and activate
+    # select first synthesizer and activate
     if !_.isEmpty($scope.project.synthesizers)
-# assign first as a selected
+      # assign first as a selected
       $scope.synthesizer = $scope.project.synthesizers[0]
       # activate
       _.forEach(data.synthesizers, (synthesizer) ->
@@ -42,6 +42,15 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
     # prepare data for session
     $scope.synthesizers = data.synthesizers
   apiVisualization.all (data) ->
+    # select first visualization and activate
+    if !_.isEmpty($scope.project.visualizations)
+      # assign first as a selected
+      $scope.visualization = $scope.project.visualizations[0]
+      # activate
+      _.forEach(data.visualizations, (visualization) ->
+        visualization.active = _.include(_.pluck($scope.project.visualizations, 'id'), visualization.id)
+      )
+    # prepare data for session
     $scope.visualizations = data.visualizations
 
   $scope.selectSynthesizer = (synthesizer) ->

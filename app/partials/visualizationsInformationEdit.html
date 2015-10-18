@@ -24,76 +24,97 @@
 <div class="modal-header"><h4 class="modal-title"><span class="fa fa-edit"></span> {{initial.name}}</h4></div>
 <div class="modal-body">
     <form name="editVisualization" class="form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Name</label>
+        <uib-tabset type="pills">
+            <uib-tab heading="Visualization">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Name</label>
 
-            <div class="col-sm-10">
-                <input name="name" ng-model="visualization.name" class="form-control" ng-trim="false"
-                       ui-validate="{exists: 'validateName($value)' }"
-                       type="text" placeholder="Enter a name here" required/>
-            </div>
-        </div>
+                    <div class="col-sm-10">
+                        <input name="name" ng-model="visualization.name" class="form-control" ng-trim="false"
+                               ui-validate="{exists: 'validateName($value)' }"
+                               type="text" placeholder="Enter a name here" required/>
+                    </div>
+                </div>
 
-        <div ng-show="editVisualization.name.$error.exists" class="col-md-offset-2">
-            <p class="text-danger left-buffer-10">
-                <strong>Already exists!</strong>
-                <small>Visualization already exists.</small>
-            </p>
-        </div>
+                <div ng-show="editVisualization.name.$error.exists" class="col-md-offset-2">
+                    <p class="text-danger left-buffer-10">
+                        <strong>Already exists!</strong>
+                        <small>Visualization already exists.</small>
+                    </p>
+                </div>
 
-        <div ng-show="editVisualization.name.$dirty && editVisualization.name.$error.required" class="col-md-offset-2">
-            <p class="text-danger left-buffer-10">
-                <strong>Required!</strong>
-                <small>Visualization name is required.</small>
-            </p>
-        </div>
+                <div ng-show="editVisualization.name.$dirty && editVisualization.name.$error.required"
+                     class="col-md-offset-2">
+                    <p class="text-danger left-buffer-10">
+                        <strong>Required!</strong>
+                        <small>Visualization name is required.</small>
+                    </p>
+                </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Description</label>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Description</label>
 
-            <div class="col-sm-10">
+                    <div class="col-sm-10">
                 <textarea name="description" ng-model="visualization.description" class="form-control"
                           placeholder="Enter a description here" rows="5"></textarea>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Author</label>
-
-            <div class="col-sm-10">
-                <ui-select ng-model="visualization.author" ng-disabled="!user.isAdmin()" ng-change="filter()" required>
-                    <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}</ui-select-choices>
-                </ui-select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Public</label>
-
-            <div class="col-sm-10">
-                <input type="checkbox" ng-model="visualization.public"><span class="text-muted"
-                                                                             style="margin-left: 10px;">Turn this visualization into the public mode</span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Script</label>
-
-            <div class="col-sm-10">
-                <div ng-show="visualization.file">
-                    <input name="file" ng-model="visualization.file.name" class="form-control" type="text" disabled/>
+                    </div>
                 </div>
-                <div ng-hide="visualization.file">
-                    <div nv-file-drop="" uploader="uploader">
-                        <div nv-file-over="" uploader="uploader" over-class="drop-zone-over"
-                             class="well drop-zone">
-                            Drop your visualization script here if you would like to update it
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Author</label>
+
+                    <div class="col-sm-10">
+                        <ui-select ng-model="visualization.author" ng-disabled="!user.isAdmin()" ng-change="filter()"
+                                   required>
+                            <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Public</label>
+
+                    <div class="col-sm-10">
+                        <input type="checkbox" ng-model="visualization.public"><span class="text-muted"
+                                                                                     style="margin-left: 10px;">Turn this visualization into the public mode</span>
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Contributors" disable="contributors.length == 0">
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <ui-select ng-model="contributor.selected"
+                                   theme="bootstrap"
+                                   reset-search-input="true"
+                                   on-select="addContribution($select.selected)"
+                                   style="width: 300px;">
+                            <ui-select-match placeholder="Select a contributor...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="contributor in contributors"
+                                               refresh-delay="0">
+                                <div ng-bind-html="contributor.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+                    <div class="col-sm-7">
+                        <div class="well" style="max-height: 300px; overflow: auto;">
+                            <div ng-show="visualization.contributors.length == 0" style="text-align: center; color: grey;">Select
+                                a user you would like to be a part of the project.
+                            </div>
+                            <div ng-hide="visualization.contributors.length == 0">
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="contributor in library.contributors">
+                                        {{contributor.name}} <span class="fa fa-times pull-right pointer-hand" ng-click="removeContribution(contributor)"></span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </uib-tab>
+        </uib-tabset>
     </form>
 </div>
 <div class="modal-footer">

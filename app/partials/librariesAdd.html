@@ -50,26 +50,6 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Description</label>
-
-            <div class="col-sm-10">
-                <textarea name="description" ng-model="library.description" class="form-control"
-                          placeholder="Enter a description here" rows="5"></textarea>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Project</label>
-
-            <div class="col-sm-10">
-                <ui-select ng-model="library.project" required>
-                    <ui-select-match placeholder="Pick a project">{{$select.selected.title}}</ui-select-match>
-                    <ui-select-choices repeat="project in projects | filter:$select.search">{{project.title}}</ui-select-choices>
-                </ui-select>
-            </div>
-        </div>
-
-        <div class="form-group">
             <label class="col-sm-2 control-label">Author</label>
 
             <div class="col-sm-10">
@@ -81,24 +61,22 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Contributors</label>
+            <label class="col-sm-2 control-label">Project</label>
 
             <div class="col-sm-10">
-                <ui-select multiple ng-model="library.contributors" style="width: 100%;">
-                    <ui-select-match placeholder="Select contributors">{{$item.name}}</ui-select-match>
-                    <ui-select-choices repeat="user in contributors | filter:$select.search">{{user.name}}</ui-select-choices>
+                <ui-select ng-model="library.project">
+                    <ui-select-match placeholder="Pick a project (Optional)">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="project in projects | filter:$select.search">{{project.title}}</ui-select-choices>
                 </ui-select>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Generators</label>
+            <label class="col-sm-2 control-label">Description</label>
 
             <div class="col-sm-10">
-                <ui-select multiple ng-model="library.generators" style="width: 100%;">
-                    <ui-select-match placeholder="Select generators">{{$item.title}}</ui-select-match>
-                    <ui-select-choices repeat="generator in generators | filter:$select.search">{{generator.title}}</ui-select-choices>
-                </ui-select>
+                <textarea name="description" ng-model="library.description" class="form-control"
+                          placeholder="Enter a description here (Optional)" rows="5"></textarea>
             </div>
         </div>
     </form>

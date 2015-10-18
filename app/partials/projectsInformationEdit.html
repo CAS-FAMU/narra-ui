@@ -24,8 +24,8 @@
 <div class="modal-header"><h4 class="modal-title"><span class="fa fa-edit"></span> {{initial.title}}</h4></div>
 <div class="modal-body">
     <form name="editProject" class="form-horizontal">
-        <tabset>
-            <tab heading="General">
+        <uib-tabset type="pills">
+            <uib-tab heading="Project">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Title</label>
 
@@ -104,8 +104,8 @@
                                                                                style="margin-left: 10px;">Turn this project into the public mode</span>
                     </div>
                 </div>
-            </tab>
-            <tab heading="Contributors">
+            </uib-tab>
+            <uib-tab heading="Contributors" disable="contributors.length == 0">
                 <div class="form-group">
                     <div class="col-sm-5">
                         <ui-select ng-model="contributor.selected"
@@ -136,8 +136,8 @@
                         </div>
                     </div>
                 </div>
-            </tab>
-            <tab heading="Synthesizers">
+            </uib-tab>
+            <uib-tab heading="Synthesizers" disable="synthesizers.length == 0">
                 <div class="form-group">
                     <div class="col-sm-5">
                         <div class="well" style="max-height: 300px; overflow: auto;">
@@ -161,8 +161,8 @@
                         </div>
                     </div>
                 </div>
-            </tab>
-            <tab heading="Visualizations">
+            </uib-tab>
+            <uib-tab heading="Visualizations" disable="visualizations.length == 0">
                 <div class="form-group">
                     <div class="col-sm-5">
                         <div class="well" style="max-height: 300px; overflow: auto;">
@@ -186,8 +186,8 @@
                         </div>
                     </div>
                 </div>
-            </tab>
-        </tabset>
+            </uib-tab>
+        </uib-tabset>
     </form>
 </div>
 <div class="modal-footer">

@@ -24,50 +24,51 @@
 <div class="container bs-docs-container">
 
     <div class="row">
-        <div class="col-md-12" role="main">
+
+        <div ng-hide="projects.length > 0 || contributions.length > 0" class="col-md-12 item-empty">
+            Create a new project clicking the red button.
+        </div>
+
+        <div class="col-md-12" role="main" ng-show="projects.length > 0">
             <div class="bs-docs-section" id="projects-section">
                 <h5 id="projects" class="page-header">My Projects</h5>
 
-                <div ng-hide="projects.length > 0" class="col-md-12 item-empty">You are not an author of any
-                    project.
-                </div>
-
-                <div class="row">
-                    <div ng-repeat="project in projects" class="col-md-12 dashboard-item pointer-hand"
-                         style="width: 100%; height: 150px;"
-                         ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false" ng-click="detail(project)">
+                <div class="tab-content">
+                    <div ng-repeat="project in projects | orderBy:'name'" ng-click="detail(project)" class="well-hover">
                         <div ng-repeat="thumbnail in project.thumbnails track by $index"
-                             ng-class="{'dashboard-item-image': hover$index}"
                              class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); width: 20%; height: 150px; float: left"></div>
-                        <div class="dashboard-item-title" ng-class="{'dashboard-item-title-anim': hover$index}">
-                            <h1>{{project.title}}</h1>
-
-                            <p>by {{project.author.name}}</p>
+                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
+                        <div class="well">
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{project.title}}</dt>
+                                <dd></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{project.description}}</dd>
+                            </dl>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bs-docs-section" id="contributions-section">
+            <div class="bs-docs-section" id="contributions-section" ng-show="contributions.length > 0">
                 <h5 id="contributions" class="page-header">My Contributions</h5>
 
-                <div ng-hide="contributions.length > 0" class="col-md-12 item-empty">You don't have any
-                    contribution.
-                </div>
-
-                <div class="row">
-                    <div ng-repeat="project in contributions" class="col-md-12 dashboard-item pointer-hand"
-                         style="width: 100%; height: 150px;"
-                         ng-mouseover="hover$index=true" ng-mouseleave="hover$index=false" ng-click="detail(project)">
+                <div class="tab-content">
+                    <div ng-repeat="project in contributions | orderBy:'name'" ng-click="detail(project)" class="well-hover">
                         <div ng-repeat="thumbnail in project.thumbnails track by $index"
-                             ng-class="{'dashboard-item-image': hover$index}"
                              class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); width: 20%; height: 150px; float: left"></div>
-                        <div class="dashboard-item-title" ng-class="{'dashboard-item-title-anim': hover$index}">
-                            <h1>{{project.title}}</h1>
-
-                            <p>by {{project.author.name}}</p>
+                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
+                        <div class="well">
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{project.title}}</dt>
+                                <dd></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{project.description}}</dd>
+                            </dl>
                         </div>
                     </div>
                 </div>

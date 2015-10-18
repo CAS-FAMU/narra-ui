@@ -24,43 +24,55 @@
 <div class="container bs-docs-container">
 
     <div class="row">
+
+        <div ng-hide="myVisualizations.length > 0 || publicVisualizations.length > 0" class="col-md-12 item-empty">
+            Create a new visualiztion clicking the red button.
+        </div>
+
         <div class="col-md-12" role="main">
-            <div class="bs-docs-section">
+            <div class="bs-docs-section" ng-show="myVisualizations.length > 0">
                 <h5 class="page-header">My Visualizations</h5>
 
-                <div ng-hide="myVisualizations.length > 0" class="col-md-12 item-empty">You are not an author
-                    of any visualization.
-                </div>
-
-                <div class="row">
-                    <div ng-repeat="visualization in myVisualizations" class="col-sm-4">
-                        <div class="well well-hover" ng-click="detail(visualization)">
-                            <div class="background-cover"
-                                 style="background-image: url('{{visualization.thumbnail}}'); width: 100%; height: 150px;"></div>
-
-                            <h3 class="text-center">{{visualization.name}}</h3>
-                            <span ng-show="visualization.public" class="label label-stamp label-success">public</span>
-                            <span ng-hide="visualization.public" class="label label-stamp label-danger">private</span>
+                <div class="tab-content">
+                    <div ng-repeat="visualization in myVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
+                        <div ng-repeat="thumbnail in visualization.thumbnails track by $index"
+                             class="background-cover"
+                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
+                        <div class="well">
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{visualization.name}}</dt>
+                                <dd></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{visualization.description}}</dd>
+                            </dl>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bs-docs-section" id="contributions-section">
+            <div class="bs-docs-section" ng-show="publicVisualizations.length > 0">
                 <h5 class="page-header">Public Visualizations</h5>
 
-                <div ng-hide="publicVisualizations.length > 0" class="col-md-12 item-empty">There are no
-                    public visualization.
-                </div>
-
-                <div class="row">
-                    <div ng-repeat="visualization in publicVisualizations" class="col-sm-4">
+                <div class="tab-content">
+                    <div ng-repeat="visualization in myVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
+                        <div ng-repeat="thumbnail in visualization.thumbnails track by $index"
+                             class="background-cover"
+                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
                         <div class="well">
-                            <div class="background-cover"
-                                 style="background-image: url('{{visualization.thumbnail}}'); width: 100%; height: 150px;"></div>
-
-                            <h3 class="text-center">{{visualization.name}}</h3>
-                            <h5 class="text-center">by {{visualization.author.name}}</h5>
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{visualization.name}}</dt>
+                                <dd></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{visualization.description}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>author</dt>
+                                <dd>{{visualization.author.name}}</dd>
+                            </dl>
                         </div>
                     </div>
                 </div>

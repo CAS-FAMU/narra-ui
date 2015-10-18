@@ -20,3 +20,15 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 -->
+<div class="text-center">{{visualization.description}}</div>
+
+<div style="margin-top: 20px;" ng-repeat="(key, value) in visualization.options">
+    <div class="form-group">
+        <label class="col-sm-6 control-label">{{key|propertyname}}</label>
+
+        <div class="col-sm-6">
+            <input name="name" ng-model="visualization.options[key]" class="form-control" ng-trim="false"
+                   type="text"/>
+        </div>
+    </div>
+</div>

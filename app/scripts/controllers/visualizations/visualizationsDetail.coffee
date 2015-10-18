@@ -19,7 +19,9 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce, $timeout, $rootScope, $http, $routeParams, $location, $document, $interval, $filter, $q, dialogs, apiVisualization, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
+angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce, $timeout, $window, $rootScope, $http, $routeParams, $location, $document, $interval, $filter, $q, dialogs, apiVisualization, apiUser, apiProject, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
+  # initialization
+  $scope.tabs = { visualization: { active: true }, code: { } }
   $scope.editorOption =
     theme: 'xcode',
     require: ['ace/ext/language_tools', 'ace/ext/static_highlight', 'ace/ext/error_marker', 'ace/ext/searchbox'],
@@ -45,6 +47,7 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
     $scope.user = elzoidoAuthUser.get()
     # get deffered
     visualization = $q.defer()
+    projects = $q.defer()
 
     apiVisualization.get {id: $routeParams.visualization}, (data) ->
       # get visualization
@@ -54,8 +57,19 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
         $scope.ready = true
         visualization.resolve true
 
+    apiProject.all (data) ->
+      $scope.projects = data.projects
+      projects.resolve true
+
     # register promises into one queue
-    elzoidoPromises.register('visualization', [visualization.promise])
+    elzoidoPromises.register('visualization', [visualization.promise, projects.promise])
+
+  $scope.preview = (project) ->
+    # save script
+    promise = $scope.save()
+    # when saved then preview
+    promise.then ->
+      $window.open('/viewer/' + project.name + '?visualization=' + $scope.visualization.id, $scope.visualization.id, '_blank')
 
   $scope.edit = ->
     confirm = dialogs.create('partials/visualizationsInformationEdit.html', 'VisualizationsInformationEditCtrl',
@@ -83,6 +97,8 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
 
   # save action
   $scope.save = ->
+    # get deffered
+    process = $q.defer()
     # create form data object
     data = new FormData()
 
@@ -108,10 +124,14 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
         $scope.refresh();
         # close wait dialog
         wait.close($scope.visualization.name)
+        # resolve process
+        process.resolve true
         # fire message
         elzoidoMessages.send('success', 'Success!', 'Visualization ' + $scope.visualization.name + ' was successfully updated.')
       , 1000)
     )
+    # return promise
+    return process.promise
 
   # refresh when new library is added
   $scope.$on 'event:narra-visualization-updated', (event, visualization) ->

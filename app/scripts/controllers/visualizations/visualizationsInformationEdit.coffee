@@ -24,6 +24,7 @@ angular.module('narra.ui').controller 'VisualizationsInformationEditCtrl', ($sco
   $scope.visualization = data.visualization
   $scope.initial = angular.copy(data.visualization)
   $scope.uploader = new FileUploader()
+  $scope.contributor = {}
 
   apiVisualization.all (data) ->
     $scope.visualizations = data.visualizations
@@ -40,9 +41,21 @@ angular.module('narra.ui').controller 'VisualizationsInformationEditCtrl', ($sco
       $scope.visualization.file = file._file
       console.log($scope.visualization.file)
 
+  $scope.addContribution = (user) ->
+    $scope.visualization.contributors.push(user)
+    $scope.contributor.selected = undefined
+    # refresh
+    $scope.filter()
+
+  $scope.removeContribution = (user) ->
+    _.pull($scope.visualization.contributors, user)
+    # refresh
+    $scope.filter()
+
   $scope.filter = ->
     $scope.contributors = _.filter($scope.users, (user) ->
-      !_.isEqual($scope.visualization.author.username, user.username)
+      !_.isEqual($scope.visualization.author.username, user.username) && !_.include(_.pluck($scope.visualization.contributors,
+        'username'), user.username)
     )
 
   $scope.close = ->

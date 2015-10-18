@@ -21,19 +21,12 @@
 
 angular.module('narra.ui').controller 'ProjectsAddCtrl', ($q, $scope, $filter, $modalInstance, dialogs, apiProject, apiUser, elzoidoMessages, elzoidoAuthUser) ->
   $scope.user = elzoidoAuthUser.get()
-  $scope.project = {name: '', title: '', author: $scope.user, description: '', contributors: []}
+  $scope.project = {name: '', title: '', author: $scope.user, description: ''}
 
   apiProject.all (data) ->
     $scope.projects = data.projects
   apiUser.all (data) ->
     $scope.users = data.users
-    $scope.filter()
-
-  $scope.filter = ->
-    temporary = angular.copy($scope.users)
-    _.remove(temporary, (user) ->
-      _.isEqual(user.username, $scope.project.author.username))
-    $scope.contributors = temporary
 
   $scope.close = ->
     $modalInstance.dismiss('canceled')
@@ -54,7 +47,7 @@ angular.module('narra.ui').controller 'ProjectsAddCtrl', ($q, $scope, $filter, $
         title: $scope.project.title
         author: $scope.project.author.username
         description: $scope.project.description
-        contributors: _.pluck($scope.project.contributors, 'username')
+        contributors: []
       }, (data) ->
         # close wait dialog
         wait.close(data.project.name)

@@ -21,7 +21,7 @@
 
 angular.module('narra.ui').controller 'LibrariesAddCtrl', ($q, $scope, $filter, $modalInstance, dialogs, apiLibrary, apiProject, apiUser, apiGenerator, elzoidoMessages, elzoidoAuthUser) ->
   $scope.user = elzoidoAuthUser.get()
-  $scope.library = { name: '', description: '', author: $scope.user, contributors: [], generators: [], project: '' }
+  $scope.library = { name: '', description: '', author: $scope.user, project: undefined }
 
   apiLibrary.all (data) ->
     $scope.libraries = data.libraries
@@ -33,15 +33,8 @@ angular.module('narra.ui').controller 'LibrariesAddCtrl', ($q, $scope, $filter, 
     $scope.projects = temporary
   apiUser.all (data) ->
     $scope.users = data.users
-    $scope.filter()
   apiGenerator.all (data) ->
     $scope.generators = data.generators
-
-  $scope.filter = ->
-    temporary = angular.copy($scope.users)
-    _.remove(temporary, (user) ->
-      _.isEqual(user.username, $scope.library.author.username))
-    $scope.contributors = temporary
 
   $scope.close = ->
     $modalInstance.dismiss('canceled')
@@ -54,12 +47,16 @@ angular.module('narra.ui').controller 'LibrariesAddCtrl', ($q, $scope, $filter, 
     # close dialog
     $modalInstance.close(wait)
 
+    # prepare project
+    if _.isUndefined($scope.library.project)
+      $scope.library.project = {name: undefined}
+
     apiLibrary.new({
       name: $scope.library.name
       author: $scope.library.author.username
       description: $scope.library.description
-      generators: _.pluck($scope.library.generators, 'identifier')
-      contributors: _.pluck($scope.library.contributors, 'username')
+      generators: []
+      contributors: []
       project: $scope.library.project.name
     }, (data) ->
       # close wait dialog

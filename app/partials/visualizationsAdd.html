@@ -69,15 +69,6 @@
             </div>
 
             <div class="form-group">
-                <label class="col-sm-2 control-label">Description</label>
-
-                <div class="col-sm-10">
-                <textarea name="description" ng-model="visualization.description" class="form-control"
-                          placeholder="Enter a description here" rows="5"></textarea>
-                </div>
-            </div>
-
-            <div class="form-group">
                 <label class="col-sm-2 control-label">Author</label>
 
                 <div class="col-sm-10">
@@ -86,6 +77,15 @@
                         <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}
                         </ui-select-choices>
                     </ui-select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Description</label>
+
+                <div class="col-sm-10">
+                <textarea name="description" ng-model="visualization.description" class="form-control"
+                          placeholder="Enter a description here (Optional)" rows="5"></textarea>
                 </div>
             </div>
         </div>

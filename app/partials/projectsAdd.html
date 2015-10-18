@@ -66,6 +66,17 @@
             </p>
         </div>
 
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Author</label>
+
+            <div class="col-sm-10">
+                <ui-select ng-model="project.author" ng-disabled="!user.isAdmin()" ng-change="filter()" required>
+                    <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}</ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
         <div ng-show="newProject.name.$dirty && newProject.name.$error.required" class="col-md-offset-2">
             <p class="text-danger left-buffer-10">
                 <strong>Required!</strong>
@@ -78,29 +89,7 @@
 
             <div class="col-sm-10">
                 <textarea name="description" ng-model="project.description" class="form-control"
-                          placeholder="Enter a description here" rows="5"></textarea>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Author</label>
-
-            <div class="col-sm-10">
-                <ui-select ng-model="project.author" ng-disabled="!user.isAdmin()" ng-change="filter()" required>
-                    <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}</ui-select-choices>
-                </ui-select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Contributors</label>
-
-            <div class="col-sm-10">
-                <ui-select multiple ng-model="project.contributors" style="width: 100%;">
-                    <ui-select-match placeholder="Select contributors">{{$item.name}}</ui-select-match>
-                    <ui-select-choices repeat="user in contributors | filter:$select.search">{{user.name}}</ui-select-choices>
-                </ui-select>
+                          placeholder="Enter a description here (Optional)" rows="5"></textarea>
             </div>
         </div>
     </form>

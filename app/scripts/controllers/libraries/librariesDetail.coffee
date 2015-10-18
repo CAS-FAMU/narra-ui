@@ -20,16 +20,13 @@
 #
 
 angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, $rootScope, $routeParams, $location, $document, $interval, $filter, $q, dialogs, apiProject, apiLibrary, apiUser, apiItem, elzoidoPromises, constantMetadata, elzoidoAuthUser, elzoidoMessages) ->
-  # set up context
-  $scope.project = $routeParams.project
-  $scope.from = $routeParams.from
   # initialization
   $scope.rotation = {}
   $scope.thumbnail = {}
   # init metadata providers
   $scope.libraryMetadata = {}
   $scope.itemsMetadata = {}
-  $scope.tabs = { general: { active: true }, items: { }, metadata: { } }
+  $scope.tabs = { library: { active: true }, items: { }, metadata: { } }
 
   if !_.isUndefined($routeParams.tab)
     $scope.tabs[$routeParams.tab].active = true
@@ -55,6 +52,11 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, 
       # resolve metadata providers
       $scope.metadataProviders = constantMetadata.providers
       items.resolve true
+
+    # set up context
+    library.promise.then ->
+      if !_.isUndefined($routeParams.project)
+        $scope.project = _.find($scope.library.projects, { name: $routeParams.project })
 
     # register promises into one queue
     elzoidoPromises.register('library', [library.promise, items.promise])

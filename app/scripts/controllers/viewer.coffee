@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $window, $rootScope, $q, apiProject, elzoidoPromises, angularLoad) ->
+angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $window, $rootScope, $q, apiProject, apiVisualization, elzoidoPromises, angularLoad) ->
 # narra api for processing
   $window.narra =
     width: $window.innerWidth - 5
@@ -39,24 +39,21 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
       else
         _.where($scope.junctions[synthesizer], {items: [{id: item}]})
 
+  # inicialization
+  $scope.visualization = {}
+
   $scope.refresh = ->
     # get deffered
     project = $q.defer()
     junctions = $q.defer()
     items = $q.defer()
+    visualization = $q.defer()
     $scope.junctions = {}
 
     apiProject.get {name: $routeParams.project}, (data) ->
-      _.forEach(data.project.visualizations, (visualization) ->
-        visualization.thumbnail = '/images/bars.png')
-      _.forEach(data.project.libraries, (library) ->
-        library.thumbnails = [] if _.isUndefined(library.thumbnails)
-        while library.thumbnails.length < 5
-          library.thumbnails.push('/images/bars.png'))
       data.project.metadata = _.filter(data.project.metadata, (meta) ->
         !_.isEqual(meta.name, 'public'))
       $scope.project = data.project
-      $scope.visualization = data.project.visualizations[0]
       $rootScope.project = data.project
       project.resolve true
 
@@ -68,19 +65,29 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
           if index + 1 == $scope.project.synthesizers.length
             junctions.resolve true
       )
+      # get visualization
+      if _.isUndefined($routeParams.visualization)
+        apiVisualization.get {id: $scope.project.visualization[0].id }, (data) ->
+          $scope.visualization = data.visualization
+          visualization.resolve true
+      else
+        apiVisualization.get {id: $routeParams.visualization }, (data) ->
+          $scope.visualization = data.visualization
+          visualization.resolve true
 
     apiProject.items {name: $routeParams.project}, (data) ->
       $scope.items = data.items
       items.resolve true
 
     items.promise.then ->
-      $scope.ready = true
-      if ($scope.visualization.type == 'p5.js')
-        angularLoad.loadScript($scope.visualization.script).then ->
-          $scope.sketch = $window.visualization
+      visualization.promise.then ->
+        $scope.ready = true
+        if ($scope.visualization.type == 'p5js')
+          angularLoad.loadScript($scope.visualization.script).then ->
+            $scope.sketch = $window.visualization
 
     # register promises into one queue
-    elzoidoPromises.register('viewer', [project.promise, junctions.promise, items.promise])
+    elzoidoPromises.register('viewer', [project.promise, junctions.promise, items.promise, visualization.promise])
 
   # initial data
   $scope.refresh()
