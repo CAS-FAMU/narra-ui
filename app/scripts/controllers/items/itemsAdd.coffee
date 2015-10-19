@@ -37,52 +37,65 @@ angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $
 
   # next action
   $scope.next = ->
-    # setup collections
-    $scope.items = []
-    # open waiting
-    waiting = dialogs.wait('Please Wait', 'Checking new items ...')
-    # promises
-    promises = []
-    # parse items
-    items = $scope.item.url.split("\n")
-    # iterate over
-    _.forEach(items, (item) ->
-      # get deffered
-      wait = $q.defer()
-      # register promise
-      promises.push(wait.promise)
-      # add item
-      $timeout(->
-        apiItem.check({ url: item }, (data) ->
-          # thumbnail check
-          _.forEach(data.items, (x) ->
-            x.thumbnail = serviceThumbnail.thumbnail(x.type) if _.isNull(x.thumbnail)
-            # push into collection
-            $scope.items.push(x)
+    if $scope.second
+      $scope.third = true
+      $scope.second = false
+    else
+      # author is provided
+      $scope.author = true
+      # setup collections
+      $scope.items = []
+      # open waiting
+      waiting = dialogs.wait('Please Wait', 'Checking new items ...')
+      # promises
+      promises = []
+      # parse items
+      items = $scope.item.url.split("\n")
+      # iterate over
+      _.forEach(items, (item) ->
+        # get deffered
+        wait = $q.defer()
+        # register promise
+        promises.push(wait.promise)
+        # add item
+        $timeout(->
+          apiItem.check({ url: item }, (data) ->
+            # thumbnail check
+            _.forEach(data.items, (x) ->
+              x.thumbnail = serviceThumbnail.thumbnail(x.type) if _.isNull(x.thumbnail)
+              # push into collection
+              $scope.items.push(x)
+              # author is provided
+              $scope.author = $scope.author && x.author
+            )
+            # resolve
+            wait.resolve true
+          , (error) ->
+            wait.resolve true
           )
-          # resolve
-          wait.resolve true
-        , (error) ->
-          wait.resolve true
-        )
-      , 100)
-    )
+        , 100)
+      )
 
-    # register promises into one queue
-    elzoidoPromises.register('check-items', promises)
-    # close dialog
-    elzoidoPromises.promise('check-items').then ->
-      # close
-      waiting.close()
-      # and setup for the next slide
-      $scope.second = true if !_.isEmpty($scope.items)
+      # register promises into one queue
+      elzoidoPromises.register('check-items', promises)
+      # close dialog
+      elzoidoPromises.promise('check-items').then ->
+        # close
+        waiting.close()
+        # and setup for the next slide
+        $scope.second = true if !_.isEmpty($scope.items)
 
   # back action
   $scope.back = ->
-    # setup collections
-    $scope.items = []
-    # back to the first slide
-    $scope.second = false
+    # move back according to level
+    if $scope.third
+      $scope.third = false
+      $scope.second = true
+    else if $scope.second
+      # setup collections
+      $scope.items = []
+      # back to the first slide
+      $scope.second = false
 
   # save action
   $scope.new = ->

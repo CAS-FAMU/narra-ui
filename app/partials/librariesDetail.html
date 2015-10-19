@@ -46,11 +46,13 @@
 
             <uib-tabset type="pills">
                 <uib-tab heading="Library" active="tabs.library.active">
-                    <div ng-class="{'well-hover': isAuthor() || isContributor()}" ng-click="edit()">
+                    <div>
+                        <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
+                        <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
                         <div ng-repeat="thumbnail in library.thumbnails track by $index"
                              class="background-cover"
                              style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 100px; float: left; margin-bottom: 10px;"></div>
-                        <div class="well" ng-class="{'well-hover': isAuthor() || isContributor()}">
+                        <div class="well">
                             <dl class="dl-horizontal">
                                 <dt class="block-header">{{library.name}}</dt>
                             </dl>

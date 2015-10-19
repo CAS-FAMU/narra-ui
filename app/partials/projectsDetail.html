@@ -44,7 +44,9 @@
 
             <uib-tabset type="pills">
                 <uib-tab heading="Project" active="tabs.project.active">
-                    <div ng-click="edit()" class="well-hover">
+                    <div>
+                        <span ng-show="project.public" class="label label-success narra-badge">public</span>
+                        <span ng-hide="project.public" class="label label-danger narra-badge">private</span>
                         <div ng-repeat="thumbnail in project.thumbnails track by $index"
                              class="background-cover"
                              style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 100px; float: left; margin-bottom: 10px;"></div>
@@ -86,6 +88,8 @@
                         <div id="libraries-{{$index}}"
                              ng-repeat="library in filtered = (project.libraries | filter:search) | orderBy:'name'"
                              class="well-hover" ng-click="detailLibrary(library, $index)">
+                            <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
+                            <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
                             <div ng-repeat="thumbnail in library.thumbnails track by $index"
                                  class="background-cover"
                                  style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>

@@ -19,17 +19,21 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiUser, apiSynthesizers, apiVisualization, elzoidoMessages, elzoidoAuthUser, data) ->
+angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiLibrary, apiUser, apiSynthesizers, apiVisualization, elzoidoMessages, elzoidoAuthUser, data) ->
   $scope.user = elzoidoAuthUser.get()
   $scope.project = data.project
   $scope.initial = angular.copy(data.project)
   $scope.contributor = {}
+  $scope.library = {}
 
   apiProject.all (data) ->
     $scope.projects = data.projects
+  apiLibrary.all (data) ->
+    $scope.allLibraries = data.libraries
+    $scope.filterLibraries()
   apiUser.all (data) ->
     $scope.users = data.users
-    $scope.filter()
+    $scope.filterUsers()
   apiSynthesizers.all (data) ->
     # select first synthesizer and activate
     if !_.isEmpty($scope.project.synthesizers)
@@ -85,20 +89,36 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
     $scope.project.contributors.push(user)
     $scope.contributor.selected = undefined
     # refresh
-    $scope.filter()
+    $scope.filterUsers()
 
   $scope.removeContribution = (user) ->
     _.pull($scope.project.contributors, user)
     # refresh
-    $scope.filter()
+    $scope.filterUsers()
+
+  $scope.addLibrary = (library) ->
+    $scope.project.libraries.push(library)
+    $scope.library.selected = undefined
+    # refresh
+    $scope.filterLibraries()
+
+  $scope.removeLibrary = (library) ->
+    _.pull($scope.project.libraries, library)
+    # refresh
+    $scope.filterLibraries()
 
   $scope.isAuthor = ->
     !_.isUndefined($scope.project) && _.isEqual($scope.project.author.username, $scope.user.username) || $scope.user.isAdmin()
 
-  $scope.filter = ->
+  $scope.filterUsers = ->
     $scope.contributors = _.filter($scope.users, (user) ->
       !_.isEqual($scope.project.author.username, user.username) && !_.include(_.pluck($scope.project.contributors,
         'username'), user.username)
+    )
+
+  $scope.filterLibraries = ->
+    $scope.libraries = _.filter($scope.allLibraries, (library) ->
+      !_.include(_.pluck($scope.project.libraries, 'id'), library.id)
     )
 
   $scope.close = ->
@@ -136,6 +156,7 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
         visualizations: _.collect($scope.project.visualizations, (v) ->
           { id: v.id, identifier: v.identifier, options: v.options})
         contributors: _.pluck($scope.project.contributors, 'username')
+        libraries: _.pluck($scope.project.libraries, 'id')
       }, (data) ->
         # close wait dialog
         wait.close(data.project)
