@@ -29,12 +29,14 @@
             Create a new project clicking the red button.
         </div>
 
-        <div class="col-md-12" role="main" ng-show="projects.length > 0">
-            <div class="bs-docs-section" id="projects-section">
+        <div class="col-md-12" role="main">
+            <div class="bs-docs-section" ng-show="projects.length > 0">
                 <h5 id="projects" class="page-header">My Projects</h5>
 
                 <div class="tab-content">
                     <div ng-repeat="project in projects | orderBy:'name'" ng-click="detail(project)" class="well-hover">
+                        <span ng-show="project.public" class="label label-success narra-badge">public</span>
+                        <span ng-hide="project.public" class="label label-danger narra-badge">private</span>
                         <div ng-repeat="thumbnail in project.thumbnails track by $index"
                              class="background-cover"
                              style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
@@ -52,11 +54,13 @@
                 </div>
             </div>
 
-            <div class="bs-docs-section" id="contributions-section" ng-show="contributions.length > 0">
+            <div class="bs-docs-section" ng-show="contributions.length > 0">
                 <h5 id="contributions" class="page-header">My Contributions</h5>
 
                 <div class="tab-content">
                     <div ng-repeat="project in contributions | orderBy:'name'" ng-click="detail(project)" class="well-hover">
+                        <span ng-show="project.public" class="label label-success narra-badge">public</span>
+                        <span ng-hide="project.public" class="label label-danger narra-badge">private</span>
                         <div ng-repeat="thumbnail in project.thumbnails track by $index"
                              class="background-cover"
                              style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>

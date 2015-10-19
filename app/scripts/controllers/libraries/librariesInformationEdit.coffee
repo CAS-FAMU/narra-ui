@@ -69,6 +69,9 @@ angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $
     if $scope.generator
       $scope.generator.identifier == generator.identifier
 
+  $scope.isAuthor = ->
+    !_.isUndefined($scope.library) && _.isEqual($scope.library.author.username, $scope.user.username) || $scope.user.isAdmin()
+
   $scope.filter = ->
     $scope.contributors = _.filter($scope.users, (user) ->
       !_.isEqual($scope.library.author.username, user.username) && !_.include(_.pluck($scope.library.contributors,

@@ -37,7 +37,7 @@
                         <li role="menuitem"><a href="#" ng-click="projectMetadata.add()">Add Metadata</a></li>
                         <li class="divider"></li>
                         <li role="menuitem"><a href="#" ng-click="edit()">Settings</a></li>
-                        <li role="menuitem"><a href="#" ng-click="delete()">Delete</a></li>
+                        <li role="menuitem" ng-show="isAuthor()"><a href="#" ng-click="delete()">Delete</a></li>
                     </ul>
                 </div>
             </div>

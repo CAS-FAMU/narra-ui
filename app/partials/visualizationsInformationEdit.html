@@ -64,7 +64,7 @@
                     <label class="col-sm-2 control-label">Author</label>
 
                     <div class="col-sm-10">
-                        <ui-select ng-model="visualization.author" ng-disabled="!user.isAdmin()" ng-change="filter()"
+                        <ui-select ng-model="visualization.author" ng-disabled="!isAuthor()" ng-change="filter()"
                                    required>
                             <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}
@@ -77,12 +77,12 @@
                     <label class="col-sm-2 control-label">Public</label>
 
                     <div class="col-sm-10">
-                        <input type="checkbox" ng-model="visualization.public"><span class="text-muted"
+                        <input type="checkbox" ng-model="visualization.public" ng-disabled="!isAuthor()"><span class="text-muted"
                                                                                      style="margin-left: 10px;">Turn this visualization into the public mode</span>
                     </div>
                 </div>
             </uib-tab>
-            <uib-tab heading="Contributors" disable="contributors.length == 0">
+            <uib-tab heading="Contributors" disable="(contributors.length == 0 && visualization.contributors == 0) || !isAuthor()">
                 <div class="form-group">
                     <div class="col-sm-5">
                         <ui-select ng-model="contributor.selected"
@@ -105,7 +105,7 @@
                             </div>
                             <div ng-hide="visualization.contributors.length == 0">
                                 <ul class="list-group">
-                                    <li class="list-group-item" ng-repeat="contributor in library.contributors">
+                                    <li class="list-group-item" ng-repeat="contributor in visualization.contributors">
                                         {{contributor.name}} <span class="fa fa-times pull-right pointer-hand" ng-click="removeContribution(contributor)"></span>
                                     </li>
                                 </ul>

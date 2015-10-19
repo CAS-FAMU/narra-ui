@@ -33,9 +33,11 @@ angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $loc
     apiLibrary.all (data) ->
       _.forEach(data.libraries, (library) ->
         $scope.thumbnail[library.name] = library.thumbnails[0])
-      $scope.libraries = _.filter(data.libraries, (library) ->
+      $scope.myLibraries = _.filter(data.libraries, (library) ->
         _.isEqual(library.author.username, $scope.user.username))
-      $scope.contributions = _.filter(data.libraries, (library) ->
+      $scope.sharedLibraries = _.filter(data.libraries, (library) ->
+        library.shared && !_.contains(_.pluck($scope.myLibraries, 'id'), library.id))
+      $scope.contribLibraries = _.filter(data.libraries, (library) ->
         _.contains(_.pluck(library.contributors, 'username'), $scope.user.username))
       libraries.resolve true
 

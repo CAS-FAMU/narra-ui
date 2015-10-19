@@ -64,6 +64,9 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
     # register promises into one queue
     elzoidoPromises.register('visualization', [visualization.promise, projects.promise])
 
+  $scope.isAuthor = ->
+    !_.isUndefined($scope.visualization) && _.isEqual($scope.visualization.author.username, $scope.user.username) || $scope.user.isAdmin()
+
   $scope.preview = (project) ->
     # save script
     promise = $scope.save()
@@ -112,6 +115,11 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
     file = new File([$scope.newContent], fileName)
 
     # set up
+    data.append('name', $scope.visualization.name)
+    data.append('author', $scope.visualization.author.username)
+    data.append('description', $scope.visualization.description)
+    data.append('public', $scope.visualization.public)
+    data.append('contributors', JSON.stringify(_.pluck($scope.visualization.contributors, 'username')))
     data.append('file', file)
 
     # open waiting

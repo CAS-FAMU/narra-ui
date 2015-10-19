@@ -25,8 +25,8 @@
 
     <div class="row">
 
-        <div ng-hide="myVisualizations.length > 0 || publicVisualizations.length > 0" class="col-md-12 item-empty">
-            Create a new visualiztion clicking the red button.
+        <div ng-hide="myVisualizations.length > 0 || publicVisualizations.length > 0 || contribVisualizations.length > 0" class="col-md-12 item-empty">
+            Create a new visualization clicking the red button.
         </div>
 
         <div class="col-md-12" role="main">
@@ -35,6 +35,8 @@
 
                 <div class="tab-content">
                     <div ng-repeat="visualization in myVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
+                        <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
+                        <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
                         <div ng-repeat="thumbnail in visualization.thumbnails track by $index"
                              class="background-cover"
                              style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
@@ -52,11 +54,41 @@
                 </div>
             </div>
 
+            <div class="bs-docs-section" ng-show="contribVisualizations.length > 0">
+                <h5 class="page-header">My Contributions</h5>
+
+                <div class="tab-content">
+                    <div ng-repeat="visualization in contribVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
+                        <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
+                        <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
+                        <div ng-repeat="thumbnail in visualization.thumbnails track by $index"
+                             class="background-cover"
+                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
+                        <div class="well">
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{visualization.name}}</dt>
+                                <dd></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{visualization.description}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>author</dt>
+                                <dd>{{visualization.author.name}}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="bs-docs-section" ng-show="publicVisualizations.length > 0">
                 <h5 class="page-header">Public Visualizations</h5>
 
                 <div class="tab-content">
                     <div ng-repeat="visualization in myVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
+                        <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
+                        <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
                         <div ng-repeat="thumbnail in visualization.thumbnails track by $index"
                              class="background-cover"
                              style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>

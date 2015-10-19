@@ -92,6 +92,9 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
     # refresh
     $scope.filter()
 
+  $scope.isAuthor = ->
+    !_.isUndefined($scope.project) && _.isEqual($scope.project.author.username, $scope.user.username) || $scope.user.isAdmin()
+
   $scope.filter = ->
     $scope.contributors = _.filter($scope.users, (user) ->
       !_.isEqual($scope.project.author.username, user.username) && !_.include(_.pluck($scope.project.contributors,
@@ -128,12 +131,10 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
         title: $scope.project.title
         author: $scope.project.author.username
         description: $scope.project.description
-        synthesizers: _.map($scope.project.synthesizers, (s) ->
-          {identifier: s.identifier, options: s.options}
-        )
-        visualizations: _.map($scope.project.visualizations, (v) ->
-          { id: v.id, identifier: v.identifier, options: v.options}
-        )
+        synthesizers: _.collect($scope.project.synthesizers, (s) ->
+          {identifier: s.identifier, options: s.options})
+        visualizations: _.collect($scope.project.visualizations, (v) ->
+          { id: v.id, identifier: v.identifier, options: v.options})
         contributors: _.pluck($scope.project.contributors, 'username')
       }, (data) ->
         # close wait dialog

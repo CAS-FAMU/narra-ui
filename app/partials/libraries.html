@@ -25,16 +25,18 @@
 
     <div class="row">
 
-        <div ng-hide="libraries.length > 0 || contributions.length > 0" class="col-md-12 item-empty">
+        <div ng-hide="myLibraries.length > 0 || contribLibraries.length > 0 || sharedLibraries.length > 0" class="col-md-12 item-empty">
             Create a new library clicking the red button.
         </div>
 
         <div class="col-md-12" role="main">
-            <div class="bs-docs-section" id="libraries-section"  ng-show="libraries.length > 0">
-                <h5 id="libraries" class="page-header">My Libraries</h5>
+            <div class="bs-docs-section" ng-show="myLibraries.length > 0">
+                <h5 class="page-header">My Libraries</h5>
 
                 <div class="tab-content">
-                    <div ng-repeat="library in libraries | orderBy:'name'" ng-click="detail(library)" class="well-hover">
+                    <div ng-repeat="library in myLibraries | orderBy:'name'" ng-click="detail(library)" class="well-hover">
+                        <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
+                        <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
                         <div ng-repeat="thumbnail in library.thumbnails track by $index"
                              class="background-cover"
                              style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
@@ -52,11 +54,41 @@
                 </div>
             </div>
 
-            <div class="bs-docs-section" id="contributions-section" ng-show="contributions.length > 0">
-                <h5 id="contributions" class="page-header">My Contributions</h5>
+            <div class="bs-docs-section" ng-show="contribLibraries.length > 0">
+                <h5 class="page-header">My Contributions</h5>
 
                 <div class="tab-content">
-                    <div ng-repeat="library in contributions | orderBy:'name'" ng-click="detail(library)" class="well-hover">
+                    <div ng-repeat="library in contribLibraries | orderBy:'name'" ng-click="detail(library)" class="well-hover">
+                        <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
+                        <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
+                        <div ng-repeat="thumbnail in library.thumbnails track by $index"
+                             class="background-cover"
+                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
+                        <div class="well">
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{library.name}}</dt>
+                                <dd></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{library.description}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>author</dt>
+                                <dd>{{library.author.name}}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bs-docs-section" ng-show="sharedLibraries.length > 0">
+                <h5 class="page-header">Shared Libraries</h5>
+
+                <div class="tab-content">
+                    <div ng-repeat="library in sharedLibraries | orderBy:'name'" ng-click="detail(library)" class="well-hover">
+                        <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
+                        <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
                         <div ng-repeat="thumbnail in library.thumbnails track by $index"
                              class="background-cover"
                              style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>

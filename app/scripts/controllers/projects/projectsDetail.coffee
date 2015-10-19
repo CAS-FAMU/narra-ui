@@ -66,6 +66,9 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
         # fire event
         $rootScope.$broadcast 'event:narra-project-updated', project.name
 
+  $scope.isAuthor = ->
+    !_.isUndefined($scope.project) && _.isEqual($scope.project.author.username, $scope.user.username) || $scope.user.isAdmin()
+
   $scope.delete = ->
     # open confirmation dialog
     confirm = dialogs.confirm('Please Confirm',

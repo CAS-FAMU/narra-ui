@@ -67,7 +67,16 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, 
   $scope.selectedItems = ->
     _.where($scope.items, { selected: true })
 
+  $scope.isAuthor = ->
+    !_.isUndefined($scope.library) && _.isEqual($scope.library.author.username, $scope.user.username) || $scope.user.isAdmin()
+
+  $scope.isContributor = ->
+    !_.isUndefined($scope.library) && _.include(_.pluck($scope.library.contributors, 'username'), $scope.user.username)
+
   $scope.edit = ->
+    # check
+    return if !$scope.isAuthor() && !$scope.isContributor()
+    # process
     confirm = dialogs.create('partials/librariesInformationEdit.html', 'LibrariesInformationEditCtrl',
       {library: $scope.library},
       {size: 'lg', keyboard: false})

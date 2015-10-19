@@ -32,8 +32,9 @@ angular.module('narra.ui').controller 'VisualizationsCtrl', ($scope, $rootScope,
       $scope.myVisualizations = _.filter(data.visualizations, (visualization) ->
         _.isEqual(visualization.author.username, $scope.user.username))
       $scope.publicVisualizations = _.filter(data.visualizations, (visualization) ->
-        visualization.public && !_.contains(_.pluck($scope.myVisualizations, 'id'), visualization.id)
-      )
+        visualization.public && !_.contains(_.pluck($scope.myVisualizations, 'id'), visualization.id))
+      $scope.contribVisualizations = _.filter(data.visualizations, (visualization) ->
+        _.contains(_.pluck(visualization.contributors, 'username'), $scope.user.username))
       visualizations.resolve true
 
     # register promises into one queue

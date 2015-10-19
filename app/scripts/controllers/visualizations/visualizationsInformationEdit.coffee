@@ -58,12 +58,15 @@ angular.module('narra.ui').controller 'VisualizationsInformationEditCtrl', ($sco
         'username'), user.username)
     )
 
+  $scope.isAuthor = ->
+    !_.isUndefined($scope.visualization) && _.isEqual($scope.visualization.author.username, $scope.user.username) || $scope.user.isAdmin()
+
   $scope.close = ->
     $modalInstance.dismiss('canceled')
 
   # save action
   $scope.edit = ->
-# create form data object
+    # create form data object
     data = new FormData()
 
     # set up
@@ -71,6 +74,7 @@ angular.module('narra.ui').controller 'VisualizationsInformationEditCtrl', ($sco
     data.append('author', $scope.visualization.author.username)
     data.append('description', $scope.visualization.description)
     data.append('public', $scope.visualization.public)
+    data.append('contributors', JSON.stringify(_.pluck($scope.visualization.contributors, 'username')))
     data.append('file', $scope.visualization.file) if $scope.visualization.file
 
     # open waiting
