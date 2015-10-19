@@ -37,6 +37,9 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
         session.setMode('ace/mode/java')
       else
         session.setMode('ace/mode/javascript')
+      # set autoresize
+      editor.setAutoScrollEditorIntoView(true)
+      editor.setOption("maxLines", 120)
       # listen for changes
       session.on "change", ->
         $scope.newContent = session.getValue()
