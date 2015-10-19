@@ -151,7 +151,7 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, 
     url = '/items/' + item.id + '?library=' + $scope.library.id
     # when comes from project
     if !_.isUndefined($scope.project)
-      url = url + '&project=' + $scope.project + '&fromPrevious=' + $scope.from
+      url = url + '&project=' + $scope.project.name
     # change location
     $location.url(url)
 

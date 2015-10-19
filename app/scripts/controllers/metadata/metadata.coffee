@@ -99,7 +99,6 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
             # merge
             _.merge(data,  { seek: $scope.seek, mark: mark })
 
-
           # open confirmation dialog
           confirm = dialogs.create(provider.templateEdit, provider.controller, data,
             {size: 'lg', keyboard: false})

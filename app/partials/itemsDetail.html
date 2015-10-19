@@ -24,11 +24,46 @@
 <div class="container bs-docs-container">
 
     <div class="row">
-        <div class="col-md-9" role="main">
-            <div class="bs-docs-section" id="player">
-                <h5 class="page-header">{{item.name}}</h5>
+        <div class="col-md-12" role="main">
+            <h5 class="page-header">
+                <span ng-show="project"><a href="/projects/{{project.name}}?tab=libraries">{{project.title}}</a> / </span>
+                <span ng-show="library"><a href="/libraries/{{library.id}}?tab=items&project={{project.name}}">{{library.name}}</a> / </span>
+                {{item.name}}</h5>
 
-                <div ng-if="player.ready" class="videogular-container">
+            <div ng-if="isAuthor() || isContributor()" ui-scrollpoint="+30">
+                <div class="pull-right">
+                    <div class="btn-group" uib-dropdown>
+                        <button id="metadata" class="btn btn-danger" type="button" uib-dropdown-toggle>
+                            <span class="fa fa-plus"></span> Add Metadata <span class="caret"></span>
+                        </button>
+                        <ul class="uib-dropdown-menu" role="menu" aria-labelledby="metadata">
+                            <li ng-repeat="provider in metadataProviders | orderBy:'name'">
+                                <a href="#" ng-click="itemMetadata.add(provider)">{{provider.name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="btn-group" ng-show="generators.length" uib-dropdown>
+                        <button id="regenerate" class="btn btn-danger" type="button" uib-dropdown-toggle>
+                            <span class="fa fa-repeat"></span> Regenerate <span class="caret"></span>
+                        </button>
+                        <ul class="uib-dropdown-menu" role="menu" aria-labelledby="regenerate">
+                            <li ng-repeat="generator in generators">
+                                <a href="#"
+                                   ng-click="itemMetadata.regenerate(generator.identifier)">{{generator.title}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="btn-group" uib-dropdown>
+                        <button id="actions" type="button" class="btn btn-danger" uib-dropdown-toggle>
+                            <span class="fa fa-cog"></span> <span class="caret"></span>
+                        </button>
+                        <ul class="uib-dropdown-menu" role="menu" aria-labelledby="actions">
+                            <li role="menuitem"><a href="#" ng-click="delete()">Delete</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div ng-if="player.ready"
+                     ng-class="{'videogular-container': tabs.player.active, 'videogular-container-floating': !tabs.player.active}">
                     <videogular vg-player-ready="onPlayerReady($API)" vg-responsive="true"
                                 vg-cue-points="player.cuePoints">
                         <vg-media vg-src="player.sources"
@@ -59,64 +94,21 @@
                         </div>
                     </videogular>
                 </div>
-
-                <div ng-if="text" ui-ace="editorOption" ng-model="text"></div>
             </div>
 
-            <div class="bs-docs-section" id="meta">
-                <h5 class="page-header">Metadata</h5>
-
-                <div narra-metadata-api="narraMetadataAPI" narra-metadata-type="item" narra-metadata-data="item"
-                     narra-metadata-player="player.api" narra-metadata-search="search" narra-metadata-ui="true" narra-metadata></div>
-            </div>
+            <uib-tabset type="pills">
+                <uib-tab ng-if="player.ready" heading="Player" active="tabs.player.active">
+                    <div style="height: 500px;"></div>
+                </uib-tab>
+                <uib-tab ng-if="text" heading="Text" active="tabs.text.active">
+                    <div ui-ace="editorOption" ng-model="text"></div>
+                </uib-tab>
+                <uib-tab heading="Metadata" active="tabs.metadata.active">
+                    <div narra-metadata-api="itemMetadata" narra-metadata-type="item" narra-metadata-data="item"
+                         narra-metadata-player="player.api" narra-metadata-search="search" narra-metadata-ui="true"
+                         narra-metadata></div>
+                </uib-tab>
+            </uib-tabset>
         </div>
-
-        <div class="col-md-3">
-            <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" ui-scrollpoint="+30">
-                <div class="input-group input-group-sm" style="width: 200px;">
-                    <span class="input-group-addon"><span class="fa fa-search"></span></span>
-                    <input type="text" class="form-control" ng-model="search" placeholder="Search">
-                </div>
-                <ul class="side-buttons">
-                    <li>
-                        <button class="btn btn-danger btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
-                                aria-expanded="false">
-                            <span class="fa fa-plus"></span> Add Meta <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li ng-repeat="provider in metadataProviders | orderBy:'name'">
-                                <a href="#" ng-click="narraMetadataAPI.add(provider)">{{provider.name}}</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li ng-show="generators.length">
-                        <button class="btn btn-danger btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
-                                aria-expanded="false">
-                            <span class="fa fa-repeat"></span> Regenerate <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li ng-repeat="generator in generators">
-                                <a href="#" ng-click="narraMetadataAPI.regenerate(generator.identifier)">{{generator.title}}</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <button class="btn btn-danger btn-xs" ng-click="delete()"><span class="fa fa-remove"></span>
-                            Delete
-                        </button>
-                    </li>
-                    <li ng-hide="project">
-                        <a class="btn btn-default btn-xs" href="/libraries/{{library}}?tab=items"><span
-                                class="fa fa-angle-double-left"></span> Back To Library</a>
-                    </li>
-                    <li ng-show="project">
-                        <a class="btn btn-default btn-xs"
-                           href="/libraries/{{library}}?project={{project}}&tab=items"><span
-                                class="fa fa-angle-double-left"></span> Back To Library</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
     </div>
 </div>

@@ -83,9 +83,22 @@ body {
   margin-top: 85px;
 }
 
-.ui-scrollpoint {
+.well {
+  border-radius: 0px;
+}
+
+.ui-scrollpoint div.pull-right {
   position: fixed;
-  top: -65px;
+  top: 20px;
+  right: 60px;
+  z-index: 98;
+}
+
+.ui-scrollpoint div.videogular-container-floating {
+  position: fixed;
+  top: 80px;
+  right: 60px;
+  z-index: 97;
 }
 
 .page-header {
@@ -95,6 +108,14 @@ body {
 
 .dl-horizontal dt {
   font-size: small;
+}
+
+a {
+  color: #d9203b;
+}
+
+a:hover {
+  color: #d9203b;
 }
 
 .block-header {
@@ -214,7 +235,7 @@ body {
   margin-bottom: 0px;
 }
 
-.well-hover:hover  {
+.well-hover:hover {
   -webkit-transition: all linear 0.2s;
   -moz-transition: all linear 0.2s;
   transition: all linear 0.2s;
@@ -233,7 +254,7 @@ body {
 }
 
 .ace_editor {
-  height: 800px;
+  height: 200px;
 }
 
 .well-active {

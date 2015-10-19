@@ -21,10 +21,9 @@
 
 angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $routeParams, $location, $sce, $document, $interval, $timeout, $filter, $q, dialogs, apiProject, apiLibrary, apiItem, apiUser, uiGmapGoogleMapApi, constantMetadata, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
   # set up context
-  $scope.library = $routeParams.library
-  $scope.project = $routeParams.project
-  $scope.from = $routeParams.from
-  $scope.fromPrevious = $routeParams.fromPrevious
+  $scope.itemMetadata = {}
+  # get current user
+  $scope.tabs = { player: { }, text: { }, metadata: { } }
   # player
   $scope.player =
     api: undefined
@@ -39,15 +38,12 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
     plugins: {}
 
   $scope.editorOption =
-    theme: 'kuroir',
+    theme: 'chrome',
     require: ['ace/ext/language_tools', 'ace/ext/static_highlight', 'ace/ext/error_marker', 'ace/ext/searchbox'],
     useWrapMode: true,
     showGutter: false,
-    advanced: {
-      enableSnippets: true,
-      enableBasicAutocompletion: true,
-      enableLiveAutocompletion: true
-    },
+    showPrintMargin: false,
+    advanced: {},
     onLoad: (editor) ->
       # read only
       editor.setReadOnly(true)
@@ -55,7 +51,9 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
       session = editor.getSession()
       # resolve mode
       session.setMode('ace/mode/text')
-
+      editor.setAutoScrollEditorIntoView(true)
+      editor.setOption("maxLines", 120)
+      editor.setFontSize('14px')
 
   # refresh data
   $scope.refresh = ->
@@ -68,12 +66,18 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
     # get library
     apiLibrary.get {id: $routeParams.library}, (data) ->
       $scope.generators = data.library.generators
+      $scope.library = data.library
+      # get project informations
+      if !_.isUndefined($routeParams.project)
+        $scope.project = _.find($scope.library.projects, { name: $routeParams.project })
       library.resolve true
 
     # get item
     apiItem.get {id: $routeParams.item}, (data) ->
       switch(data.item.type)
         when 'video'
+          # set active panel
+          $scope.tabs.player.active = true
           # set video
           $scope.player.sources = [{src: $sce.trustAsResourceUrl(data.item.video_proxy_hq), type: "video/webm"}]
           # get duration
@@ -109,6 +113,8 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
           }
           $scope.player.ready = true
         when 'text'
+          # set active panel
+          $scope.tabs.text.active = true
           $scope.text = _.where(data.item.metadata, {name: 'text'})[0].value
           data.item.metadata = _.filter(data.item.metadata, (meta) ->
             !_.isEqual(meta.name, 'text')
@@ -126,6 +132,22 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
 
     # register promises into one queue
     elzoidoPromises.register('item', [item.promise, library.promise])
+
+  $scope.refreshMetadata = ->
+    apiItem.get {id: $routeParams.item}, (data) ->
+      $scope.item = data.item
+      # item's used generators
+      generators = _.uniq(_.pluck($scope.item.metadata, 'generator'))
+      # resolve metadata providers
+      $scope.metadataProviders = _.filter(constantMetadata.providers, (provider) ->
+        !_.include(generators, provider.id) || _.isEqual(provider.id, 'user_custom')
+      )
+
+  $scope.isAuthor = ->
+    !_.isUndefined($scope.library) && _.isEqual($scope.library.author.username, $scope.user.username) || $scope.user.isAdmin()
+
+  $scope.isContributor = ->
+    !_.isUndefined($scope.library) && _.include(_.pluck($scope.library.contributors, 'username'), $scope.user.username)
 
   $scope.delete = ->
     # open confirmation dialog
@@ -152,8 +174,7 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
 
   $scope.$on 'event:narra-item-updated', (event, item) ->
     if _.isEqual($routeParams.item, item)
-      $scope.player.ready = false
-      $scope.refresh()
+      $scope.refreshMetadata()
 
   # initial data
   $scope.refresh()

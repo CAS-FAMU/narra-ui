@@ -10,10 +10,19 @@
 }
 
 .videogular-container {
+  position: absolute;
+  top: 150px;
+  left: 0px;
   width: 100%;
-  height: 320px;
-  margin-bottom: 30px;
-  overflow: hidden;
+  height: 80%;
+}
+
+.videogular-container-floating {
+  position: absolute;
+  width: 400px;
+  height: 225px;
+  top: 145px;
+  right: 15px;
 }
 
 .videogular-container.audio {
@@ -22,7 +31,8 @@
 }
 
 vg-scrub-bar-cue-points.metadata .cue-point {
-  background-color: red !important; }
+  background-color: red !important;
+}
 
 videogular div.my-logo-layer {
   position: absolute;
@@ -32,32 +42,4 @@ videogular div.my-logo-layer {
   left: 30px;
   width: 25%;
   opacity: 0.5;
-}
-
-@media (min-width: 1200px) {
-  .videogular-container {
-    width: 100%;
-    height: 460px;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-  .videogular-container {
-    width: 100%;
-    height: 320px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  .videogular-container {
-    width: 100%;
-    height: 240px;
-  }
-}
-
-@media (max-width: 768px) {
-  .videogular-container {
-    width: 100%;
-    height: 183px;
-  }
 }
