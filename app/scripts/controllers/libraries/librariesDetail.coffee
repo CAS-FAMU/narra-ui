@@ -67,6 +67,11 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, 
   $scope.selectedItems = ->
     _.where($scope.items, { selected: true })
 
+  $scope.select = (selected) ->
+    _.forEach($scope.items, (item) ->
+      item.selected = if selected then true else undefined
+    )
+
   $scope.isAuthor = ->
     !_.isUndefined($scope.library) && _.isEqual($scope.library.author.username, $scope.user.username) || $scope.user.isAdmin()
 

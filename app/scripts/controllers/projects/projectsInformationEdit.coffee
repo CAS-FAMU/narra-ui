@@ -154,9 +154,10 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
         synthesizers: _.collect($scope.project.synthesizers, (s) ->
           {identifier: s.identifier, options: s.options})
         visualizations: _.collect($scope.project.visualizations, (v) ->
-          { id: v.id, identifier: v.identifier, options: v.options})
+          { id: v.id, type: v.type, options: v.options})
         contributors: _.pluck($scope.project.contributors, 'username')
         libraries: _.pluck($scope.project.libraries, 'id')
+        public: $scope.project.public
       }, (data) ->
         # close wait dialog
         wait.close(data.project)

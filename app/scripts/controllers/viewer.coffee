@@ -67,7 +67,7 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
       )
       # get visualization
       if _.isUndefined($routeParams.visualization)
-        apiVisualization.get {id: $scope.project.visualization[0].id }, (data) ->
+        apiVisualization.get {id: $scope.project.visualizations[0].id }, (data) ->
           $scope.visualization = data.visualization
           visualization.resolve true
       else

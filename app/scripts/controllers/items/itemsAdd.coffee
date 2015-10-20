@@ -104,35 +104,20 @@ angular.module('narra.ui').controller 'ItemsAddCtrl', ($scope, $rootScope, $q, $
     # close dialog
     $modalInstance.close(waiting)
     # promises
-    promises = []
+    container = []
     # iterate over
     _.forEach($scope.items, (item) ->
-      # get deffered
-      wait = $q.defer()
-      # register promise
-      promises.push(wait.promise)
-      # add item
-      $timeout(->
-        apiItem.new({
-            url: item.url
-            author: $scope.item.author.name
-            library: $scope.item.library.id
-            connector: item.connector
-            options: item[item.connector]
-          }, (data) ->
-          wait.resolve true
-        , (error) ->
-          wait.resolve true
-          # fire message
-          elzoidoMessages.send('danger', 'Error!', 'Item ' + item.name + ' encountered problem.')
-        )
-      , 100)
+      # prepare item
+      container.push({
+        url: item.url
+        author: $scope.item.author.name
+        library: $scope.item.library.id
+        connector: item.connector
+        options: item[item.connector]
+      })
     )
-
-    # register promises into one queue
-    elzoidoPromises.register('add-items', promises)
-    # close dialog
-    elzoidoPromises.promise('add-items').then ->
+    # add items
+    apiItem.new { items: container}, (data) ->
       # fire message
       elzoidoMessages.send('success', 'Success!', 'Items were successfully created.')
       # close dialog
