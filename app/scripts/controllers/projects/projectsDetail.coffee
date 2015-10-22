@@ -20,109 +20,112 @@
 #
 
 angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope, $document, $routeParams, $location, $filter, $q, dialogs, apiProject, apiVisualization, apiUser, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
-  $scope.refresh = ->
-    # get current user
-    $scope.user = elzoidoAuthUser.get()
-    # get deffered
-    project = $q.defer()
-    sequences = $q.defer()
-    visualizations = $q.defer()
-    $scope.projectMetadata = {}
-    $scope.tabs = { project: { active: true }, libraries: { }, sequences: { }, metadata: { } }
+  # initialization
+  $scope.tabs = { project: { active: true }, libraries: { }, sequences: { }, metadata: { } }
 
-    if !_.isUndefined($routeParams.tab)
-      $scope.tabs[$routeParams.tab].active = true
+  elzoidoPromises.promise('authentication').then ->
+    $scope.refresh = ->
+      # get current user
+      $scope.user = elzoidoAuthUser.get()
+      # get deffered
+      project = $q.defer()
+      sequences = $q.defer()
+      visualizations = $q.defer()
+      $scope.projectMetadata = {}
 
-    apiProject.get {name: $routeParams.project}, (data) ->
-      _.forEach(data.project.visualizations, (visualization) ->
-        visualization.thumbnail = '/images/bars.png')
-      data.project.metadata = _.filter(data.project.metadata, (meta) ->
-        !_.isEqual(meta.name, 'public')
-      )
-      $scope.project = data.project
-      project.resolve true
+      if !_.isUndefined($routeParams.tab)
+        $scope.tabs[$routeParams.tab].active = true
 
-    apiProject.sequences {name: $routeParams.project}, (data) ->
-      $scope.sequences = data.sequences
-      sequences.resolve true
-
-    project.promise.then () ->
-      apiVisualization.all (data) ->
-        $scope.visualizations = _.filter(data.visualizations, (visualization) ->
-          visualization.public && !_.contains(_.pluck($scope.project.visualizations, 'id'), visualization.id)
+      apiProject.get {name: $routeParams.project}, (data) ->
+        _.forEach(data.project.visualizations, (visualization) ->
+          visualization.thumbnail = '/images/bars.png')
+        data.project.metadata = _.filter(data.project.metadata, (meta) ->
+          !_.isEqual(meta.name, 'public')
         )
-        visualizations.resolve true
+        $scope.project = data.project
+        project.resolve true
 
-    # register promises into one queue
-    elzoidoPromises.register('project', [project.promise, sequences.promise, visualizations.promise])
+      apiProject.sequences {name: $routeParams.project}, (data) ->
+        $scope.sequences = data.sequences
+        sequences.resolve true
 
-  $scope.edit = ->
-    confirm = dialogs.create('partials/projectsInformationEdit.html', 'ProjectsInformationEditCtrl',
-      {project: $scope.project},
-      {size: 'lg', keyboard: false})
-    # result
-    confirm.result.then (wait) ->
-      wait.result.then (project)->
-        # fire event
-        $rootScope.$broadcast 'event:narra-project-updated', project.name
+      project.promise.then () ->
+        apiVisualization.all (data) ->
+          $scope.visualizations = _.filter(data.visualizations, (visualization) ->
+            visualization.public && !_.contains(_.pluck($scope.project.visualizations, 'id'), visualization.id)
+          )
+          visualizations.resolve true
 
-  $scope.isAuthor = ->
-    !_.isUndefined($scope.project) && _.isEqual($scope.project.author.username, $scope.user.username) || $scope.user.isAdmin()
+      # register promises into one queue
+      elzoidoPromises.register('project', [project.promise, sequences.promise, visualizations.promise])
 
-  $scope.delete = ->
-    # open confirmation dialog
-    confirm = dialogs.confirm('Please Confirm',
-      'You are about to delete the project ' + $scope.project.title + ', this procedure is irreversible. Do you want to continue ?')
+    $scope.edit = ->
+      confirm = dialogs.create('partials/projectsInformationEdit.html', 'ProjectsInformationEditCtrl',
+        {project: $scope.project},
+        {size: 'lg', keyboard: false})
+      # result
+      confirm.result.then (wait) ->
+        wait.result.then (project)->
+          # fire event
+          $rootScope.$broadcast 'event:narra-project-updated', project.name
 
-    # result
-    confirm.result.then ->
-      # delete storage and its projects
-      apiProject.delete {name: $scope.project.name}, ->
-        # redirect back to libraries
-        $location.url('/projects/')
+    $scope.isAuthor = ->
+      !_.isUndefined($scope.project) && _.isEqual($scope.project.author.username, $scope.user.username) || $scope.user.isAdmin()
+
+    $scope.delete = ->
+      # open confirmation dialog
+      confirm = dialogs.confirm('Please Confirm',
+        'You are about to delete the project ' + $scope.project.title + ', this procedure is irreversible. Do you want to continue ?')
+
+      # result
+      confirm.result.then ->
+        # delete storage and its projects
+        apiProject.delete {name: $scope.project.name}, ->
+          # redirect back to libraries
+          $location.url('/projects/')
+          # send message
+          elzoidoMessages.send('success', 'Success!', 'Project ' + $scope.project.name + ' was successfully deleted.')
+
+    # click function for detail view
+    $scope.detailLibrary = (library, index) ->
+      $location.url('/libraries/' + library.id + '?project=' + $scope.project.name)
+
+    # click function for detail view
+    $scope.detailSequence = (sequence, index) ->
+      $location.url('/sequences/' + sequence.id + '?project=' + $scope.project.name)
+
+    $scope.addVisualization = (visualization) ->
+      apiProject.visualizationsAction {name: $scope.project.name, action: 'add', visualizations: [visualization.id]}, ->
         # send message
-        elzoidoMessages.send('success', 'Success!', 'Project ' + $scope.project.name + ' was successfully deleted.')
+        elzoidoMessages.send('success', 'Success!', 'Visualization ' + visualization.name + ' was successfully added.')
+        # refresh
+        $scope.refresh()
 
-  # click function for detail view
-  $scope.detailLibrary = (library, index) ->
-    $location.url('/libraries/' + library.id + '?project=' + $scope.project.name)
+    $scope.removeVisualization = (visualization) ->
+      apiProject.visualizationsAction {name: $scope.project.name, action: 'remove', visualizations: [visualization.id]}, ->
+        # send message
+        elzoidoMessages.send('success', 'Success!', 'Visualization ' + visualization.name + ' was successfully removed.')
+        # refresh
+        $scope.refresh()
 
-  # click function for detail view
-  $scope.detailSequence = (sequence, index) ->
-    $location.url('/sequences/' + sequence.id + '?project=' + $scope.project.name)
+    # refresh when new library is added
+    $scope.$on 'event:narra-library-created', (event) ->
+      if !_.isUndefined($routeParams.project)
+        $scope.refresh()
 
-  $scope.addVisualization = (visualization) ->
-    apiProject.visualizationsAction {name: $scope.project.name, action: 'add', visualizations: [visualization.id]}, ->
-      # send message
-      elzoidoMessages.send('success', 'Success!', 'Visualization ' + visualization.name + ' was successfully added.')
-      # refresh
+    # refresh when new library is added
+    $rootScope.$on 'event:narra-library-purged', (event, status) ->
       $scope.refresh()
 
-  $scope.removeVisualization = (visualization) ->
-    apiProject.visualizationsAction {name: $scope.project.name, action: 'remove', visualizations: [visualization.id]}, ->
-      # send message
-      elzoidoMessages.send('success', 'Success!', 'Visualization ' + visualization.name + ' was successfully removed.')
-      # refresh
-      $scope.refresh()
+    # refresh when new sequence is added
+    $scope.$on 'event:narra-sequence-created', (event) ->
+      if !_.isUndefined($routeParams.project)
+        $scope.refresh()
 
-  # refresh when new library is added
-  $scope.$on 'event:narra-library-created', (event) ->
-    if !_.isUndefined($routeParams.project)
-      $scope.refresh()
+    # refresh when new library is added
+    $scope.$on 'event:narra-project-updated', (event, project) ->
+      if _.isEqual($routeParams.project, project)
+        $scope.refresh()
 
-  # refresh when new library is added
-  $rootScope.$on 'event:narra-library-purged', (event, status) ->
+    # initial data
     $scope.refresh()
-
-  # refresh when new sequence is added
-  $scope.$on 'event:narra-sequence-created', (event) ->
-    if !_.isUndefined($routeParams.project)
-      $scope.refresh()
-
-  # refresh when new library is added
-  $scope.$on 'event:narra-project-updated', (event, project) ->
-    if _.isEqual($routeParams.project, project)
-      $scope.refresh()
-
-  # initial data
-  $scope.refresh()

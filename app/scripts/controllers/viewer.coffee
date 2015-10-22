@@ -20,7 +20,7 @@
 #
 
 angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $window, $rootScope, $q, apiProject, apiVisualization, elzoidoPromises, angularLoad) ->
-# narra api for processing
+  # narra api for processing
   $window.narra =
     width: $window.innerWidth - 5
     height: $window.innerHeight - 5

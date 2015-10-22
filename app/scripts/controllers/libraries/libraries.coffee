@@ -25,49 +25,46 @@ angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $loc
   $scope.thumbnail = {}
   $scope.tabs = { myLibraries: { }, contribLibraries: { }, sharedLibraries: { } }
 
-  $scope.refresh = ->
-# get current user
-    $scope.user = elzoidoAuthUser.get()
-    # get deffered
-    libraries = $q.defer()
+  elzoidoPromises.promise('authentication').then ->
+    $scope.refresh = ->
+      # get current user
+      $scope.user = elzoidoAuthUser.get()
+      # get deffered
+      libraries = $q.defer()
 
-    apiLibrary.all (data) ->
-      _.forEach(data.libraries, (library) ->
-        $scope.thumbnail[library.name] = library.thumbnails[0])
-      $scope.myLibraries = _.filter(data.libraries, (library) ->
-        _.isEqual(library.author.username, $scope.user.username))
-      $scope.contribLibraries = _.filter(data.libraries, (library) ->
-        _.contains(_.pluck(library.contributors, 'username'), $scope.user.username))
-      $scope.sharedLibraries = _.filter(data.libraries, (library) ->
-        library.shared && !_.contains(_.pluck($scope.myLibraries, 'id'),
-          library.id) && !_.contains(_.pluck($scope.contribLibraries, 'id'), library.id))
-      if $scope.myLibraries.length == 0
-        if $scope.contribLibraries.length == 0
-          $scope.tabs.sharedLibraries = { active: true }
+      apiLibrary.all (data) ->
+        _.forEach(data.libraries, (library) ->
+          $scope.thumbnail[library.name] = library.thumbnails[0])
+        $scope.myLibraries = _.filter(data.libraries, (library) ->
+          _.isEqual(library.author.username, $scope.user.username))
+        $scope.contribLibraries = _.filter(data.libraries, (library) ->
+          _.contains(_.pluck(library.contributors, 'username'), $scope.user.username))
+        $scope.sharedLibraries = _.filter(data.libraries, (library) ->
+          library.shared && !_.contains(_.pluck($scope.myLibraries, 'id'),
+            library.id) && !_.contains(_.pluck($scope.contribLibraries, 'id'), library.id))
+        if $scope.myLibraries.length == 0
+          if $scope.contribLibraries.length == 0
+            $scope.tabs.sharedLibraries = { active: true }
+          else
+            $scope.tabs.contribLibraries = { active: true }
         else
-          $scope.tabs.contribLibraries = { active: true }
-      else
-        $scope.tabs.myLibraries = { active: true }
-      libraries.resolve true
+          $scope.tabs.myLibraries = { active: true }
+        libraries.resolve true
 
-    # register promises into one queue
-    elzoidoPromises.register('libraries', [libraries.promise])
+      # register promises into one queue
+      elzoidoPromises.register('libraries', [libraries.promise])
 
-  # refresh when user is logged
-  $rootScope.$on 'event:elzoido-auth-user', (event, status) ->
+    # refresh when new library is added
+    $rootScope.$on 'event:narra-library-created', (event, status) ->
+      $scope.refresh()
+
+    # refresh when new library is added
+    $rootScope.$on 'event:narra-library-purged', (event, status) ->
+      $scope.refresh()
+
+    # click function for detail view
+    $scope.detail = (library) ->
+      $location.path('/libraries/' + library.id)
+
+    # initial data
     $scope.refresh()
-
-  # refresh when new library is added
-  $rootScope.$on 'event:narra-library-created', (event, status) ->
-    $scope.refresh()
-
-  # refresh when new library is added
-  $rootScope.$on 'event:narra-library-purged', (event, status) ->
-    $scope.refresh()
-
-  # click function for detail view
-  $scope.detail = (library) ->
-    $location.path('/libraries/' + library.id)
-
-  # initial data
-  $scope.refresh()

@@ -83,7 +83,7 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
 
   $scope.isSelectedVisualization = (visualization) ->
     if $scope.visualization
-      $scope.visualization.identifier == visualization.identifier
+      $scope.visualization.id == visualization.id
 
   $scope.addContribution = (user) ->
     $scope.project.contributors.push(user)

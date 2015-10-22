@@ -19,9 +19,11 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $routeParams, dialogs, constantMetadata, elzoidoMessages, apiItem, apiLibrary, apiProject) ->
+angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $routeParams, dialogs, constantMetadata, elzoidoMessages, elzoidoAuthUser, apiItem, apiLibrary, apiProject) ->
   # prepare data
   $scope.refresh = ->
+    # get current user
+    $scope.user = elzoidoAuthUser.get()
     # init api
     $scope.api = $scope.api || {}
     $scope.player = $scope.api || {}
@@ -56,6 +58,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
       when 'item'
         # assign data
         $scope.item = $scope.data
+        $scope.auth = $scope.data.library
         $scope.connector = _.result(_.find($scope.item.metadata, { 'name': 'connector', 'generator': 'source' }), 'value')
         # temporary meta container
         meta = {}
@@ -173,6 +176,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
       when 'library'
         # assign data
         $scope.library = $scope.data
+        $scope.auth = $scope.data
         # init metadata
         $scope.meta = $scope.library.metadata
         # local methods
@@ -242,6 +246,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
       when 'project'
         # assign data
         $scope.project = $scope.data
+        $scope.auth = $scope.data
         # init metadata
         $scope.meta = $scope.project.metadata
         # local methods
@@ -303,6 +308,15 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $rootScope, $rout
 
   $scope.seek = (position) ->
     $scope.player.seekTime(position)
+
+  $scope.isAuthor = ->
+    !_.isUndefined($scope.auth) && _.isEqual($scope.auth.author.username, $scope.user.username) || $scope.user.isAdmin()
+
+  $scope.isContributor = ->
+    !_.isUndefined($scope.auth) && _.include(_.pluck($scope.auth.contributors, 'username'), $scope.user.username)
+
+  $scope.isLink = (text) ->
+    text.indexOf('http') == 0
 
   # LISTENERS
   # item listener

@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'EventsCtrl', ($scope, $rootScope, $interval, dialogs, apiEvent, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'EventsCtrl', ($scope, $rootScope, $interval, dialogs, apiEvent) ->
   $scope.refresh = ->
     apiEvent.me {}, (data) ->
       _.forEach(data.events, (event) ->
@@ -35,7 +35,7 @@ angular.module('narra.ui').controller 'EventsCtrl', ($scope, $rootScope, $interv
     $scope.refreshInterval = $interval(->
       # reload data
       $scope.refresh()
-    , 10000)
+    , 20000)
 
   $scope.stopRefreshInterval = ->
     # don't start new refresh when it is already on

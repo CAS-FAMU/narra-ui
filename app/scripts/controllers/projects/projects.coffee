@@ -23,41 +23,38 @@ angular.module('narra.ui').controller 'ProjectsCtrl', ($scope, $rootScope, $loca
   # initialization
   $scope.tabs = { myProjects: { }, contribProjects: { } }
 
-  $scope.refresh = ->
-    # get current user
-    $scope.user = elzoidoAuthUser.get()
-    # get deffered
-    projects = $q.defer()
+  elzoidoPromises.promise('authentication').then ->
+    $scope.refresh = ->
+      # get current user
+      $scope.user = elzoidoAuthUser.get()
+      # get deffered
+      projects = $q.defer()
 
-    apiProject.all (data) ->
-      $scope.projects = _.filter(data.projects, (project) ->
-        _.isEqual(project.author.username, $scope.user.username))
-      $scope.contributions = _.filter(data.projects, (project) ->
-        _.contains(_.pluck(project.contributors, 'username'), $scope.user.username))
-      if  $scope.projects.length == 0
-        $scope.tabs.contribProjects = { active: true }
-      else
-        $scope.tabs.myProjects = { active: true }
-      projects.resolve true
+      apiProject.all (data) ->
+        $scope.projects = _.filter(data.projects, (project) ->
+          _.isEqual(project.author.username, $scope.user.username))
+        $scope.contributions = _.filter(data.projects, (project) ->
+          _.contains(_.pluck(project.contributors, 'username'), $scope.user.username))
+        if  $scope.projects.length == 0
+          $scope.tabs.contribProjects = { active: true }
+        else
+          $scope.tabs.myProjects = { active: true }
+        projects.resolve true
 
-    # register promises into one queue
-    elzoidoPromises.register('dashboard', [projects.promise])
+      # register promises into one queue
+      elzoidoPromises.register('dashboard', [projects.promise])
 
-  # click functionfor detail view
-  $scope.detailProject = (project) ->
-    $location.path('/projects/' + project.name)
+    # click functionfor detail view
+    $scope.detailProject = (project) ->
+      $location.path('/projects/' + project.name)
 
-  # refresh when user is logged
-  $rootScope.$on 'event:elzoido-auth-user', (event, status) ->
+    # refresh when new project is added
+    $rootScope.$on 'event:narra-project-created', (event, status) ->
+      $scope.refresh()
+
+    # click function for detail view
+    $scope.detail = (project) ->
+      $location.path('/projects/' + project.name)
+
+    # initial data
     $scope.refresh()
-
-  # refresh when new project is added
-  $rootScope.$on 'event:narra-project-created', (event, status) ->
-    $scope.refresh()
-
-  # click function for detail view
-  $scope.detail = (project) ->
-    $location.path('/projects/' + project.name)
-
-  # initial data
-  $scope.refresh()

@@ -23,44 +23,41 @@ angular.module('narra.ui').controller 'VisualizationsCtrl', ($scope, $rootScope,
   # initialization
   $scope.tabs = { myVisualizations: { }, contribVisualizations: { }, publicVisualizations: { } }
 
-  $scope.refresh = ->
-    # get current user
-    $scope.user = elzoidoAuthUser.get()
-    # get deffered
-    visualizations = $q.defer()
+  elzoidoPromises.promise('authentication').then ->
+    $scope.refresh = ->
+      # get current user
+      $scope.user = elzoidoAuthUser.get()
+      # get deffered
+      visualizations = $q.defer()
 
-    apiVisualization.all (data) ->
-      _.forEach(data.visualizations, (visualization) ->
-        visualization.thumbnail = '/images/bars.png')
-      $scope.myVisualizations = _.filter(data.visualizations, (visualization) ->
-        _.isEqual(visualization.author.username, $scope.user.username))
-      $scope.publicVisualizations = _.filter(data.visualizations, (visualization) ->
-        visualization.public && !_.contains(_.pluck($scope.myVisualizations, 'id'), visualization.id))
-      $scope.contribVisualizations = _.filter(data.visualizations, (visualization) ->
-        _.contains(_.pluck(visualization.contributors, 'username'), $scope.user.username))
-      if $scope.myVisualizations.length == 0
-        if $scope.contribVisualizations.length == 0
-          $scope.tabs.publicVisualizations = { active: true }
+      apiVisualization.all (data) ->
+        _.forEach(data.visualizations, (visualization) ->
+          visualization.thumbnail = '/images/bars.png')
+        $scope.myVisualizations = _.filter(data.visualizations, (visualization) ->
+          _.isEqual(visualization.author.username, $scope.user.username))
+        $scope.publicVisualizations = _.filter(data.visualizations, (visualization) ->
+          visualization.public && !_.contains(_.pluck($scope.myVisualizations, 'id'), visualization.id))
+        $scope.contribVisualizations = _.filter(data.visualizations, (visualization) ->
+          _.contains(_.pluck(visualization.contributors, 'username'), $scope.user.username))
+        if $scope.myVisualizations.length == 0
+          if $scope.contribVisualizations.length == 0
+            $scope.tabs.publicVisualizations = { active: true }
+          else
+            $scope.tabs.contribVisualizations = { active: true }
         else
-          $scope.tabs.contribVisualizations = { active: true }
-      else
-        $scope.tabs.myVisualizations = { active: true }
-      visualizations.resolve true
+          $scope.tabs.myVisualizations = { active: true }
+        visualizations.resolve true
 
-    # register promises into one queue
-    elzoidoPromises.register('visualizations', [visualizations.promise])
+      # register promises into one queue
+      elzoidoPromises.register('visualizations', [visualizations.promise])
 
-  # click function for detail view
-  $scope.detail = (visualization) ->
-    $location.path('/visualizations/' + visualization.id)
+    # click function for detail view
+    $scope.detail = (visualization) ->
+      $location.path('/visualizations/' + visualization.id)
 
-  # refresh when user is logged
-  $rootScope.$on 'event:elzoido-auth-user', (event, status) ->
+    # refresh when new library is added
+    $rootScope.$on 'event:narra-visualization-created', (event, status) ->
+      $scope.refresh()
+
+    # initial data
     $scope.refresh()
-
-  # refresh when new library is added
-  $rootScope.$on 'event:narra-visualization-created', (event, status) ->
-    $scope.refresh()
-
-  # initial data
-  $scope.refresh()

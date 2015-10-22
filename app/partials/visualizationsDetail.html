@@ -47,7 +47,7 @@
                         </button>
                         <ul class="uib-dropdown-menu pull-right" role="menu" aria-labelledby="settings">
                             <li role="menuitem"><a href="#" ng-click="edit()">Settings</a></li>
-                            <li role="menuitem"><a href="#" ng-click="delete()">Delete</a></li>
+                            <li role="menuitem" ng-show="isAuthor()"><a href="#" ng-click="delete()">Delete</a></li>
                         </ul>
                     </div>
                 </div>

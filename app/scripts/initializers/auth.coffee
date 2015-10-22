@@ -26,7 +26,7 @@ angular.module('narra.ui').config(($httpProvider, elzoidoAuthModule) ->
   # static configuration elzoido auth plugin
   elzoidoAuthModule.config.userProvider = 'apiUser'
   elzoidoAuthModule.config.providersProvider = 'apiAuth'
-).run ($rootScope, $q, $window, $cookies, dialogs, elzoidoAuthModule, elzoidoAuthUser, elzoidoAuthAPI, serviceToken, serviceServer, apiUser) ->
+).run ($rootScope, $q, $window, $cookies, dialogs, elzoidoAuthModule, elzoidoAuthUser, elzoidoAuthAPI, elzoidoPromises, serviceToken, serviceServer, apiUser) ->
   # dynamic configuration elzoido auth plugin
   elzoidoAuthModule.config.functionProfile = ->
     confirm = dialogs.create('partials/usersEdit.html', 'UsersEditCtrl', {user: elzoidoAuthUser.get()},
@@ -67,6 +67,15 @@ angular.module('narra.ui').config(($httpProvider, elzoidoAuthModule) ->
     # return promise
     deferred.promise
 
+  # create deffered object
+  authentication = $q.defer()
+
+  # register listener
+  $rootScope.$on 'event:elzoido-auth-user', ->
+    authentication.resolve true
+
   # autosign check
   if serviceToken.get()
     elzoidoAuthAPI.signin()
+
+  elzoidoPromises.register('authentication', authentication.promise)
