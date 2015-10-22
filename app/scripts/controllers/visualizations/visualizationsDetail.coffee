@@ -70,6 +70,9 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
   $scope.isAuthor = ->
     !_.isUndefined($scope.visualization) && _.isEqual($scope.visualization.author.username, $scope.user.username) || $scope.user.isAdmin()
 
+  $scope.isContributor = ->
+    !_.isUndefined($scope.visualization) && _.include(_.pluck($scope.visualization.contributors, 'username'), $scope.user.username)
+
   $scope.preview = (project) ->
     # save script
     promise = $scope.save()

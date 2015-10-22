@@ -20,6 +20,9 @@
 #
 
 angular.module('narra.ui').controller 'VisualizationsCtrl', ($scope, $rootScope, $location, $interval, $filter, $q, dialogs, apiProject, apiVisualization, apiUser, elzoidoPromises, elzoidoAuthUser) ->
+  # initialization
+  $scope.tabs = { myVisualizations: { }, contribVisualizations: { }, publicVisualizations: { } }
+
   $scope.refresh = ->
     # get current user
     $scope.user = elzoidoAuthUser.get()
@@ -35,6 +38,13 @@ angular.module('narra.ui').controller 'VisualizationsCtrl', ($scope, $rootScope,
         visualization.public && !_.contains(_.pluck($scope.myVisualizations, 'id'), visualization.id))
       $scope.contribVisualizations = _.filter(data.visualizations, (visualization) ->
         _.contains(_.pluck(visualization.contributors, 'username'), $scope.user.username))
+      if $scope.myVisualizations.length == 0
+        if $scope.contribVisualizations.length == 0
+          $scope.tabs.publicVisualizations = { active: true }
+        else
+          $scope.tabs.contribVisualizations = { active: true }
+      else
+        $scope.tabs.myVisualizations = { active: true }
       visualizations.resolve true
 
     # register promises into one queue

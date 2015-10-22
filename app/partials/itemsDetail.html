@@ -30,8 +30,8 @@
                 <span ng-show="library"><a href="/libraries/{{library.id}}?tab=items&project={{project.name}}">{{library.name}}</a> / </span>
                 {{item.name}}</h5>
 
-            <div ng-if="isAuthor() || isContributor()" ui-scrollpoint="+30">
-                <div class="pull-right">
+            <div ui-scrollpoint="+30">
+                <div class="pull-right" ng-if="isAuthor() || isContributor()">
                     <div class="btn-group" uib-dropdown>
                         <button id="metadata" class="btn btn-danger" type="button" uib-dropdown-toggle>
                             <span class="fa fa-plus"></span> Add Metadata <span class="caret"></span>
@@ -62,6 +62,7 @@
                         </ul>
                     </div>
                 </div>
+
                 <div ng-if="player.ready"
                      ng-class="{'videogular-container': tabs.player.active, 'videogular-container-floating': !tabs.player.active}">
                     <videogular vg-player-ready="onPlayerReady($API)" vg-responsive="true"

@@ -20,9 +20,10 @@
 #
 
 angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $location, $interval, $filter, $q, dialogs, apiProject, apiLibrary, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
-# initialization
+  # initialization
   $scope.rotation = {}
   $scope.thumbnail = {}
+  $scope.tabs = { myLibraries: { }, contribLibraries: { }, sharedLibraries: { } }
 
   $scope.refresh = ->
 # get current user
@@ -40,6 +41,13 @@ angular.module('narra.ui').controller 'LibrariesCtrl', ($scope, $rootScope, $loc
       $scope.sharedLibraries = _.filter(data.libraries, (library) ->
         library.shared && !_.contains(_.pluck($scope.myLibraries, 'id'),
           library.id) && !_.contains(_.pluck($scope.contribLibraries, 'id'), library.id))
+      if $scope.myLibraries.length == 0
+        if $scope.contribLibraries.length == 0
+          $scope.tabs.sharedLibraries = { active: true }
+        else
+          $scope.tabs.contribLibraries = { active: true }
+      else
+        $scope.tabs.myLibraries = { active: true }
       libraries.resolve true
 
     # register promises into one queue

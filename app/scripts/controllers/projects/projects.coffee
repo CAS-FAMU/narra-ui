@@ -20,6 +20,9 @@
 #
 
 angular.module('narra.ui').controller 'ProjectsCtrl', ($scope, $rootScope, $location, $filter, $q, dialogs, apiProject, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
+  # initialization
+  $scope.tabs = { myProjects: { }, contribProjects: { } }
+
   $scope.refresh = ->
     # get current user
     $scope.user = elzoidoAuthUser.get()
@@ -31,6 +34,10 @@ angular.module('narra.ui').controller 'ProjectsCtrl', ($scope, $rootScope, $loca
         _.isEqual(project.author.username, $scope.user.username))
       $scope.contributions = _.filter(data.projects, (project) ->
         _.contains(_.pluck(project.contributors, 'username'), $scope.user.username))
+      if  $scope.projects.length == 0
+        $scope.tabs.contribProjects = { active: true }
+      else
+        $scope.tabs.myProjects = { active: true }
       projects.resolve true
 
     # register promises into one queue

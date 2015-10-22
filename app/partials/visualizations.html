@@ -29,11 +29,12 @@
             Create a new visualization clicking the red button.
         </div>
 
-        <div class="col-md-12" role="main">
-            <div class="bs-docs-section" ng-show="myVisualizations.length > 0">
-                <h5 class="page-header">My Visualizations</h5>
+        <div class="col-md-12" role="main" ng-show="myVisualizations.length > 0 || contribVisualizations.length > 0 || publicVisualizations.length > 0">
 
-                <div class="tab-content">
+            <h5 class="page-header">VISUALIZATION</h5>
+
+            <uib-tabset type="pills">
+                <uib-tab heading="My Visualizations" active="tabs.myVisualizations.active" ng-show="myVisualizations.length > 0">
                     <div ng-repeat="visualization in myVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
                         <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
                         <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
@@ -51,13 +52,8 @@
                             </dl>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="bs-docs-section" ng-show="contribVisualizations.length > 0">
-                <h5 class="page-header">My Contributions</h5>
-
-                <div class="tab-content">
+                </uib-tab>
+                <uib-tab heading="My Contributions" active="tabs.contribVisualizations.active" ng-show="contribVisualizations.length > 0">
                     <div ng-repeat="visualization in contribVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
                         <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
                         <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
@@ -79,14 +75,9 @@
                             </dl>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="bs-docs-section" ng-show="publicVisualizations.length > 0">
-                <h5 class="page-header">Public Visualizations</h5>
-
-                <div class="tab-content">
-                    <div ng-repeat="visualization in myVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
+                </uib-tab>
+                <uib-tab heading="Public Visualizations" active="tabs.publicVisualizations.active" ng-show="publicVisualizations.length > 0">
+                    <div ng-repeat="visualization in publicVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
                         <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
                         <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
                         <div ng-repeat="thumbnail in visualization.thumbnails track by $index"
@@ -107,9 +98,8 @@
                             </dl>
                         </div>
                     </div>
-                </div>
-            </div>
+                </uib-tab>
+            </uib-tabset>
         </div>
-
     </div>
 </div>
