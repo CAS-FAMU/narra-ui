@@ -24,49 +24,98 @@
 <div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Add new sequence</h4></div>
 <div class="modal-body">
     <form name="newSequence" class="form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-2 control-label">EDL File</label>
+        <div ng-if="!second">
+            <div class="text-center">
+                Create an empty <span class="btn btn-danger" ng-click="select('narra')">Sequence</span>
+            </div>
 
-            <div class="col-sm-10">
-                <input type="file" ng-model='sequence.file' onchange="angular.element(this).scope().setFile(this)" required>
+            <br/>
+
+            <div nv-file-drop="" uploader="uploader">
+                <div nv-file-over="" uploader="uploader" over-class="drop-zone-over"
+                     class="well drop-zone">
+                    or drop your sequence script here
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Title</label>
+        <div ng-if="second">
+            <div ng-show="sequence.file" class="form-group">
+                <label class="col-sm-2 control-label">Script</label>
 
-            <div class="col-sm-10">
-                <input name="title" ng-model="sequence.title" class="form-control" ng-trim="false"
-                       type="text" placeholder="Enter a title here" required/>
+                <div class="col-sm-10">
+                    <input name="file" ng-model="sequence.file.name" class="form-control" type="text" disabled/>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Project</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Name</label>
 
-            <div class="col-sm-10">
-                <ui-select ng-model="sequence.project" required>
-                    <ui-select-match placeholder="Pick a project">{{$select.selected.title}}</ui-select-match>
-                    <ui-select-choices repeat="project in projects | filter:$select.search">{{project.title}}</ui-select-choices>
-                </ui-select>
+                <div class="col-sm-10">
+                    <input name="name" ng-model="sequence.name" class="form-control" ng-trim="false"
+                           type="text" placeholder="Enter a name here" required/>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Author</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Type</label>
 
-            <div class="col-sm-10">
-                <ui-select ng-model="sequence.author" required>
-                    <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}</ui-select-choices>
-                </ui-select>
+                <div class="col-sm-10">
+                    <input name="type" ng-model="sequence.type" class="form-control" type="text" disabled/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Framerate</label>
+
+                <div class="col-sm-10">
+                    <ui-select ng-model="sequence.fps" required>
+                        <ui-select-match placeholder="Pick an framerate">{{$select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="framerate in framerates | filter:$select.search">
+                            {{framerate}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Project</label>
+
+                <div class="col-sm-10">
+                    <ui-select ng-model="sequence.project" required>
+                        <ui-select-match placeholder="Pick a project">{{$select.selected.title}}</ui-select-match>
+                        <ui-select-choices repeat="project in projects | filter:$select.search">{{project.title}}</ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Author</label>
+
+                <div class="col-sm-10">
+                    <ui-select ng-model="sequence.author" required>
+                        <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Description</label>
+
+                <div class="col-sm-10">
+                <textarea name="description" ng-model="sequence.description" class="form-control"
+                          placeholder="Enter a description here (Optional)" rows="5"></textarea>
+                </div>
             </div>
         </div>
     </form>
 </div>
 <div class="modal-footer">
     <span class="btn btn-default" ng-click="close()">Cancel</span>
-    <button class="btn btn-danger" ng-disabled="!newSequence.$valid"
+    <span ng-if="second" class="btn btn-default" ng-click="back()">Back</span>
+    <button ng-if="second" class="btn btn-danger" ng-disabled="!newSequence.$valid"
             ng-click="new()">Add Sequence
     </button>
 </div>

@@ -23,6 +23,8 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
   # set up context
   $scope.project = $routeParams.project
   $scope.sequence = $routeParams.sequence
+  # initializations
+  $scope.tabs = { sequence: { active: true }, player: { }, editor: { } }
   # player
   $scope.player =
     api: undefined

@@ -117,20 +117,35 @@
                     </div>
                 </uib-tab>
                 <uib-tab heading="Sequences" active="tabs.sequences.active" disable="sequences.length == 0">
-                    <div class="tab-content">
-                        <div id="sequences-{{$index}}"
-                             ng-repeat="sequence in filtered = (sequences | filter:search) | orderBy:'name'"
-                             ng-click="detailSequence(sequence)">
-                            <div class="well well-sm well-hover">
-                                <div class="pull-left">
-                                    <img src="{{sequence.thumbnail}}" style="height: 70px;">
-                                </div>
-                                <div style="margin-left: 140px;">
-                                    <h4>{{sequence.name}}</h4>
+                    <div ng-repeat="sequence in sequences | orderBy:'name'" ng-click="detailSequence(sequence)"
+                         class="well-hover">
+                        <span ng-show="sequence.public" class="label label-success narra-badge">public</span>
+                        <span ng-hide="sequence.public" class="label label-danger narra-badge">private</span>
 
-                                    <p>by {{sequence.author.name}}</p>
-                                </div>
-                            </div>
+                        <div ng-repeat="thumbnail in sequence.thumbnails track by $index"
+                             class="background-cover"
+                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
+                        <div class="well">
+                            <dl class="dl-horizontal">
+                                <dt class="block-header">{{sequence.name}}</dt>
+                                <dd></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>description</dt>
+                                <dd>{{sequence.description}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>author</dt>
+                                <dd>{{sequence.author.name}}</dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>contributors</dt>
+                                <dd><span ng-repeat="contributor in sequence.contributors">{{contributor.name}}<span
+                                        ng-hide="$last">, </span></span><span
+                                        ng-show="sequence.contributors.length == 0"
+                                        class="text-muted">There is no contributors in this sequence.</span>
+                                </dd>
+                            </dl>
                         </div>
                     </div>
                 </uib-tab>
