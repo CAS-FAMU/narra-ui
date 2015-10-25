@@ -20,9 +20,6 @@
 #
 
 angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $timeout, $rootScope, $routeParams, $location, $document, $interval, $filter, $q, dialogs, apiProject, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
-  # set up context
-  $scope.project = $routeParams.project
-  $scope.sequence = $routeParams.sequence
   # initializations
   $scope.tabs = { sequence: { active: true }, player: { }, editor: { } }
   # player
@@ -30,7 +27,7 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
     api: undefined
     ready: false
     preload: true
-    autoHide: false
+    autoHide: true
     autoHideTime: 2000
     autoPlay: false
     sources: []
@@ -41,83 +38,107 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
     plugins: {}
 
   # refresh data
-  $scope.refresh = ->
-    # get current user
-    $scope.user = elzoidoAuthUser.get()
-    # get deffered
-    sequence = $q.defer()
+  elzoidoPromises.promise('authentication').then ->
+    $scope.refresh = ->
+      # get current user
+      $scope.user = elzoidoAuthUser.get()
+      # get deffered
+      sequence = $q.defer()
+      items = $q.defer()
 
-    apiProject.sequences {name: $scope.project, param: $routeParams.sequence}, (data) ->
-      # get seauence
-      $scope.sequence = data.sequence
-      # set playlist
-      _.forEach($scope.sequence.marks, (mark) ->
-        $scope.player.playlist.push({in: mark.in, out: mark.out, src: {src: $sce.trustAsResourceUrl(mark.clip.source), type: "video/mp4"}})
-      )
-      # set first video
-      $scope.player.sources = [$scope.player.playlist[0].src]
-      # resolve
-      sequence.resolve true
+      apiProject.items {name: $routeParams.project}, (data) ->
+        $scope.items = data.items
+        items.resolve true
 
-    sequence.promise.then ->
-      # init player
-      $scope.player.ready = true
+      items.promise.then ->
+        apiProject.sequences {name: $routeParams.project, param: $routeParams.sequence}, (data) ->
+          # get seauence
+          $scope.sequence = data.sequence
+          # set playlist
+          _.forEach($scope.sequence.marks, (mark) ->
+            # get item
+            item = _.find($scope.items, {name: mark.clip.name})
+            # get video source
+            if _.isUndefined(item)
+              source = 'http://static.rur.cz/narra/black/black.mp4'
+              source_in = 0
+              source_out = mark.out - mark.in
+            else
+              source = item.video_proxy_hq
+              source_in = mark.in
+              source_out = mark.out
+            # create playlist entry
+            $scope.player.playlist.push({in: source_in, out: source_out, src: {src: $sce.trustAsResourceUrl(source), type: "video/mp4"}})
+          )
+          # set first video
+          $scope.player.sources = [$scope.player.playlist[0].src]
+          # resolve
+          sequence.resolve true
 
-    # register promises into one queue
-    elzoidoPromises.register('sequence', [sequence.promise])
+      # register promises into one queue
+      elzoidoPromises.register('sequence', [sequence.promise, items.promise])
+      elzoidoPromises.promise('sequence').then ->
+        # init player
+        $scope.player.ready = true
 
-  $scope.onPlayerReady = (api) ->
-    # set player's api
-    $scope.player.api = api
-    # set first video seek time
-    $timeout ->
-      $scope.player.api.seekTime($scope.player.playlist[0].in)
-    , 0
+    $scope.onPlayerReady = (api) ->
+      # set player's api
+      $scope.player.api = api
+      # set first video seek time
+      $timeout ->
+        $scope.player.api.seekTime($scope.player.playlist[0].in)
+      , 0
 
-  $scope.playlistHandler = (currentTime) ->
-    if currentTime >= $scope.player.playlist[$scope.player.current].out
-      # set next video
-      $scope.player.current += 1
+    $scope.playlistHandler = (currentTime) ->
+      if currentTime >= $scope.player.playlist[$scope.player.current].out
+        # set next video
+        $scope.player.current += 1
+        # refresh
+        $scope.playerAction()
+
+    $scope.seek = (index) ->
+      # set current video
+      $scope.player.current = index
       # refresh
       $scope.playerAction()
 
-  $scope.seek = (index) ->
-    # set current video
-    $scope.player.current = index
-    # refresh
-    $scope.playerAction()
+    $scope.playerAction = () ->
+      if $scope.player.current != $scope.player.playlist.length
+        $scope.player.sources = [$scope.player.playlist[$scope.player.current].src]
+        $timeout ->
+          $scope.player.api.seekTime($scope.player.playlist[$scope.player.current].in)
+          $scope.player.api.play()
+        , 0
+      else
+        $scope.player.api.stop()
+        $scope.player.current = 0
+        $scope.player.sources = [$scope.player.playlist[$scope.player.current].src]
+        $timeout ->
+          $scope.player.api.seekTime($scope.player.playlist[$scope.player.current].in)
+        , 0
 
-  $scope.playerAction = () ->
-    if $scope.player.current != $scope.player.playlist.length
-      $scope.player.sources = [$scope.player.playlist[$scope.player.current].src]
-      $timeout ->
-        $scope.player.api.seekTime($scope.player.playlist[$scope.player.current].in)
-        $scope.player.api.play()
-      , 0
-    else
-      $scope.player.api.stop()
-      $scope.player.current = 0
-      $scope.player.sources = [$scope.player.playlist[$scope.player.current].src]
-      $timeout ->
-        $scope.player.api.seekTime($scope.player.playlist[$scope.player.current].in)
-      , 0
+    $scope.isAuthor = ->
+      !_.isUndefined($scope.sequence) && _.isEqual($scope.sequence.author.username, $scope.user.username) || $scope.user.isAdmin()
 
-  $scope.isActive = (index) ->
-    $scope.player.current == index
+    $scope.isContributor = ->
+      !_.isUndefined($scope.sequence) && _.include(_.pluck($scope.sequence.contributors, 'username'), $scope.user.username)
 
-  $scope.delete = ->
-    # open confirmation dialog
-    confirm = dialogs.confirm('Please Confirm',
-      'You are about to delete the sequence ' + $scope.sequence.name + ', this procedure is irreversible. Do you want to continue ?')
+    $scope.isActive = (index) ->
+      $scope.player.current == index
 
-    # result
-    confirm.result.then ->
-      # delete storage and its projects
-      apiProject.sequencesDelete {name: $scope.project, param: $scope.sequence.id}, ->
-        # send message
-        elzoidoMessages.send('success', 'Success!', 'Sequence ' + $scope.sequence.name + ' was successfully deleted.')
-        # redirect back to project
-        $location.url('/projects/' + $scope.project)
+    $scope.delete = ->
+      # open confirmation dialog
+      confirm = dialogs.confirm('Please Confirm',
+        'You are about to delete the sequence ' + $scope.sequence.name + ', this procedure is irreversible. Do you want to continue ?')
 
-  # initial data
-  $scope.refresh()
+      # result
+      confirm.result.then ->
+        # delete storage and its projects
+        apiProject.sequencesDelete {name: $routeParams.project, param: $scope.sequence.id}, ->
+          # send message
+          elzoidoMessages.send('success', 'Success!', 'Sequence ' + $scope.sequence.name + ' was successfully deleted.')
+          # redirect back to project
+          $location.url('/projects/' + $routeParams.project)
+
+    # initial data
+    $scope.refresh()

@@ -35,43 +35,43 @@
 
             <uib-tabset type="pills">
                 <uib-tab heading="My Projects" active="tabs.myProjects.active" ng-show="projects.length > 0">
-                    <div ng-repeat="project in projects | orderBy:'name'" ng-click="detail(project)" class="well-hover">
-                        <span ng-show="project.public" class="label label-success narra-badge">public</span>
-                        <span ng-hide="project.public" class="label label-danger narra-badge">private</span>
-
-                        <div ng-repeat="thumbnail in project.thumbnails track by $index"
-                             class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
-                        <div class="well">
-                            <dl class="dl-horizontal">
-                                <dt class="block-header">{{project.title}}</dt>
-                                <dd></dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>description</dt>
-                                <dd>{{project.description}}</dd>
-                            </dl>
+                    <div class="tab-content">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover"
+                                    ng-repeat="project in projects | orderBy:'name'">
+                                    <span ng-show="project.public" class="label label-success narra-badge">public</span>
+                                    <span ng-hide="project.public" class="label label-danger narra-badge">private</span>
+                                    <div class="input-item-overlay">
+                                        <div ng-click="detail(project)" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{project.thumbnails[0]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{project.title|uppercase}}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </uib-tab>
                 <uib-tab heading="My Contributions" active="tabs.contribProjects.active" ng-show="contributions.length > 0">
-                    <div ng-repeat="project in contributions | orderBy:'name'" ng-click="detail(project)"
-                         class="well-hover">
-                        <span ng-show="project.public" class="label label-success narra-badge">public</span>
-                        <span ng-hide="project.public" class="label label-danger narra-badge">private</span>
-
-                        <div ng-repeat="thumbnail in project.thumbnails track by $index"
-                             class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
-                        <div class="well">
-                            <dl class="dl-horizontal">
-                                <dt class="block-header">{{project.title}}</dt>
-                                <dd></dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>description</dt>
-                                <dd>{{project.description}}</dd>
-                            </dl>
+                    <div class="tab-content">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover"
+                                    ng-repeat="project in contributions | orderBy:'name'">
+                                    <span ng-show="project.public" class="label label-success narra-badge">public</span>
+                                    <span ng-hide="project.public" class="label label-danger narra-badge">private</span>
+                                    <div class="input-item-overlay">
+                                        <div ng-click="detail(project)" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{project.thumbnails[0]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{project.title|uppercase}}</span>
+                                            <small>by {{project.author.name}}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </uib-tab>

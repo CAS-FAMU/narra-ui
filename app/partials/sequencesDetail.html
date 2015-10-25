@@ -25,13 +25,12 @@
 
     <div class="row">
         <div class="col-md-12" role="main">
-            <h5 class="page-header">{{sequence.name}}</h5>
+            <h5 class="page-header">
+                <span><a href="/projects/{{sequence.project.name}}?tab=sequences">{{sequence.project.title}}</a> / </span>{{sequence.name}}
+            </h5>
 
-            <div ng-if="isAuthor() || isContributor()" ui-scrollpoint="+30">
-                <div class="pull-right">
-                    <div class="btn-group" ng-show="tabs.editor.active">
-                        <button class="btn btn-danger" ng-click="save()">Save Sequence</button>
-                    </div>
+            <div ui-scrollpoint="+30">
+                <div class="pull-right" ng-if="isAuthor() || isContributor()">
                     <div class="btn-group" uib-dropdown>
                         <button id="settings" type="button" class="btn btn-danger" uib-dropdown-toggle>
                             <span class="fa fa-cog"></span> <span class="caret"></span>
@@ -41,6 +40,31 @@
                             <li role="menuitem" ng-show="isAuthor()"><a href="#" ng-click="delete()">Delete</a></li>
                         </ul>
                     </div>
+                </div>
+
+                <div ng-if="player.ready" ng-class="{'videogular-container': tabs.player.active, 'videogular-container-floating': !tabs.player.active, 'videogular-container-none': tabs.sequence.active}">
+                    <videogular vg-player-ready="onPlayerReady($API)" vg-responsive="true"
+                                vg-cue-points="player.cuePoints" vg-update-time="playlistHandler($currentTime)">
+                        <vg-media vg-src="player.sources"
+                                  vg-tracks="player.tracks" vg-preload="player.preload">
+                        </vg-media>
+
+                        <vg-controls vg-autohide="player.autoHide" vg-autohide-time="player.autoHideTime">
+                            <vg-play-pause-button></vg-play-pause-button>
+                            <vg-scrub-bar>
+                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                            </vg-scrub-bar>
+                            <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                            <vg-volume>
+                                <vg-mute-button></vg-mute-button>
+                                <vg-volume-bar></vg-volume-bar>
+                            </vg-volume>
+                            <vg-fullscreen-button></vg-fullscreen-button>
+                        </vg-controls>
+
+                        <vg-overlay-play></vg-overlay-play>
+                        <vg-buffering></vg-buffering>
+                    </videogular>
                 </div>
             </div>
 
@@ -78,46 +102,24 @@
                     </div>
                 </uib-tab>
                 <uib-tab heading="Player" active="tabs.player.active">
-                    <div ng-if="player.ready" class="videogular-container">
-                        <videogular vg-player-ready="onPlayerReady($API)" vg-responsive="true"
-                                    vg-cue-points="player.cuePoints" vg-update-time="playlistHandler($currentTime)">
-                            <vg-media vg-src="player.sources"
-                                      vg-tracks="player.tracks" vg-preload="player.preload">
-                            </vg-media>
-
-                            <vg-controls vg-autohide="player.autoHide" vg-autohide-time="player.autoHideTime">
-                                <vg-play-pause-button></vg-play-pause-button>
-                                <vg-scrub-bar>
-                                    <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                </vg-scrub-bar>
-                                <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
-                                <vg-volume>
-                                    <vg-mute-button></vg-mute-button>
-                                    <vg-volume-bar></vg-volume-bar>
-                                </vg-volume>
-                                <vg-fullscreen-button></vg-fullscreen-button>
-                            </vg-controls>
-
-                            <vg-overlay-play ng-hide="player.current"></vg-overlay-play>
-                        </videogular>
-                    </div>
+                    <div style="height: 500px;"></div>
                 </uib-tab>
-                <uib-tab heading="Editor" active="tabs.editor.active">
-                    <div ng-repeat="mark in filtered = (sequence.marks | filter:search) | orderBy:'row'"
-                         style="padding-left: 15px; padding-right: 15px;" on-render-finished>
-
-                        <div class="well well-sm well-hover" ng-class="{'well-active': isActive($index)}"
-                             ng-click="seek($index)">
-                            <div class="pull-left">
-                                <img src="{{mark.clip.thumbnail}}" style="height: 100px;">
-                            </div>
-                            <div style="margin-left: 200px;">
-                                <h4>{{mark.clip.name}}</h4>
-
-                                <p><span class="label label-danger">in</span> {{mark.in}}</p>
-
-                                <p><span class="label label-danger">out</span> {{mark.out}}</p>
-                            </div>
+                <uib-tab heading="Items" active="tabs.editor.active">
+                    <div class="tab-content">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover" ng-class="{'well-active': isActive($index)}"
+                                    ng-repeat="mark in sequence.marks | orderBy:'row'">
+                                    <div class="input-item-overlay">
+                                        <div ng-click="seek($index)" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{mark.clip.thumbnail}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{mark.clip.name|uppercase}}</span>
+                                            <small>{{mark.in}} - {{mark.out}}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </uib-tab>

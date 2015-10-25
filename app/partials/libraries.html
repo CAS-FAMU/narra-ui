@@ -36,75 +36,66 @@
 
             <uib-tabset type="pills">
                 <uib-tab heading="My Libraries" active="tabs.myLibraries.active" ng-show="myLibraries.length > 0">
-                    <div ng-repeat="library in myLibraries | orderBy:'name'" ng-click="detail(library)"
-                         class="well-hover">
-                        <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
-                        <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
-
-                        <div ng-repeat="thumbnail in library.thumbnails track by $index"
-                             class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
-                        <div class="well">
-                            <dl class="dl-horizontal">
-                                <dt class="block-header">{{library.name}}</dt>
-                                <dd></dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>description</dt>
-                                <dd>{{library.description}}</dd>
-                            </dl>
+                    <div class="tab-content">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover"
+                                    ng-repeat="library in myLibraries | orderBy:'name'">
+                                    <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
+                                    <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
+                                    <div class="input-item-overlay">
+                                        <div ng-click="detail(library)" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{library.thumbnails[0]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{library.name|uppercase}}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </uib-tab>
                 <uib-tab heading="My Contributions" active="tabs.contribLibraries.active"
                          ng-show="contribLibraries.length > 0">
-                    <div ng-repeat="library in contribLibraries | orderBy:'name'" ng-click="detail(library)"
-                         class="well-hover">
-                        <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
-                        <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
-
-                        <div ng-repeat="thumbnail in library.thumbnails track by $index"
-                             class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
-                        <div class="well">
-                            <dl class="dl-horizontal">
-                                <dt class="block-header">{{library.name}}</dt>
-                                <dd></dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>description</dt>
-                                <dd>{{library.description}}</dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>author</dt>
-                                <dd>{{library.author.name}}</dd>
-                            </dl>
+                    <div class="tab-content">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover"
+                                    ng-repeat="library in contribLibraries | orderBy:'name'">
+                                    <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
+                                    <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
+                                    <div class="input-item-overlay">
+                                        <div ng-click="detail(library)" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{library.thumbnails[0]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{library.name|uppercase}}</span>
+                                            <small>by {{library.author.name}}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </uib-tab>
                 <uib-tab heading="Shared Libraries" active="tabs.sharedLibraries.active"
                          ng-show="sharedLibraries.length > 0">
-                    <div ng-repeat="library in sharedLibraries | orderBy:'name'" ng-click="detail(library)"
-                         class="well-hover">
-                        <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
-                        <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
-
-                        <div ng-repeat="thumbnail in library.thumbnails track by $index"
-                             class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
-                        <div class="well">
-                            <dl class="dl-horizontal">
-                                <dt class="block-header">{{library.name}}</dt>
-                                <dd></dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>description</dt>
-                                <dd>{{library.description}}</dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>author</dt>
-                                <dd>{{library.author.name}}</dd>
-                            </dl>
+                    <div class="tab-content">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover"
+                                    ng-repeat="library in sharedLibraries | orderBy:'name'">
+                                    <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
+                                    <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
+                                    <div class="input-item-overlay">
+                                        <div ng-click="detail(library)" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{library.thumbnails[0]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{library.name|uppercase}}</span>
+                                            <small>by {{library.author.name}}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </uib-tab>
