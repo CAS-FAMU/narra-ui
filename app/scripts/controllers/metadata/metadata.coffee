@@ -139,7 +139,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
                   if _.isArray(data.meta.value)
                     data.meta.value = data.meta.value.join(', ')
                   # update
-                  apiItem.metadataUpdate {id: $scope.item.id, meta: data.meta.name, value: data.meta.value, marks: data.meta.marks, generator: 'user'}, ->
+                  apiItem.metadataUpdate {id: $scope.item.id, meta: data.meta.name, value: data.meta.value, marks: data.meta.marks, generator: meta.generator, new_generator: 'user'}, ->
                     # close dialog
                     waiting.close()
                     # send message
