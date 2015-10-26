@@ -98,16 +98,16 @@
             </div>
 
             <uib-tabset type="pills">
-                <uib-tab ng-if="player.ready" heading="Player" active="tabs.player.active">
-                    <div style="height: 500px;"></div>
-                </uib-tab>
-                <uib-tab ng-if="text" heading="Text" active="tabs.text.active">
-                    <div ui-ace="editorOption" ng-model="text"></div>
-                </uib-tab>
                 <uib-tab heading="Metadata" active="tabs.metadata.active">
                     <div narra-metadata-api="itemMetadata" narra-metadata-type="item" narra-metadata-data="item"
                          narra-metadata-player="player.api" narra-metadata-search="search" narra-metadata-ui="true"
                          narra-metadata></div>
+                </uib-tab>
+                <uib-tab ng-if="text" heading="Text" active="tabs.text.active">
+                    <div ui-ace="editorOption" ng-model="text"></div>
+                </uib-tab>
+                <uib-tab ng-if="player.ready" heading="Player" active="tabs.player.active">
+                    <div style="height: 500px;"></div>
                 </uib-tab>
             </uib-tabset>
         </div>

@@ -23,7 +23,7 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
   # set up context
   $scope.itemMetadata = {}
   # get current user
-  $scope.tabs = { player: { }, text: { }, metadata: { } }
+  $scope.tabs = { player: { }, text: { }, metadata: { active: true } }
   # player
   $scope.player =
     api: undefined
@@ -77,8 +77,6 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
       apiItem.get {id: $routeParams.item}, (data) ->
         switch(data.item.type)
           when 'video'
-            # set active panel
-            $scope.tabs.player.active = true
             # set video
             $scope.player.sources = [{src: $sce.trustAsResourceUrl(data.item.video_proxy_hq), type: "video/webm"}]
             # get duration
@@ -114,8 +112,6 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
             }
             $scope.player.ready = true
           when 'text'
-            # set active panel
-            $scope.tabs.text.active = true
             $scope.text = _.where(data.item.metadata, {name: 'text'})[0].value
             data.item.metadata = _.filter(data.item.metadata, (meta) ->
               !_.isEqual(meta.name, 'text')
