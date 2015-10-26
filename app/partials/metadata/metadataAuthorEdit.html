@@ -1,0 +1,47 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Edit Author Metadata</h4></div>
+<div class="modal-body">
+    <form name="editMeta" class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Author</label>
+
+            <div class="col-sm-10">
+                <ui-select multiple tagging tagging-label="false" ng-model="meta.value" sortable="true" style="width: 100%;" ui-validate=" '$value.length' ">
+                    <ui-select-match placeholder="Select or type author...">{{$item}}</ui-select-match>
+                    <ui-select-choices repeat="author in authors | filter:$select.search">
+                      {{author}}
+                    </ui-select-choices>
+                 </ui-select>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <span class="btn btn-default" ng-click="close()">Cancel</span>
+    <button class="btn btn-danger" ng-click="delete()">Delete</button>
+    <button class="btn btn-danger" ng-disabled="!editMeta.$valid"
+            ng-click="edit()">Update Meta
+    </button>
+</div>

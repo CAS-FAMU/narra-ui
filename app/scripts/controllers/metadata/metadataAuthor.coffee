@@ -19,11 +19,11 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'MetadataKeywordsCtrl', ($scope, $modalInstance, dialogs, elzoidoMessages, elzoidoAuthUser, data) ->
+angular.module('narra.ui').controller 'MetadataAuthorCtrl', ($scope, $modalInstance, dialogs, elzoidoMessages, elzoidoAuthUser, data) ->
   $scope.user = elzoidoAuthUser.get()
   # init data
   if _.isUndefined(data.meta)
-    $scope.meta = {name: 'keywords', value: ''}
+    $scope.meta = {name: 'author', value: ''}
   else
     $scope.meta = data.meta
     $scope.meta.value = _.map(data.meta.value.split(','), (type) ->
@@ -31,9 +31,9 @@ angular.module('narra.ui').controller 'MetadataKeywordsCtrl', ($scope, $modalIns
     )
   
   if _.isUndefined(data.values)
-    $scope.keywords = []
+    $scope.authors = []
   else
-    $scope.keywords = data.values
+    $scope.authors = data.values
 
   $scope.close = ->
     # cancel dialog

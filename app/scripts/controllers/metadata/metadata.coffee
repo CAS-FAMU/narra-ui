@@ -33,28 +33,40 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
       when 'items'
         # implement add function
         $scope.api.add = (provider) ->
+          # meta container
+          metaValues = {}
+          # deffered object
+          values = $q.defer()
+          # get or prepare autocompletion
+          if _.isUndefined(metaValues[provider.id])
+            apiLibrary.metaValues {id: $scope.item.library.id, name: provider.id}, (data) ->
+              metaValues[provider.id] = data.values
+              values.resolve true
+          else
+            values.resolve true
           # open confirmation dialog
-          confirm = dialogs.create(provider.templateAdd, provider.controller, { },
-            {size: 'lg', keyboard: false})
-          # result
-          confirm.result.then (meta) ->
-            # open waiting
-            waiting = dialogs.wait('Please Wait', 'Adding new metadata ...')
-            # check for array
-            if _.isArray(meta.value)
-              meta.value = meta.value.join(', ')
-            # prepare items
-            items = $scope.data()
-            # add
-            apiItem.metadataNew {items: _.pluck(items, 'id'), meta: meta.name, value: meta.value, generator: provider.id}, ->
-              # close dialog
-              waiting.close()
-              # send message
-              elzoidoMessages.send('success', 'Success!', 'New metadata was successfully created.')
-              # broadcast event
-              _.forEach(items, (item) ->
-                $rootScope.$broadcast 'event:narra-item-updated', item.id
-              )
+          values.promise.then ->
+            confirm = dialogs.create(provider.templateAdd, provider.controller, { },
+              {size: 'lg', keyboard: false})
+            # result
+            confirm.result.then (meta) ->
+              # open waiting
+              waiting = dialogs.wait('Please Wait', 'Adding new metadata ...')
+              # check for array
+              if _.isArray(meta.value)
+                meta.value = meta.value.join(', ')
+              # prepare items
+              items = $scope.data()
+              # add
+              apiItem.metadataNew {items: _.pluck(items, 'id'), meta: meta.name, value: meta.value, generator: 'user'}, ->
+                # close dialog
+                waiting.close()
+                # send message
+                elzoidoMessages.send('success', 'Success!', 'New metadata was successfully created.')
+                # broadcast event
+                _.forEach(items, (item) ->
+                  $rootScope.$broadcast 'event:narra-item-updated', item.id
+                )
       when 'item'
         # assign data
         $scope.item = $scope.data
@@ -96,7 +108,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
           if _.isUndefined(metaValues[provider.id])
             apiLibrary.metaValues {id: $scope.item.library.id, name: provider.id}, (data) ->
               if !_.isEmpty(data.values)
-                metaValues[provider.id] = _.uniq(data.values.join().split(','))
+                metaValues[provider.id] = data.values
               values.resolve true
           else
             values.resolve true
@@ -166,7 +178,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
           # get or prepare autocompletion
           if _.isUndefined(metaValues[provider.id])
             apiLibrary.metaValues {id: $scope.item.library.id, name: provider.id}, (data) ->
-              metaValues[provider.id] = _.uniq(data.values.join().split(','))
+              metaValues[provider.id] = data.values
               values.resolve true
           else
             values.resolve true
