@@ -1,4 +1,6 @@
 exports.config =
+  server:
+    port: process.env.PORT
   modules:
     definition: false
     wrapper: false

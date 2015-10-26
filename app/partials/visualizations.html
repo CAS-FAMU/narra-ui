@@ -35,67 +35,64 @@
 
             <uib-tabset type="pills">
                 <uib-tab heading="My Visualizations" active="tabs.myVisualizations.active" ng-show="myVisualizations.length > 0">
-                    <div ng-repeat="visualization in myVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
-                        <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
-                        <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
-                        <div ng-repeat="thumbnail in visualization.thumbnails track by $index"
-                             class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
-                        <div class="well">
-                            <dl class="dl-horizontal">
-                                <dt class="block-header">{{visualization.name}}</dt>
-                                <dd></dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>description</dt>
-                                <dd>{{visualization.description}}</dd>
-                            </dl>
+                    <div class="tab-content">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover"
+                                    ng-repeat="visualization in myVisualizations | orderBy:'name'">
+                                    <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
+                                    <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
+                                    <div class="input-item-overlay">
+                                        <div ng-click="detail(visualization)" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{visualization.thumbnails[0]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{visualization.name|uppercase}}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </uib-tab>
                 <uib-tab heading="My Contributions" active="tabs.contribVisualizations.active" ng-show="contribVisualizations.length > 0">
-                    <div ng-repeat="visualization in contribVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
-                        <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
-                        <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
-                        <div ng-repeat="thumbnail in visualization.thumbnails track by $index"
-                             class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
-                        <div class="well">
-                            <dl class="dl-horizontal">
-                                <dt class="block-header">{{visualization.name}}</dt>
-                                <dd></dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>description</dt>
-                                <dd>{{visualization.description}}</dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>author</dt>
-                                <dd>{{visualization.author.name}}</dd>
-                            </dl>
+                    <div class="tab-content">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover"
+                                    ng-repeat="visualization in contribVisualizations | orderBy:'name'">
+                                    <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
+                                    <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
+                                    <div class="input-item-overlay">
+                                        <div ng-click="detail(visualization)" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{visualization.thumbnails[0]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{visualization.name|uppercase}}</span>
+                                            <small>by <strong>{{visualization.author.name}}</strong></small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </uib-tab>
                 <uib-tab heading="Public Visualizations" active="tabs.publicVisualizations.active" ng-show="publicVisualizations.length > 0">
-                    <div ng-repeat="visualization in publicVisualizations | orderBy:'name'" ng-click="detail(visualization)" class="well-hover">
-                        <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
-                        <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
-                        <div ng-repeat="thumbnail in visualization.thumbnails track by $index"
-                             class="background-cover"
-                             style="background-image: url('{{thumbnail}}'); background-size: contain; width: 20%; height: 50px; float: left; margin-bottom: 10px;"></div>
-                        <div class="well">
-                            <dl class="dl-horizontal">
-                                <dt class="block-header">{{visualization.name}}</dt>
-                                <dd></dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>description</dt>
-                                <dd>{{visualization.description}}</dd>
-                            </dl>
-                            <dl class="dl-horizontal">
-                                <dt>author</dt>
-                                <dd>{{visualization.author.name}}</dd>
-                            </dl>
+                    <div class="tab-content">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover"
+                                    ng-repeat="visualization in publicVisualizations | orderBy:'name'">
+                                    <span ng-show="visualization.public" class="label label-success narra-badge">public</span>
+                                    <span ng-hide="visualization.public" class="label label-danger narra-badge">private</span>
+                                    <div class="input-item-overlay">
+                                        <div ng-click="detail(visualization)" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{visualization.thumbnails[0]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{visualization.name|uppercase}}</span>
+                                            <small>by <strong>{{visualization.author.name}}</strong></small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </uib-tab>

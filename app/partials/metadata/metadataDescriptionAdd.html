@@ -21,27 +21,29 @@
 #
 -->
 
-<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Edit Location Metadata</h4></div>
+<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Add new Description Metadata</h4></div>
 <div class="modal-body">
-    <form name="editMeta" class="form-horizontal">
-        <div class="form-group" ng-if="ready">
-            <div id="map_canvas" ui-map="map" class="map-canvas" ui-event="{'map-click': 'setMarkerPosition($event, $params)', 'map-tilesloaded': 'mapTilesLoaded(map)'}"
-                ui-options="mapOptions">
-        </div>
+    <form name="newMeta" class="form-horizontal">
         <div class="form-group">
-            <label class="col-sm-2 control-label">Location</label>
+            <label class="col-sm-2 control-label">Description</label>
 
-            <div class="col-sm-9">
-                <input name="location" ng-model="meta.value" class="form-control" ng-trim="false"
-                       type="text" placeholder="Enter a coordinates here" disabled required/>
+            <div class="col-sm-10">
+                <textarea name="value" ng-model="meta.value" class="form-control"
+                          placeholder="Enter a description here" rows="5" required></textarea>
             </div>
+        </div>
+
+        <div ng-show="newMeta.value.$dirty && newMeta.value.$error.required" class="col-md-offset-2">
+            <p class="text-danger left-buffer-10">
+                <strong>Required!</strong>
+                <small>Value is required.</small>
+            </p>
         </div>
     </form>
 </div>
 <div class="modal-footer">
     <span class="btn btn-default" ng-click="close()">Cancel</span>
-    <button class="btn btn-danger" ng-click="delete()">Delete</button>
-    <button class="btn btn-danger" ng-disabled="!editMeta.$valid"
-            ng-click="edit()">Update Meta
+    <button class="btn btn-danger" ng-disabled="!newMeta.$valid"
+            ng-click="add()">Add Meta
     </button>
 </div>

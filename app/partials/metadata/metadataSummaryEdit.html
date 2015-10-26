@@ -21,20 +21,23 @@
 #
 -->
 
-<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Edit Location Metadata</h4></div>
+<div class="modal-header"><h4 class="modal-title"><span class="fa fa-plus"></span> Edit Summary Metadata</h4></div>
 <div class="modal-body">
     <form name="editMeta" class="form-horizontal">
-        <div class="form-group" ng-if="ready">
-            <div id="map_canvas" ui-map="map" class="map-canvas" ui-event="{'map-click': 'setMarkerPosition($event, $params)', 'map-tilesloaded': 'mapTilesLoaded(map)'}"
-                ui-options="mapOptions">
-        </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Location</label>
+            <label class="col-sm-2 control-label">Summary</label>
 
-            <div class="col-sm-9">
-                <input name="location" ng-model="meta.value" class="form-control" ng-trim="false"
-                       type="text" placeholder="Enter a coordinates here" disabled required/>
+            <div class="col-sm-10">
+                <textarea name="value" ng-model="meta.value" class="form-control"
+                          placeholder="Enter a summary here" rows="2" required></textarea>
             </div>
+        </div>
+
+        <div ng-show="editMeta.value.$dirty && editMeta.value.$error.required" class="col-md-offset-2">
+            <p class="text-danger left-buffer-10">
+                <strong>Required!</strong>
+                <small>Value is required.</small>
+            </p>
         </div>
     </form>
 </div>

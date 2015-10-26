@@ -21,7 +21,14 @@
 
 angular.module('narra.ui').constant 'constantMetadata',
   providers: [
-    {id: 'user_shot_type', name: 'Shot Type', templateAdd: 'partials/metadata/metadataShotTypeAdd.html', templateEdit: 'partials/metadata/metadataShotTypeEdit.html', controller: 'MetadataShotTypeCtrl'}
-    {id: 'user_custom', name: 'Custom', templateAdd: 'partials/metadata/metadataCustomAdd.html', templateEdit: 'partials/metadata/metadataCustomEdit.html', controller: 'MetadataCustomCtrl'},
-    {id: 'user_location', name: 'Location', templateAdd: 'partials/metadata/metadataLocationAdd.html', templateEdit: 'partials/metadata/metadataLocationEdit.html', controller: 'MetadataLocationCtrl'}
+    {id: 'author', name: 'Author', templateAdd: 'partials/metadata/metadataAuthorAdd.html', templateEdit: 'partials/metadata/metadataAuthorEdit.html', controller: 'MetadataAuthorCtrl'}
+    {id: 'keywords', name: 'Keywords', templateAdd: 'partials/metadata/metadataKeywordsAdd.html', templateEdit: 'partials/metadata/metadataKeywordsEdit.html', controller: 'MetadataKeywordsCtrl'}
+    {id: 'characters', name: 'Characters', templateAdd: 'partials/metadata/metadataCharactersAdd.html', templateEdit: 'partials/metadata/metadataCharactersEdit.html', controller: 'MetadataCharactersCtrl'}
+    {id: 'organizations', name: 'Organizations', templateAdd: 'partials/metadata/metadataOrganizationsAdd.html', templateEdit: 'partials/metadata/metadataOrganizationsEdit.html', controller: 'MetadataOrganizationsCtrl'}
+    {id: 'language', name: 'Language', templateAdd: 'partials/metadata/metadataLanguageAdd.html', templateEdit: 'partials/metadata/metadataLanguageEdit.html', controller: 'MetadataLanguageCtrl'}
+    {id: 'summary', name: 'Summary', templateAdd: 'partials/metadata/metadataSummaryAdd.html', templateEdit: 'partials/metadata/metadataSummaryEdit.html', controller: 'MetadataSummaryCtrl'}
+    {id: 'description', name: 'Description', templateAdd: 'partials/metadata/metadataDescriptionAdd.html', templateEdit: 'partials/metadata/metadataDescriptionEdit.html', controller: 'MetadataDescriptionCtrl'}
+    {id: 'shot_type', name: 'Shot Type', templateAdd: 'partials/metadata/metadataShotTypeAdd.html', templateEdit: 'partials/metadata/metadataShotTypeEdit.html', controller: 'MetadataShotTypeCtrl'}
+    {id: 'custom', name: 'Custom', templateAdd: 'partials/metadata/metadataCustomAdd.html', templateEdit: 'partials/metadata/metadataCustomEdit.html', controller: 'MetadataCustomCtrl'},
+    {id: 'location', name: 'Location', templateAdd: 'partials/metadata/metadataLocationAdd.html', templateEdit: 'partials/metadata/metadataLocationEdit.html', controller: 'MetadataLocationCtrl'}
   ]

@@ -31,6 +31,7 @@ angular.module('narra.ui', [
   'ui.scrollpoint',
   'ui.select',
   'ui.ace',
+  'ui.map',
   'dialogs.main',
   'dialogs.default-translations',
   'elzoido.auth',
@@ -45,7 +46,6 @@ angular.module('narra.ui', [
   'com.2fdevs.videogular.plugins.poster',
   'com.2fdevs.videogular.plugins.buffering',
   'uiGmapgoogle-maps',
-  'google.places',
   'angularFileUpload',
   'angularLoad',
   'angular-loading-bar'

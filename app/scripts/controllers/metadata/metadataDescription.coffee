@@ -19,43 +19,15 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'MetadataLocationCtrl', ($scope, $timeout, $modalInstance, dialogs, elzoidoAuthUser, data) ->
+angular.module('narra.ui').controller 'MetadataDescriptionCtrl', ($scope, $modalInstance, dialogs, elzoidoMessages, elzoidoAuthUser, data) ->
   $scope.user = elzoidoAuthUser.get()
-  
-  $scope.mapOptions = {
-    center: new google.maps.LatLng(49.873, 15.552),
-    zoom: 7,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  }
 
-  # by deafult map is disabled
-  $scope.ready = false
-  
-  # workaround to refresh map everytime
-  $timeout(->
-    $scope.ready = true
-  , 100)
-  
-  $scope.mapTilesLoaded = (map) ->
-    if _.isUndefined($scope.marker)
-      $scope.marker = new google.maps.Marker({map: map})
-      # default values
-      if $scope.meta.value != ''
-        $scope.marker.setPosition(map.center)
-  
   # init data
   if _.isUndefined(data.meta)
-    $scope.meta = {name: 'location', value: ''}
+    $scope.meta = {name: 'description', value: ''}
   else
     $scope.meta = data.meta
-    coordinates = $scope.meta.value.split(',')
-    $scope.mapOptions.center = new google.maps.LatLng(coordinates[0], coordinates[1])
-    $scope.mapOptions.zoom = 15
   
-  $scope.setMarkerPosition = ($event, $params) ->
-    $scope.marker.setPosition(new google.maps.LatLng($params[0].latLng.G, $params[0].latLng.K))
-    $scope.meta.value = $params[0].latLng.G + ", " + $params[0].latLng.K
-
   $scope.close = ->
     # cancel dialog
     $modalInstance.dismiss('canceled')

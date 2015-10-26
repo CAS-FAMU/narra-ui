@@ -21,7 +21,7 @@
 
 
 angular.module('narra.ui').factory "apiLibrary", ($resource, serviceServer, serviceToken) ->
-  $resource serviceServer.url + "/v1/libraries/:id/:action0/:param/:action1",
+  $resource serviceServer.url + "/v1/libraries/:id/:action0/:param/:action1/:name",
     token: serviceToken.get()
   ,
     all:
@@ -49,6 +49,12 @@ angular.module('narra.ui').factory "apiLibrary", ($resource, serviceServer, serv
       method: 'GET'
       params:
         action0: 'items'
+        
+    metaValues:
+      method: 'GET'
+      params:
+        action0: 'items'
+        param: 'metadata'
 
     update:
       method: 'POST'

@@ -138,10 +138,10 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
       apiItem.get {id: $routeParams.item}, (data) ->
         $scope.item = data.item
         # item's used generators
-        generators = _.uniq(_.pluck($scope.item.metadata, 'generator'))
+        names = _.uniq(_.pluck($scope.item.metadata, 'name'))
         # resolve metadata providers
         $scope.metadataProviders = _.filter(constantMetadata.providers, (provider) ->
-          !_.include(generators, provider.id) || _.isEqual(provider.id, 'user_custom')
+          !_.include(names, provider.id) || _.isEqual(provider.id, 'custom')
         )
 
     $scope.isAuthor = ->

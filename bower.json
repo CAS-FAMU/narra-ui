@@ -11,7 +11,6 @@
     "angular-dialog-service": "~5.2.8",
     "angular-file-upload": "~2.1.4",
     "angular-google-maps": "~2.2.1",
-    "angular-google-places-autocomplete": "~0.2.7",
     "angular-load": "~0.3.0",
     "angular-loading-bar": "~0.8.0",
     "angular-masonry": "~0.12.0",
@@ -30,7 +29,6 @@
     "elzoido-navigation": "marigan/elzoido-navigation#0.1.6",
     "elzoido-promises": "marigan/elzoido-promises#0.2.0",
     "font-awesome": "~4.4.0",
-    "geocoder-service": "~0.0.5",
     "holderjs": "~2.8.2",
     "lodash": "~3.10.1",
     "momentjs": "~2.10.6",
@@ -41,7 +39,8 @@
     "videogular-controls": "~1.2.8",
     "videogular-overlay-play": "~1.2.8",
     "videogular-poster": "~1.2.8",
-    "videogular-themes-default": "~1.2.8"
+    "videogular-themes-default": "~1.2.8",
+    "angular-ui-map": "~0.5.0"
   },
   "overrides": {}
 }
