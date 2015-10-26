@@ -33,20 +33,25 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
       when 'items'
         # implement add function
         $scope.api.add = (provider) ->
+          # prepare items
+          input = $scope.data()
           # meta container
           metaValues = {}
           # deffered object
           values = $q.defer()
           # get or prepare autocompletion
           if _.isUndefined(metaValues[provider.id])
-            apiLibrary.metaValues {id: $scope.item.library.id, name: provider.id}, (data) ->
-              metaValues[provider.id] = data.values
+            apiLibrary.metaValues {id: input.library.id, name: provider.id}, (data) ->
+              if !_.isEmpty(data.values)
+                if !_.isArray(data.values)
+                  data.values = [data.values]
+                metaValues[provider.id] = data.values
               values.resolve true
           else
             values.resolve true
           # open confirmation dialog
           values.promise.then ->
-            confirm = dialogs.create(provider.templateAdd, provider.controller, { },
+            confirm = dialogs.create(provider.templateAdd, provider.controller, { values: metaValues[provider.id] },
               {size: 'lg', keyboard: false})
             # result
             confirm.result.then (meta) ->
@@ -55,16 +60,14 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
               # check for array
               if _.isArray(meta.value)
                 meta.value = meta.value.join(', ')
-              # prepare items
-              items = $scope.data()
               # add
-              apiItem.metadataNew {items: _.pluck(items, 'id'), meta: meta.name, value: meta.value, generator: 'user'}, ->
+              apiItem.metadataNew {items: _.pluck(input.items, 'id'), meta: meta.name, value: meta.value, generator: 'user'}, ->
                 # close dialog
                 waiting.close()
                 # send message
                 elzoidoMessages.send('success', 'Success!', 'New metadata was successfully created.')
                 # broadcast event
-                _.forEach(items, (item) ->
+                _.forEach(input.items, (item) ->
                   $rootScope.$broadcast 'event:narra-item-updated', item.id
                 )
       when 'item'
@@ -108,6 +111,8 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
           if _.isUndefined(metaValues[provider.id])
             apiLibrary.metaValues {id: $scope.item.library.id, name: provider.id}, (data) ->
               if !_.isEmpty(data.values)
+                if !_.isArray(data.values)
+                  data.values = [data.values]
                 metaValues[provider.id] = data.values
               values.resolve true
           else
@@ -178,7 +183,9 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
           # get or prepare autocompletion
           if _.isUndefined(metaValues[provider.id])
             apiLibrary.metaValues {id: $scope.item.library.id, name: provider.id}, (data) ->
-              metaValues[provider.id] = data.values
+              if !_.isEmpty(data.values)
+                if !_.isArray(data.values)
+                  data.values = [data.values]
               values.resolve true
           else
             values.resolve true

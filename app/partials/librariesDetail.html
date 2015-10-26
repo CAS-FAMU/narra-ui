@@ -131,17 +131,24 @@
                     <div class="tab-content">
                         <div class="row">
                             <ul class="list-group">
-                                <li class="list-group-item pointer-hand well-hover"
+                                <li class="list-group-item" ng-class="{'well-hover': item.prepared, 'pointer-hand': item.prepared, 'preparing': !item.prepared}"
                                     ng-repeat="item in filtered = (items | filter:global.search) | orderBy:'name'">
                                     <div class="input-item-overlay">
-                                        <input ng-if="isAuthor() || isContributor()" type="checkbox"
+                                        <input ng-if="(isAuthor() || isContributor()) && item.prepared" type="checkbox"
                                                ng-model="item.selected">
 
-                                        <div ng-click="detail(item)" class="small-item-overlay"
+                                        <div ng-if="item.prepared" ng-click="detail(item)" class="small-item-overlay"
                                              style="margin-left: 30px;">
                                             <img src="{{thumbnail[item.name]}}" height="50">
                                             <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{item.name|uppercase}}</span>
                                             <small ng-show="item.keywords">{{item.keywords}}</small>
+                                        </div>
+
+                                        <div ng-if="!item.prepared" class="small-item-overlay"
+                                             style="margin-left: 30px;">
+                                            <img src="{{thumbnail[item.name]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{item.name|uppercase}}</span>
+                                            <span style="font-size: 35px; position: absolute; right: 0px; opacity: 0.5;">PREPARING</span>
                                         </div>
                                     </div>
                                 </li>

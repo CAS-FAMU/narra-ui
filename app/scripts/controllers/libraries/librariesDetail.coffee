@@ -63,10 +63,10 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, 
       elzoidoPromises.register('library', [library.promise, items.promise])
 
     $scope.isSelected = ->
-      !_.isEmpty($scope.selectedItems())
+      !_.isEmpty($scope.selectedItems().items)
 
     $scope.selectedItems = ->
-      _.where($scope.items, { selected: true })
+      {items:_.where($scope.items, { selected: true }), library: $scope.library }
 
     $scope.select = (selected) ->
       _.forEach($scope.items, (item) ->
@@ -98,7 +98,7 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, 
         'You are about to delete selected items, this procedure is irreversible. Do you want to continue ?')
 
       # prepare items
-      itemsDelete = $scope.selectedItems()
+      itemsDelete = $scope.selectedItems().items
 
       # result
       confirm.result.then ->

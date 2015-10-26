@@ -29,7 +29,7 @@ angular.module('narra.ui').controller 'MetadataAuthorCtrl', ($scope, $modalInsta
     $scope.meta.value = _.map(data.meta.value.split(','), (type) ->
       type.trim()
     )
-  
+
   if _.isUndefined(data.values)
     $scope.authors = []
   else

@@ -92,16 +92,24 @@
                     <div class="tab-content">
                         <div class="row">
                             <ul class="list-group">
-                                <li class="list-group-item pointer-hand well-hover"
+                                <li class="list-group-item" ng-class="{'well-hover': !library.purged, 'pointer-hand': !library.purged, 'preparing': library.purged}"
                                     ng-repeat="library in project.libraries | orderBy:'name'">
-                                    <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
-                                    <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
+                                    <span ng-if="!library.purged">
+                                        <span ng-show="library.shared" class="label label-success narra-badge">shared</span>
+                                        <span ng-hide="library.shared" class="label label-danger narra-badge">private</span>
+                                    </span>
                                     <div class="input-item-overlay">
-                                        <div ng-click="detailLibrary(library)" class="small-item-overlay"
+                                        <div ng-if="!library.purged" ng-click="detailLibrary(library)" class="small-item-overlay"
                                              style="margin-left: 10px;">
                                             <img src="{{library.thumbnails[0]}}" height="50">
                                             <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{library.name|uppercase}}</span>
-                                            <small>by <strong>{{library.author.name}}</strong></small>
+                                        </div>
+
+                                        <div ng-if="library.purged" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{library.thumbnails[0]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{library.name|uppercase}}</span>
+                                            <span style="font-size: 35px; position: absolute; right: 0px; opacity: 0.5;">PURGED</span>
                                         </div>
                                     </div>
                                 </li>
@@ -113,16 +121,24 @@
                     <div class="tab-content">
                         <div class="row">
                             <ul class="list-group">
-                                <li class="list-group-item pointer-hand well-hover"
+                                <li class="list-group-item" ng-class="{'well-hover': sequence.prepared, 'pointer-hand': sequence.prepared, 'preparing': !sequence.prepared}"
                                     ng-repeat="sequence in sequences | orderBy:'name'">
-                                    <span ng-show="sequence.public" class="label label-success narra-badge">public</span>
-                                    <span ng-hide="sequence.public" class="label label-danger narra-badge">private</span>
+                                    <span ng-if="sequence.prepared">
+                                        <span ng-show="sequence.public" class="label label-success narra-badge">public</span>
+                                        <span ng-hide="sequence.public" class="label label-danger narra-badge">private</span>
+                                    </span>
                                     <div class="input-item-overlay">
-                                        <div ng-click="detailSequence(sequence)" class="small-item-overlay"
+                                        <div ng-if="sequence.prepared" ng-click="detailSequence(sequence)" class="small-item-overlay"
                                              style="margin-left: 10px;">
                                             <img src="{{sequence.thumbnails[0]}}" height="50">
                                             <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{sequence.name|uppercase}}</span>
-                                            <small>by <strong>{{sequence.author.name}}</strong></small>
+                                        </div>
+
+                                        <div ng-if="!sequence.prepared" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <img src="{{sequence.thumbnails[0]}}" height="50">
+                                            <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{sequence.name|uppercase}}</span>
+                                            <span style="font-size: 35px; position: absolute; right: 0px; opacity: 0.5;">PREPARING</span>
                                         </div>
                                     </div>
                                 </li>
