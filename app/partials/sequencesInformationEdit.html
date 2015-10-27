@@ -1,0 +1,125 @@
+<!--
+#
+# Copyright (C) 2014 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="modal-header"><h4 class="modal-title"><span class="fa fa-edit"></span> {{initial.name}}</h4></div>
+<div class="modal-body">
+    <form name="editSequence" class="form-horizontal">
+        <uib-tabset type="pills">
+            <uib-tab heading="Sequence">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Name</label>
+
+                    <div class="col-sm-10">
+                        <input name="name" ng-model="sequence.name" class="form-control" ng-trim="false"
+                               ui-validate="{exists: 'validateName($value)' }"
+                               type="text" placeholder="Enter a name here" required/>
+                    </div>
+                </div>
+
+                <div ng-show="editSequence.name.$error.exists" class="col-md-offset-2">
+                    <p class="text-danger left-buffer-10">
+                        <strong>Already exists!</strong>
+                        <small>Sequence already exists.</small>
+                    </p>
+                </div>
+
+                <div ng-show="editSequence.name.$dirty && editSequence.name.$error.required"
+                     class="col-md-offset-2">
+                    <p class="text-danger left-buffer-10">
+                        <strong>Required!</strong>
+                        <small>Sequence name is required.</small>
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Description</label>
+
+                    <div class="col-sm-10">
+                <textarea name="description" ng-model="sequence.description" class="form-control"
+                          placeholder="Enter a description here" rows="5"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Author</label>
+
+                    <div class="col-sm-10">
+                        <ui-select ng-model="sequence.author" ng-disabled="!isAuthor()" ng-change="filter()"
+                                   required>
+                            <ui-select-match placeholder="Pick an author">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="user in users | filter:$select.search">{{user.name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Public</label>
+
+                    <div class="col-sm-10">
+                        <input type="checkbox" ng-model="sequence.public" ng-disabled="!isAuthor()"><span class="text-muted"
+                                                                                     style="margin-left: 10px;">Turn this visualization into the public mode</span>
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Contributors" disable="(contributors.length == 0 && sequence.contributors == 0) || !isAuthor()">
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <ui-select ng-model="contributor.selected"
+                                   theme="bootstrap"
+                                   reset-search-input="true"
+                                   on-select="addContribution($select.selected)"
+                                   style="width: 300px;">
+                            <ui-select-match placeholder="Select a contributor...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="contributor in contributors"
+                                               refresh-delay="0">
+                                <div ng-bind-html="contributor.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+                    <div class="col-sm-7">
+                        <div class="well" style="max-height: 300px; overflow: auto;">
+                            <div ng-show="sequence.contributors.length == 0" style="text-align: center; color: grey;">Select
+                                a user you would like to be a part of the project.
+                            </div>
+                            <div ng-hide="sequence.contributors.length == 0">
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="contributor in sequence.contributors">
+                                        {{contributor.name}} <span class="fa fa-times pull-right pointer-hand" ng-click="removeContribution(contributor)"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </form>
+</div>
+<div class="modal-footer">
+    <span class="btn btn-default" ng-click="close()">Cancel</span>
+    <button class="btn btn-danger" ng-disabled="!editSequence.$valid"
+            ng-click="edit()">Save Sequence
+    </button>
+</div>

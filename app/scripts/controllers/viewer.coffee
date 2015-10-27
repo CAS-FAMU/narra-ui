@@ -41,6 +41,7 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
 
   # inicialization
   $scope.visualization = {}
+  $scope.meta = {}
 
   $scope.refresh = ->
     # get deffered

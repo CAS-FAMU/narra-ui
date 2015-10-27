@@ -60,9 +60,12 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
             item = _.find($scope.items, {name: mark.clip.name})
             # get video source
             if _.isUndefined(item)
-              source = 'http://static.rur.cz/narra/black/black.mp4'
+              if mark.clip.name == 'black'
+                source = 'http://static.rur.cz/narra/black/black.mp4'
+              else
+                source = 'http://static.rur.cz/narra/bars/bars.mp4'
               source_in = 0
-              source_out = mark.out - mark.in
+              source_out = mark.duration
             else
               source = item.video_proxy_hq
               source_in = mark.in
@@ -125,6 +128,21 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
 
     $scope.isActive = (index) ->
       $scope.player.current == index
+
+    $scope.edit = ->
+      # check
+      return if !$scope.isAuthor() && !$scope.isContributor()
+      # process
+      confirm = dialogs.create('partials/sequencesInformationEdit.html', 'SequencesInformationEditCtrl',
+        {sequence: $scope.sequence},
+        {size: 'lg', keyboard: false})
+      # result
+      confirm.result.then (wait) ->
+        wait.result.then ->
+          # refresh
+          $scope.refresh()
+          # fire event
+          $rootScope.$broadcast 'event:narra-sequence-updated', $routeParams.sequence
 
     $scope.delete = ->
       # open confirmation dialog

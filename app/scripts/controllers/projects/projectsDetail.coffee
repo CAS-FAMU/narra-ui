@@ -19,9 +19,9 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope, $document, $routeParams, $location, $filter, $q, dialogs, apiProject, apiVisualization, apiUser, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
+angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope, $window, $document, $routeParams, $location, $filter, $q, dialogs, apiProject, apiVisualization, apiUser, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
   # initialization
-  $scope.tabs = { project: { active: true }, libraries: { }, sequences: { }, metadata: { } }
+  $scope.tabs = { project: { active: true }, libraries: { }, sequences: { }, visualizations: {}, metadata: { } }
 
   elzoidoPromises.promise('authentication').then ->
     $scope.refresh = ->
@@ -30,15 +30,16 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
       # get deffered
       project = $q.defer()
       sequences = $q.defer()
+      junctions = $q.defer()
       visualizations = $q.defer()
+
       $scope.projectMetadata = {}
+      $scope.junctions = {}
 
       if !_.isUndefined($routeParams.tab)
         $scope.tabs[$routeParams.tab].active = true
 
       apiProject.get {name: $routeParams.project}, (data) ->
-        _.forEach(data.project.visualizations, (visualization) ->
-          visualization.thumbnail = '/images/bars.png')
         data.project.metadata = _.filter(data.project.metadata, (meta) ->
           !_.isEqual(meta.name, 'public')
         )
@@ -50,14 +51,31 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
         sequences.resolve true
 
       project.promise.then () ->
+        _.forEach($scope.project.synthesizers, (synthesizer, index) ->
+          apiProject.junctions {name: $routeParams.project, param: synthesizer.identifier}, (data) ->
+            $scope.junctions[synthesizer.identifier] = data.junctions
+            if index + 1 == $scope.project.synthesizers.length
+              junctions.resolve true
+        )
+        if _.isEmpty($scope.project.synthesizers)
+          junctions.resolve true
         apiVisualization.all (data) ->
           $scope.visualizations = _.filter(data.visualizations, (visualization) ->
-            visualization.public && !_.contains(_.pluck($scope.project.visualizations, 'id'), visualization.id)
+            _.contains(_.pluck($scope.project.visualizations, 'id'), visualization.id)
           )
           visualizations.resolve true
 
       # register promises into one queue
-      elzoidoPromises.register('project', [project.promise, sequences.promise, visualizations.promise])
+      elzoidoPromises.register('project', [project.promise, sequences.promise, visualizations.promise, junctions.promise])
+
+    $scope.getItem = (item, array) ->
+      _.find(array, {id: item})
+
+    $scope.getColor = (weight) ->
+      255 - weight * 50
+
+    $scope.isEmpty = (object) ->
+      Object.keys(object).length == 0
 
     $scope.edit = ->
       confirm = dialogs.create('partials/projectsInformationEdit.html', 'ProjectsInformationEditCtrl',
@@ -107,6 +125,9 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
         elzoidoMessages.send('success', 'Success!', 'Visualization ' + visualization.name + ' was successfully removed.')
         # refresh
         $scope.refresh()
+
+    $scope.preview = (visualization) ->
+      $window.open('/viewer/' + $scope.project.name + '?visualization=' + visualization.id, visualization.id, '_blank')
 
     # refresh when new library is added
     $scope.$on 'event:narra-library-created', (event) ->

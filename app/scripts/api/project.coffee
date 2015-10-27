@@ -86,6 +86,14 @@ angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serv
         action1: 'sequences'
         action2: 'delete'
 
+    sequencesUpdate:
+      method: 'POST'
+      params:
+        name: '@name'
+        param: '@sequence'
+        action1: 'sequences'
+        action2: 'update'
+
     metadataNew:
       method: 'POST'
       params:

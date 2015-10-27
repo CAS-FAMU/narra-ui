@@ -35,11 +35,14 @@ angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $
   apiGenerator.all (data) ->
     # select first generator and activate
     if !_.isEmpty($scope.library.generators)
-      # assign first as a selected
-      $scope.generator = $scope.library.generators[0]
       # activate
       _.forEach(data.generators, (generator) ->
-        generator.active = _.include(_.pluck($scope.library.generators, 'identifier'), generator.identifier)
+        temp = _.find($scope.library.generators, {identifier: generator.identifier})
+        if !_.isUndefined(temp)
+          generator.options = temp.options
+          generator.active = true
+          if _.isUndefined($scope.generator)
+            $scope.generator = generator
       )
     # prepare data for session
     $scope.generators = data.generators
@@ -94,24 +97,21 @@ angular.module('narra.ui').controller 'LibrariesInformationEditCtrl', ($scope, $
       generator.active
     )
 
-    console.log($scope.library.generators)
-
     apiLibrary.update({
       id: $scope.library.id
       name: $scope.library.name
       author: $scope.library.author.username
+      shared: $scope.library.shared.toString()
       description: $scope.library.description
       generators: _.map($scope.library.generators, (g) ->
         { identifier: g.identifier, options: g.options }
       )
       contributors: _.pluck($scope.library.contributors, 'username')
     }, (data) ->
-      # update public metadata tag
-      apiLibrary.metadataUpdate { id: data.library.id, meta: 'shared', value: $scope.library.shared.toString() }, ->
-        # close wait dialog
-        wait.close(data.library)
-        # fire message
-        elzoidoMessages.send('success', 'Success!', 'Library ' + data.library.name + ' was successfully saved.')
+      # close wait dialog
+      wait.close(data.library)
+      # fire message
+      elzoidoMessages.send('success', 'Success!', 'Library ' + data.library.name + ' was successfully saved.')
     )
 
   $scope.validateName = (value) ->

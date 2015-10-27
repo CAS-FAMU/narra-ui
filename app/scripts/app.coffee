@@ -32,6 +32,7 @@ angular.module('narra.ui', [
   'ui.select',
   'ui.ace',
   'ui.map',
+  'ui.tree',
   'dialogs.main',
   'dialogs.default-translations',
   'elzoido.auth',

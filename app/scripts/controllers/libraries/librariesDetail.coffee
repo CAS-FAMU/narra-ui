@@ -115,6 +115,9 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, 
           # delete items
           $timeout(->
             apiItem.delete({id: item.id}, (data) ->
+              # remove item from stack
+              $scope.items.remove(item)
+              # resolve
               wait.resolve true
             , (error) ->
               wait.resolve true
@@ -127,8 +130,6 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, 
         elzoidoPromises.register('delete-items', promises)
         # close dialog
         elzoidoPromises.promise('delete-items').then ->
-          # refresh scope
-          $scope.refresh()
           # fire message
           elzoidoMessages.send('success', 'Success!', 'Items were successfully deleted.')
           # close dialog
@@ -168,17 +169,13 @@ angular.module('narra.ui').controller 'LibrariesDetailCtrl', ($timeout, $scope, 
 
     # refresh when new library is added
     $scope.$on 'event:narra-item-updated', (event, item) ->
-      if !_.isUndefined($routeParams.library) && _.find($scope.items, {id: item})
-        $scope.refresh()
+      #if !_.isUndefined($routeParams.library) && _.find($scope.items, {id: item})
+        #scope.refresh()
 
     # refresh when new library is added
     $scope.$on 'event:narra-library-updated', (event, library) ->
       if !_.isUndefined($routeParams.library) && _.isEqual($routeParams.library, library)
         $scope.refresh()
-
-    $scope.$on 'event:narra-render-finished', ->
-      if !_.isEmpty($location.hash())
-        $document.duScrollToElement(document.getElementById($location.hash()))
 
     # initial data
     $scope.refresh()

@@ -23,7 +23,7 @@ angular.module('narra.ui').constant 'constantMetadata',
   providers: [
     {id: 'author', name: 'Author', templateAdd: 'partials/metadata/metadataAuthorAdd.html', templateEdit: 'partials/metadata/metadataAuthorEdit.html', controller: 'MetadataAuthorCtrl'}
     {id: 'keywords', name: 'Keywords', templateAdd: 'partials/metadata/metadataKeywordsAdd.html', templateEdit: 'partials/metadata/metadataKeywordsEdit.html', controller: 'MetadataKeywordsCtrl'}
-    {id: 'characters', name: 'Characters', templateAdd: 'partials/metadata/metadataCharactersAdd.html', templateEdit: 'partials/metadata/metadataCharactersEdit.html', controller: 'MetadataCharactersCtrl'}
+    {id: 'people', name: 'People', templateAdd: 'partials/metadata/metadataPeopleAdd.html', templateEdit: 'partials/metadata/metadataPeopleEdit.html', controller: 'MetadataPeopleCtrl'}
     {id: 'organizations', name: 'Organizations', templateAdd: 'partials/metadata/metadataOrganizationsAdd.html', templateEdit: 'partials/metadata/metadataOrganizationsEdit.html', controller: 'MetadataOrganizationsCtrl'}
     {id: 'language', name: 'Language', templateAdd: 'partials/metadata/metadataLanguageAdd.html', templateEdit: 'partials/metadata/metadataLanguageEdit.html', controller: 'MetadataLanguageCtrl'}
     {id: 'summary', name: 'Summary', templateAdd: 'partials/metadata/metadataSummaryAdd.html', templateEdit: 'partials/metadata/metadataSummaryEdit.html', controller: 'MetadataSummaryCtrl'}
