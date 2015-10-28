@@ -54,7 +54,7 @@
                             <vg-scrub-bar>
                                 <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
                             </vg-scrub-bar>
-                            <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                            <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
                             <vg-volume>
                                 <vg-mute-button></vg-mute-button>
                                 <vg-volume-bar></vg-volume-bar>
@@ -115,6 +115,7 @@
                                              style="margin-left: 10px;">
                                             <img src="{{mark.clip.thumbnail}}" height="50">
                                             <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{mark.clip.name|uppercase}}</span>
+                                            <span ng-show="isActive($index)" style="font-size: 35px; position: absolute; right: 0px; opacity: 0.5;">NOW PLAYING</span>
                                         </div>
                                     </div>
                                 </li>

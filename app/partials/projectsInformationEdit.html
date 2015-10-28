@@ -104,6 +104,18 @@
                                                                                style="margin-left: 10px;">Turn this project into the public mode</span>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Layout</label>
+
+                    <div class="col-sm-10">
+                        <ui-select ng-model="project.layout" ng-disabled="!isAuthor() || !project.public">
+                            <ui-select-match placeholder="Pick a layout">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="layout in project.layouts | filter:$select.search">{{layout.name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
             </uib-tab>
             <uib-tab heading="Contributors" disable="(contributors.length == 0 && project.contributors == 0) || !isAuthor()">
                 <div class="form-group">
@@ -215,6 +227,31 @@
                             </div>
                             <div ng-if="visualization"
                                  ng-include="'partials/visualizations/generic.html'"></div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Layouts" disable="layouts.length == 0">
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <div class="well" style="max-height: 300px; overflow: auto;">
+                            <ul class="list-group">
+                                <li class="list-group-item"
+                                    ng-class="{'plugin-selected': isSelectedLayout(l), 'pointer-hand': s.active}"
+                                    ng-repeat="l in layouts"
+                                    ng-click="selectLayout(l)">
+                                    <input type="checkbox" ng-model="l.active" ng-change="activateLayout(l)"> {{l.name}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="well" style="max-height: 300px; overflow: auto;">
+                            <div ng-if="!layout" style="text-align: center; color: grey;">Select layout you
+                                would like to set up.
+                            </div>
+                            <div ng-if="layout"
+                                 ng-include="'partials/layouts/' + layout.id + '.html'"></div>
                         </div>
                     </div>
                 </div>

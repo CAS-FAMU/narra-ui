@@ -21,7 +21,7 @@
 
 angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope, $window, $document, $routeParams, $location, $filter, $q, dialogs, apiProject, apiVisualization, apiUser, elzoidoPromises, elzoidoMessages, elzoidoAuthUser) ->
   # initialization
-  $scope.tabs = { project: { active: true }, libraries: { }, sequences: { }, visualizations: {}, metadata: { } }
+  $scope.tabs = {project: {active: true}, libraries: {}, sequences: {}, visualizations: {}, layouts: {}, metadata: {}}
 
   elzoidoPromises.promise('authentication').then ->
     $scope.refresh = ->
@@ -66,7 +66,8 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
           visualizations.resolve true
 
       # register promises into one queue
-      elzoidoPromises.register('project', [project.promise, sequences.promise, visualizations.promise, junctions.promise])
+      elzoidoPromises.register('project',
+        [project.promise, sequences.promise, visualizations.promise, junctions.promise])
 
     $scope.getItem = (item, array) ->
       _.find(array, {id: item})
@@ -79,7 +80,10 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
 
     $scope.edit = ->
       confirm = dialogs.create('partials/projectsInformationEdit.html', 'ProjectsInformationEditCtrl',
-        {project: $scope.project},
+        {
+          project: $scope.project
+          sequences: $scope.sequences
+        },
         {size: 'lg', keyboard: false})
       # result
       confirm.result.then (wait) ->
@@ -88,7 +92,8 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
           $rootScope.$broadcast 'event:narra-project-updated', project.name
 
     $scope.isAuthor = ->
-      !_.isUndefined($scope.project) && _.isEqual($scope.project.author.username, $scope.user.username) || $scope.user.isAdmin()
+      !_.isUndefined($scope.project) && _.isEqual($scope.project.author.username,
+        $scope.user.username) || $scope.user.isAdmin()
 
     $scope.delete = ->
       # open confirmation dialog
@@ -120,9 +125,14 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
         $scope.refresh()
 
     $scope.removeVisualization = (visualization) ->
-      apiProject.visualizationsAction {name: $scope.project.name, action: 'remove', visualizations: [visualization.id]}, ->
+      apiProject.visualizationsAction {
+        name: $scope.project.name,
+        action: 'remove',
+        visualizations: [visualization.id]
+      }, ->
         # send message
-        elzoidoMessages.send('success', 'Success!', 'Visualization ' + visualization.name + ' was successfully removed.')
+        elzoidoMessages.send('success', 'Success!',
+          'Visualization ' + visualization.name + ' was successfully removed.')
         # refresh
         $scope.refresh()
 

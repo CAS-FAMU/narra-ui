@@ -74,10 +74,9 @@
                         <vg-controls vg-autohide="player.autoHide" vg-autohide-time="player.autoHideTime">
                             <vg-scrub-bar>
                                 <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                <vg-scrub-bar-cue-points class="metadata"
-                                                         vg-cue-points="player.cuePoints.metadata"></vg-scrub-bar-cue-points>
+                                <vg-scrub-bar-cue-points class="metadata" vg-cue-points="player.cuePoints.metadata"></vg-scrub-bar-cue-points>
                             </vg-scrub-bar>
-                            <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                            <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
                             <vg-volume>
                                 <vg-mute-button></vg-mute-button>
                                 <vg-volume-bar></vg-volume-bar>

@@ -19,12 +19,14 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiLibrary, apiUser, apiSynthesizers, apiVisualization, elzoidoMessages, elzoidoAuthUser, data) ->
+angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiLibrary, apiUser, apiSynthesizers, apiVisualization, elzoidoMessages, elzoidoAuthUser, constantLayouts, data) ->
   $scope.user = elzoidoAuthUser.get()
   $scope.project = data.project
+  $scope.sequences = data.sequences
   $scope.initial = angular.copy(data.project)
   $scope.contributor = {}
   $scope.library = {}
+  $scope.layouts = []
 
   apiProject.all (data) ->
     $scope.projects = data.projects
@@ -34,6 +36,23 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
   apiUser.all (data) ->
     $scope.users = data.users
     $scope.filterUsers()
+  # process layouts
+  if !_.isEmpty($scope.project.layouts)
+    _.forEach(constantLayouts.layouts, (layout) ->
+      temp = _.find($scope.project.layouts, {id: layout.id})
+      if !_.isUndefined(temp)
+        layout.options = temp.options
+        layout.active = true
+        if _.isUndefined($scope.layout)
+          $scope.layout = layout
+        # check for main layout
+        if temp.main
+          $scope.project.layout = layout
+      $scope.layouts.push(layout)
+    )
+  else
+    $scope.layouts = constantLayouts.layouts
+  # process synthesizers
   apiSynthesizers.all (data) ->
     # select first synthesizer and activate
     if !_.isEmpty($scope.project.synthesizers)
@@ -61,7 +80,27 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
             $scope.visualization = visualization
       )
     # prepare data for session
-    $scope.visualizations = data.visualizations
+    $scope.visualizations = _.filter(data.visualizations, (visualization) ->
+      visualization.public
+    )
+  # process sequences
+  $scope.sequences = _.filter($scope.sequences, (sequence) ->
+    sequence.public
+  )
+
+  $scope.selectLayout = (layout) ->
+    if layout.active
+      $scope.layout = layout
+
+  $scope.activateLayout = (layout) ->
+    if layout.active
+      $scope.layout = layout
+    else
+      $scope.layout = null
+
+  $scope.isSelectedLayout = (layout) ->
+    if $scope.layout
+      $scope.layout.id == layout.id
 
   $scope.selectSynthesizer = (synthesizer) ->
     if synthesizer.active
@@ -141,6 +180,17 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
     # append date suffix
     project_name = $filter('projectname')($scope.project.name)
 
+    # process layouts
+    $scope.project.layouts = _.filter($scope.layouts, (layout) ->
+      layout.active
+    )
+
+    # select main layout
+    if !_.isUndefined($scope.project.layout)
+      _.forEach($scope.project.layouts, (layout) ->
+        layout.main = layout.id == $scope.project.layout.id
+      )
+
     # process synthesizers
     $scope.project.synthesizers = _.filter($scope.synthesizers, (synthesizer) ->
       synthesizer.active
@@ -159,6 +209,8 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
         description: $scope.project.description
         synthesizers: _.collect($scope.project.synthesizers, (s) ->
           {identifier: s.identifier, options: s.options})
+        layouts: _.collect($scope.project.layouts, (l) ->
+          { id: l.id, name: l.name, main: l.main, options: l.options})
         visualizations: _.collect($scope.project.visualizations, (v) ->
           { id: v.id, type: v.type, options: v.options})
         contributors: _.pluck($scope.project.contributors, 'username')

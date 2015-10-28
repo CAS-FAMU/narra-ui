@@ -20,8 +20,8 @@
 #
 
 angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $timeout, $rootScope, $routeParams, $location, $document, $interval, $filter, $q, dialogs, apiProject, apiUser, elzoidoPromises, elzoidoAuthUser, elzoidoMessages) ->
-  # initializations
-  $scope.tabs = { sequence: { active: true }, player: { }, editor: { } }
+# initializations
+  $scope.tabs = {sequence: {active: true}, player: {}, editor: {}}
   # player
   $scope.player =
     api: undefined
@@ -44,42 +44,48 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
       $scope.user = elzoidoAuthUser.get()
       # get deffered
       sequence = $q.defer()
-      items = $q.defer()
 
-      apiProject.items {name: $routeParams.project}, (data) ->
-        $scope.items = data.items
-        items.resolve true
-
-      items.promise.then ->
-        apiProject.sequences {name: $routeParams.project, param: $routeParams.sequence}, (data) ->
-          # get seauence
-          $scope.sequence = data.sequence
-          # set playlist
-          _.forEach($scope.sequence.marks, (mark) ->
-            # get item
-            item = _.find($scope.items, {name: mark.clip.name})
-            # get video source
-            if _.isUndefined(item)
-              if mark.clip.name == 'black'
-                source = 'http://static.rur.cz/narra/black/black.mp4'
-              else
-                source = 'http://static.rur.cz/narra/bars/bars.mp4'
-              source_in = 0
-              source_out = mark.duration
+      apiProject.sequences {name: $routeParams.project, param: $routeParams.sequence}, (data) ->
+        # get seauence
+        $scope.sequence = data.sequence
+        # temporary
+        master_in = 0
+        # process marks
+        _.forEach($scope.sequence.marks, (mark) ->
+          # get video source
+          if _.isUndefined(mark.clip.source)
+            if mark.clip.name == 'black'
+              mark.clip.source = 'http://static.rur.cz/narra/black/black.mp4'
             else
-              source = item.video_proxy_hq
-              source_in = mark.in
-              source_out = mark.out
-            # create playlist entry
-            $scope.player.playlist.push({in: source_in, out: source_out, src: {src: $sce.trustAsResourceUrl(source), type: "video/mp4"}})
+              mark.clip.source = 'http://static.rur.cz/narra/bars/bars.mp4'
+            mark.in = 0
+            mark.out = mark.duration
+          # set sequence in
+          mark.master_in = master_in
+          # iterate for the next
+          master_in += mark.duration
+        )
+        # set playlist
+        if _.isUndefined($scope.sequence.master)
+          _.forEach($scope.sequence.marks, (mark) ->
+            $scope.player.playlist.push({
+              in: mark.in,
+              out: mark.out,
+              src: {src: $sce.trustAsResourceUrl(mark.clip.source), type: "video/mp4"}
+            })
           )
-          # set first video
-          $scope.player.sources = [$scope.player.playlist[0].src]
-          # resolve
-          sequence.resolve true
+        else
+          $scope.player.playlist.push({
+            in: 0,
+            src: {src: $sce.trustAsResourceUrl($scope.sequence.master.source), type: "video/mp4"}
+          })
+        # set first video
+        $scope.player.sources = [$scope.player.playlist[0].src]
+        # resolve
+        sequence.resolve true
 
       # register promises into one queue
-      elzoidoPromises.register('sequence', [sequence.promise, items.promise])
+      elzoidoPromises.register('sequence', [sequence.promise])
       elzoidoPromises.promise('sequence').then ->
         # init player
         $scope.player.ready = true
@@ -93,17 +99,27 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
       , 0
 
     $scope.playlistHandler = (currentTime) ->
-      if currentTime >= $scope.player.playlist[$scope.player.current].out
-        # set next video
-        $scope.player.current += 1
-        # refresh
-        $scope.playerAction()
+      if _.isUndefined($scope.sequence.master)
+        if currentTime >= $scope.player.playlist[$scope.player.current].out
+          # set next video
+          $scope.player.current += 1
+          # refresh
+          $scope.playerAction()
+      else
+        _.forEach($scope.sequence.marks, (mark, index) ->
+          if currentTime > mark.master_in && ($scope.sequence.marks.length == index+1 || currentTime < $scope.sequence.marks[index+1].master_in)
+            $scope.player.current = index
+        )
 
     $scope.seek = (index) ->
       # set current video
       $scope.player.current = index
-      # refresh
-      $scope.playerAction()
+      # action
+      if _.isUndefined($scope.sequence.master)
+        # refresh
+        $scope.playerAction()
+      else
+        $scope.player.api.seekTime($scope.sequence.marks[index].master_in)
 
     $scope.playerAction = () ->
       if $scope.player.current != $scope.player.playlist.length
@@ -121,10 +137,12 @@ angular.module('narra.ui').controller 'SequencesDetailCtrl', ($scope, $sce, $tim
         , 0
 
     $scope.isAuthor = ->
-      !_.isUndefined($scope.sequence) && _.isEqual($scope.sequence.author.username, $scope.user.username) || $scope.user.isAdmin()
+      !_.isUndefined($scope.sequence) && _.isEqual($scope.sequence.author.username,
+        $scope.user.username) || $scope.user.isAdmin()
 
     $scope.isContributor = ->
-      !_.isUndefined($scope.sequence) && _.include(_.pluck($scope.sequence.contributors, 'username'), $scope.user.username)
+      !_.isUndefined($scope.sequence) && _.include(_.pluck($scope.sequence.contributors, 'username'),
+        $scope.user.username)
 
     $scope.isActive = (index) ->
       $scope.player.current == index

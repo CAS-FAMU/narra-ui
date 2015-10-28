@@ -141,7 +141,8 @@
                                              style="margin-left: 30px;">
                                             <img src="{{thumbnail[item.name]}}" height="50">
                                             <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{item.name|uppercase}}</span>
-                                            <small ng-show="item.keywords">{{item.keywords}}</small>
+                                            <small ng-show="item.keywords && !item.master">{{item.keywords}}</small>
+                                            <span ng-show="item.master" style="font-size: 35px; position: absolute; right: 0px; opacity: 0.25;">MASTER</span>
                                         </div>
 
                                         <div ng-if="!item.prepared" class="small-item-overlay"

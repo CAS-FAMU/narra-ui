@@ -31,6 +31,10 @@ angular.module('narra.ui').controller 'SequencesInformationEditCtrl', ($scope, $
   apiUser.all (data) ->
     $scope.users = data.users
     $scope.filter()
+  apiProject.items {name: $scope.project.name}, (data) ->
+    $scope.items = _.filter(data.items, (item) ->
+      _.isEqual(item.type, 'video') && !item.master || (!_.isUndefined($scope.sequence.master) && $scope.sequence.master.id == item.id)
+    )
 
   $scope.addContribution = (user) ->
     $scope.sequence.contributors.push(user)
@@ -63,6 +67,10 @@ angular.module('narra.ui').controller 'SequencesInformationEditCtrl', ($scope, $
     # close dialog
     $modalInstance.close(wait)
 
+    # master check
+    if !_.isUndefined($scope.sequence.master)
+      $scope.sequence.master = $scope.sequence.master.id
+
     apiProject.sequencesUpdate({
         name: $scope.project.name
         sequence: $scope.sequence.id
@@ -71,6 +79,7 @@ angular.module('narra.ui').controller 'SequencesInformationEditCtrl', ($scope, $
         author: $scope.sequence.author.username
         description: $scope.sequence.description
         contributors: _.pluck($scope.sequence.contributors, 'username')
+        master: $scope.sequence.master
       }, (data) ->
         # close wait dialog
         wait.close(data.library)

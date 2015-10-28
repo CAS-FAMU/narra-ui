@@ -76,15 +76,6 @@
                                                                               class="text-muted">There is no synthesizers assigned to this project.</span>
                                 </dd>
                             </dl>
-                            <dl class="dl-horizontal">
-                                <dt>visualizations</dt>
-                                <dd><span
-                                        ng-repeat="visualization in project.visualizations">{{visualization.name}}<span
-                                        ng-hide="$last">, </span></span><span
-                                        ng-show="project.visualizations.length == 0"
-                                        class="text-muted">There is no visualizations assigned to this project.</span>
-                                </dd>
-                            </dl>
                         </div>
                     </div>
                 </uib-tab>
@@ -185,6 +176,24 @@
                             </div>
                         </uib-tab>
                     </uib-tabset>
+                </uib-tab>
+                <uib-tab heading="Layouts" active="tabs.layouts.active" disable="project.layouts.length == 0">
+                    <div class="tab-content">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item pointer-hand well-hover"
+                                    ng-repeat="layout in project.layouts | orderBy:'name'">
+                                    <div class="input-item-overlay">
+                                        <div ng-click="previewLayout(layout)" class="small-item-overlay"
+                                             style="margin-left: 10px;">
+                                            <span style="font-size: 20px;">{{layout.name|uppercase}}</span>
+                                            <span ng-show="layout.main" style="font-size: 20px; position: absolute; right: 0px; opacity: 0.5;">MAIN</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </uib-tab>
                 <uib-tab heading="Metadata" active="tabs.metadata.active" disable="project.metadata.length == 0">
                     <div class="tab-content">
