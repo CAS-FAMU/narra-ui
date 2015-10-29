@@ -32,11 +32,43 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
       project.resolve true
 
     project.promise.then ->
+<<<<<<< HEAD
       # resolve main layout
       $scope.layout = _.find($scope.project.layouts, { main: true })
 
     # register promises into one queue
     elzoidoPromises.register('viewer', [project.promise])
+=======
+      # get junctions
+      _.forEach($scope.project.synthesizers, (synthesizer, index) ->
+        apiProject.junctions {name: $routeParams.project, param: synthesizer.identifier}, (data) ->
+          $scope.junctions[synthesizer.identifier] = data.junctions
+          if index + 1 == $scope.project.synthesizers.length
+            junctions.resolve true
+      )
+      # get visualization
+      if _.isUndefined($routeParams.visualization)
+        apiVisualization.get {id: $scope.project.visualizations[0].id }, (data) ->
+          $scope.visualization = data.visualization
+          visualization.resolve true
+      else
+        apiVisualization.get {id: $routeParams.visualization }, (data) ->
+          $scope.visualization = data.visualization
+          visualization.resolve true
+
+    apiProject.items {name: $routeParams.project}, (data) ->
+      $scope.items = data.items
+      items.resolve true
+
+    # register promises into one queue
+    elzoidoPromises.register('viewer', [project.promise, junctions.promise, items.promise, visualization.promise])
+    # wait for complete
+    elzoidoPromises.promise('viewer').then ->
+      $scope.ready = true
+      if ($scope.visualization.type == 'p5js')
+        angularLoad.loadScript($scope.visualization.script).then ->
+          $scope.sketch = $window.visualization
+>>>>>>> 868bc4fe6d935be804568c2edb59620d99768dd8
 
   # initial data
   $scope.refresh()
