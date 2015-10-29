@@ -80,15 +80,14 @@ angular.module('narra.ui').controller 'ViewerCtrl', ($scope, $routeParams, $wind
       $scope.items = data.items
       items.resolve true
 
-    items.promise.then ->
-      visualization.promise.then ->
-        $scope.ready = true
-        if ($scope.visualization.type == 'p5js')
-          angularLoad.loadScript($scope.visualization.script).then ->
-            $scope.sketch = $window.visualization
-
     # register promises into one queue
     elzoidoPromises.register('viewer', [project.promise, junctions.promise, items.promise, visualization.promise])
+    # wait for complete
+    elzoidoPromises.promise('viewer').then ->
+      $scope.ready = true
+      if ($scope.visualization.type == 'p5js')
+        angularLoad.loadScript($scope.visualization.script).then ->
+          $scope.sketch = $window.visualization
 
   # initial data
   $scope.refresh()
