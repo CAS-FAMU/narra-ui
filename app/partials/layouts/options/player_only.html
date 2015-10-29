@@ -1,0 +1,60 @@
+<!--
+#
+# Copyright (C) 2015 CAS / FAMU
+#
+# This file is part of Narra Core.
+#
+# Narra Core is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Narra Core is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Narra Core. If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors: Michal Mocnak <michal@marigan.net>
+#
+-->
+
+<div class="text-center">{{layout.description}}</div>
+
+<div style="margin-top: 20px;" ng-repeat="(key, value) in layout.options">
+    <div class="form-group">
+        <label class="col-sm-6 control-label">{{key|propertyname}}</label>
+
+        <div class="col-sm-6">
+            <div ng-switch="key">
+                <div ng-switch-when="sequence">
+                    <ui-select ng-model="layout.options[key]">
+                        <ui-select-match placeholder="Pick a sequence">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="sequence.id as sequence in sequences | filter:$select.search">{{sequence.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div ng-switch-when="sequence_selector">
+                    <input type="checkbox" ng-model="layout.options[key]">
+                    <span class="text-muted" style="margin-left: 10px;">Enable sequence selector</span>
+                </div>
+                <div ng-switch-when="metadata_view">
+                    <input type="checkbox" ng-model="layout.options[key]">
+                    <span class="text-muted" style="margin-left: 10px;">Enable metadata view</span>
+                </div>
+                <div ng-switch-when="metadata_fields">
+                    <input name="name" ng-model="layout.options[key]" class="form-control" ng-trim="false" type="text" ng-disabled="!layout.options['metadata_view']"/>
+                </div>
+                <div ng-switch-when="contextual_view">
+                    <input type="checkbox" ng-model="layout.options[key]">
+                    <span class="text-muted" style="margin-left: 10px;">Enable contextual view</span>
+                </div>
+                <div ng-switch-when="contextual_synthesizers">
+                    <input name="name" ng-model="layout.options[key]" class="form-control" ng-trim="false" type="text" ng-disabled="!layout.options['contextual_view']"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

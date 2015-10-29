@@ -30,6 +30,7 @@ angular.module('narra.ui').controller 'DashboardCtrl', ($scope, $rootScope, $loc
       $scope.thumbnails = if _.isEmpty(data.thumbnails) then ['/images/empty_carousel.png'] else data.thumbnails
       thumbnails.resolve true
     apiProject.all (data) ->
+      # get public projects
       $scope.projects = _.where(data.projects, { public: true })
       projects.resolve true
 

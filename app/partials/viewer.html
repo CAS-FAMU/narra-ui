@@ -20,10 +20,13 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 -->
-<div ng-if="visualization.type == 'p5js'">
-    <p5 sketch="sketch"></p5>
-</div>
 
-<div ng-if="visualization.type == 'processing' && ready">
-    <canvas processing="{{visualization.script}}"></canvas>
+<div ng-switch="layout.id">
+    <div ng-switch-when="visualization_only">
+        <div narra-project="project" narra-layout="layout" layouts-visualization-only></div>
+    </div>
+
+    <div ng-switch-when="player_only">
+        <div narra-project="project" narra-layout="layout" layouts-player-only></div>
+    </div>
 </div>

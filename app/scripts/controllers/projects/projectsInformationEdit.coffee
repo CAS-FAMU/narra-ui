@@ -19,7 +19,7 @@
 # Authors: Michal Mocnak <michal@marigan.net>
 #
 
-angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiLibrary, apiUser, apiSynthesizers, apiVisualization, elzoidoMessages, elzoidoAuthUser, constantLayouts, data) ->
+angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $filter, $modalInstance, dialogs, apiProject, apiLibrary, apiUser, apiSynthesizers, apiVisualization, elzoidoMessages, elzoidoAuthUser, serviceLayouts, data) ->
   $scope.user = elzoidoAuthUser.get()
   $scope.project = data.project
   $scope.sequences = data.sequences
@@ -38,7 +38,8 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
     $scope.filterUsers()
   # process layouts
   if !_.isEmpty($scope.project.layouts)
-    _.forEach(constantLayouts.layouts, (layout) ->
+    layouts = serviceLayouts.layouts()
+    _.forEach(layouts, (layout) ->
       temp = _.find($scope.project.layouts, {id: layout.id})
       if !_.isUndefined(temp)
         layout.options = temp.options
@@ -51,7 +52,7 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
       $scope.layouts.push(layout)
     )
   else
-    $scope.layouts = constantLayouts.layouts
+    $scope.layouts = serviceLayouts.layouts()
   # process synthesizers
   apiSynthesizers.all (data) ->
     # select first synthesizer and activate
@@ -97,6 +98,10 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
       $scope.layout = layout
     else
       $scope.layout = null
+    # process layouts
+    $scope.project.layouts = _.filter($scope.layouts, (layout) ->
+      layout.active
+    )
 
   $scope.isSelectedLayout = (layout) ->
     if $scope.layout
