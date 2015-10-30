@@ -60,9 +60,5 @@ angular.module('narra.ui').controller 'MetadataCustomCtrl', ($scope, $modalInsta
         $scope.meta = _.merge($scope.meta, marks: [{in: $scope.mark.in, out: $scope.mark.out}])
       else
         $scope.meta.marks = []
-    # add meta
-    $modalInstance.close({action: 'update', meta: $scope.meta})
-
-  $scope.delete = ->
-    # add meta
-    $modalInstance.close({action: 'delete', meta: $scope.meta})
+    # update meta
+    $modalInstance.close($scope.meta)

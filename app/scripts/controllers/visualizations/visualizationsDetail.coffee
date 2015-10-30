@@ -62,7 +62,9 @@ angular.module('narra.ui').controller 'VisualizationsDetailCtrl', ($scope, $sce,
           visualization.resolve true
 
       apiProject.all (data) ->
-        $scope.projects = data.projects
+        $scope.projects = _.filter(data.projects, (project) ->
+          _.isEqual(project.author.username, $scope.user.username) || _.include(_.pluck(project.contributors, 'username'), $scope.user.username)
+        )
         projects.resolve true
 
       # register promises into one queue

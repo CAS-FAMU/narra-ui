@@ -48,8 +48,4 @@ angular.module('narra.ui').controller 'MetadataShotTypeCtrl', ($scope, $modalIns
 
   $scope.edit = ->
     # update meta
-    $modalInstance.close({action: 'update', meta: $scope.meta})
-
-  $scope.delete = ->
-    # delete meta
-    $modalInstance.close({action: 'delete', meta: $scope.meta})
+    $modalInstance.close($scope.meta)

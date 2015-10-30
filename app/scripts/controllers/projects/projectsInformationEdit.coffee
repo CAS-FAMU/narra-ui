@@ -176,7 +176,7 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
 
   # save action
   $scope.edit = ->
-# open waiting
+    # open waiting
     wait = dialogs.wait('Please Wait', 'Saving project ...')
 
     # close dialog
@@ -190,11 +190,15 @@ angular.module('narra.ui').controller 'ProjectsInformationEditCtrl', ($scope, $f
       layout.active
     )
 
-    # select main layout
-    if !_.isUndefined($scope.project.layout)
-      _.forEach($scope.project.layouts, (layout) ->
-        layout.main = layout.id == $scope.project.layout.id
+    _.forEach($scope.project.layouts, (layout) ->
+      _.forEach(Object.keys(layout.options), (key) ->
+        if _.isArray(layout.options[key])
+          layout.options[key] = layout.options[key].join(', ')
       )
+      console.log(layout)
+      if !_.isUndefined($scope.project.layout) && layout.id == $scope.project.layout.id
+        layout.main = true
+    )
 
     # process synthesizers
     $scope.project.synthesizers = _.filter($scope.synthesizers, (synthesizer) ->

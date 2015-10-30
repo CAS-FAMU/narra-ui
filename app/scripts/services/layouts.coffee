@@ -28,20 +28,32 @@ angular.module('narra.ui').factory 'serviceLayouts', ->
         description: 'Layout using only one visualization in the runtime with possibility to activate selector',
         options: {
           visualization: ''
-          visualization_selector: false
         }
       }
       {
-        id: 'player_only',
-        name: 'Player Only',
-        description: 'Layout using only one player in the runtime to play sequences with possibility to activate selector and to see contextual informations',
+        id: 'sequence_player_only',
+        name: 'Sequence Player Only',
+        description: 'Layout using only one player in the runtime to play sequences',
         options: {
           sequence: ''
-          sequence_selector: false
-          metadata_view: false
-          metadata_fields: ['keywords']
-          contextual_view: false
-          contextual_synthesizers: ['sequence']
+        }
+      }
+      {
+        id: 'sequence_player_with_metadata',
+        name: 'Sequence Player With Metadata',
+        description: 'Layout using only one player in the runtime to play sequences with possibility to see metadata of items',
+        options: {
+          sequence: ''
+          metadata_fields: 'keywords'
+        }
+      }
+      {
+        id: 'sequence_player_with_context',
+        name: 'Sequence Player With Context',
+        description: 'Layout using only one player in the runtime to play sequences with possibility to see contextual data from synthesizers',
+        options: {
+          sequence: ''
+          contextual_synthesizers: 'sequence'
         }
       }
     ]

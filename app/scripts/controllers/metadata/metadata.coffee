@@ -99,6 +99,17 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
         # assign used generators
         $scope.generators = generators
         # local methods
+        $scope.delete = (meta) ->
+          # open waiting
+          waiting = dialogs.wait('Please Wait', 'Deleting metadata ...')
+          # update
+          apiItem.metadataDelete {id: $scope.item.id, param: meta.name, generator: meta.generator}, ->
+            # close dialog
+            waiting.close()
+            # send message
+            elzoidoMessages.send('success', 'Success!', 'Metadata was successfully deleted.')
+            # broadcast event
+            $rootScope.$broadcast 'event:narra-item-updated', $scope.item.id
         $scope.edit = (meta) ->
           # get relevant provider
           provider = _.find(constantMetadata.providers, { id: meta.name })
@@ -135,33 +146,22 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
             confirm = dialogs.create(provider.templateEdit, provider.controller, data,
               {size: 'lg', keyboard: false})
             # result
-            confirm.result.then (data) ->
-              switch(data.action)
-                when 'update'
-                  # open waiting
-                  waiting = dialogs.wait('Please Wait', 'Updating metadata ...')
-                  # check for array
-                  if _.isArray(data.meta.value)
-                    data.meta.value = data.meta.value.join(', ')
-                  # update
-                  apiItem.metadataUpdate {id: $scope.item.id, meta: data.meta.name, value: data.meta.value, marks: data.meta.marks, generator: meta.generator, new_generator: 'user'}, ->
-                    # close dialog
-                    waiting.close()
-                    # send message
-                    elzoidoMessages.send('success', 'Success!', 'Metadata was successfully updated.')
-                    # broadcast event
-                    $rootScope.$broadcast 'event:narra-item-updated', $scope.item.id
-                when 'delete'
-                # open waiting
-                  waiting = dialogs.wait('Please Wait', 'Deleting metadata ...')
-                  # update
-                  apiItem.metadataDelete {id: $scope.item.id, param: data.meta.name, generator: meta.generator}, ->
-                    # close dialog
-                    waiting.close()
-                    # send message
-                    elzoidoMessages.send('success', 'Success!', 'Metadata was successfully deleted.')
-                    # broadcast event
-                    $rootScope.$broadcast 'event:narra-item-updated', $scope.item.id
+            confirm.result.then (meta) ->
+              # open waiting
+              waiting = dialogs.wait('Please Wait', 'Updating metadata ...')
+              # copy meta
+              metaSave = angular.copy(meta)
+              # check for array
+              if _.isArray(metaSave.value)
+                metaSave.value = metaSave.value.join(', ')
+              # update
+              apiItem.metadataUpdate {id: $scope.item.id, meta: metaSave.name, value: metaSave.value, marks: metaSave.marks, generator: metaSave.generator, new_generator: 'user'}, ->
+                # close dialog
+                waiting.close()
+                # send message
+                elzoidoMessages.send('success', 'Success!', 'Metadata was successfully updated.')
+                # broadcast event
+                $rootScope.$broadcast 'event:narra-item-updated', $scope.item.id
         # API Methods
         # define methods
         $scope.api.regenerate = (generator) ->
@@ -186,6 +186,7 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
               if !_.isEmpty(data.values)
                 if !_.isArray(data.values)
                   data.values = [data.values]
+                metaValues[provider.id] = data.values
               values.resolve true
           else
             values.resolve true
@@ -202,11 +203,13 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
             confirm.result.then (meta) ->
               # open waiting
               waiting = dialogs.wait('Please Wait', 'Adding new metadata ...')
+              # copy meta
+              metaSave = angular.copy(meta)
               # check for array
-              if _.isArray(meta.value)
-                meta.value = meta.value.join(', ')
+              if _.isArray(metaSave.value)
+                metaSave.value = _(metaSave.value).join(', ')
               # add
-              apiItem.metadataNew {id: $scope.item.id, meta: meta.name, value: meta.value, marks: meta.marks, generator: 'user'}, ->
+              apiItem.metadataNew {id: $scope.item.id, meta: metaSave.name, value: metaSave.value, marks: metaSave.marks, generator: 'user'}, ->
                 # close dialog
                 waiting.close()
                 # send message
@@ -220,6 +223,17 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
         # init metadata
         $scope.meta = $scope.library.metadata
         # local methods
+        $scope.delete = (meta) ->
+          # open waiting
+          waiting = dialogs.wait('Please Wait', 'Deleting metadata ...')
+          # update
+          apiLibrary.metadataDelete {id: $scope.library.id, param: meta.name}, ->
+            # close dialog
+            waiting.close()
+            # send message
+            elzoidoMessages.send('success', 'Success!', 'Metadata was successfully deleted.')
+            # broadcast event
+            $rootScope.$broadcast 'event:narra-library-updated', $scope.library.id
         $scope.edit = (meta) ->
           # get custom provider
           provider = _.find(constantMetadata.providers, { id: 'custom' })
@@ -227,30 +241,18 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
           confirm = dialogs.create(provider.templateEdit, provider.controller, { meta: meta },
             {size: 'lg', keyboard: false})
           # result
-          confirm.result.then (data) ->
-            switch(data.action)
-              when 'update'
-                # open waiting
-                waiting = dialogs.wait('Please Wait', 'Updating metadata ...')
-                # update
-                apiLibrary.metadataUpdate {id: $scope.library.id, meta: data.meta.name, value: data.meta.value}, ->
-                  # close dialog
-                  waiting.close()
-                  # send message
-                  elzoidoMessages.send('success', 'Success!', 'Metadata was successfully updated.')
-                  # broadcast event
-                  $rootScope.$broadcast 'event:narra-library-updated', $scope.library.id
-              when 'delete'
-              # open waiting
-                waiting = dialogs.wait('Please Wait', 'Deleting metadata ...')
-                # update
-                apiLibrary.metadataDelete {id: $scope.library.id, param: data.meta.name}, ->
-                  # close dialog
-                  waiting.close()
-                  # send message
-                  elzoidoMessages.send('success', 'Success!', 'Metadata was successfully deleted.')
-                  # broadcast event
-                  $rootScope.$broadcast 'event:narra-library-updated', $scope.library.id
+          confirm.result.then (meta) ->
+            # open waiting
+            waiting = dialogs.wait('Please Wait', 'Updating metadata ...')
+            # update
+            apiLibrary.metadataUpdate {id: $scope.library.id, meta: meta.name, value: meta.value}, ->
+              # close dialog
+              waiting.close()
+              # send message
+              elzoidoMessages.send('success', 'Success!', 'Metadata was successfully updated.')
+              # broadcast event
+              $rootScope.$broadcast 'event:narra-library-updated', $scope.library.id
+
         # API Methods
         # define methods
         $scope.api.regenerate = (generator) ->
@@ -290,6 +292,17 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
         # init metadata
         $scope.meta = $scope.project.metadata
         # local methods
+        $scope.delete = (meta) ->
+          # open waiting
+          waiting = dialogs.wait('Please Wait', 'Deleting metadata ...')
+          # update
+          apiProject.metadataDelete {name: $scope.project.name, param: meta.name}, ->
+            # close dialog
+            waiting.close()
+            # send message
+            elzoidoMessages.send('success', 'Success!', 'Metadata was successfully deleted.')
+            # broadcast event
+            $rootScope.$broadcast 'event:narra-project-updated', $scope.project.name
         $scope.edit = (meta) ->
           # get custom provider
           provider = _.find(constantMetadata.providers, { id: 'custom' })
@@ -297,30 +310,17 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
           confirm = dialogs.create(provider.templateEdit, provider.controller, { meta: meta },
             {size: 'lg', keyboard: false})
           # result
-          confirm.result.then (data) ->
-            switch(data.action)
-              when 'update'
-              # open waiting
-                waiting = dialogs.wait('Please Wait', 'Updating metadata ...')
-                # update
-                apiProject.metadataUpdate {name: $scope.project.name, meta: data.meta.name, value: data.meta.value}, ->
-                  # close dialog
-                  waiting.close()
-                  # send message
-                  elzoidoMessages.send('success', 'Success!', 'Metadata was successfully updated.')
-                  # broadcast event
-                  $rootScope.$broadcast 'event:narra-project-updated', $scope.project.name
-              when 'delete'
-              # open waiting
-                waiting = dialogs.wait('Please Wait', 'Deleting metadata ...')
-                # update
-                apiProject.metadataDelete {name: $scope.project.name, param: data.meta.name}, ->
-                  # close dialog
-                  waiting.close()
-                  # send message
-                  elzoidoMessages.send('success', 'Success!', 'Metadata was successfully deleted.')
-                  # broadcast event
-                  $rootScope.$broadcast 'event:narra-project-updated', $scope.project.name
+          confirm.result.then (meta) ->
+            # open waiting
+            waiting = dialogs.wait('Please Wait', 'Updating metadata ...')
+            # update
+            apiProject.metadataUpdate {name: $scope.project.name, meta: meta.name, value: meta.value}, ->
+              # close dialog
+              waiting.close()
+              # send message
+              elzoidoMessages.send('success', 'Success!', 'Metadata was successfully updated.')
+              # broadcast event
+              $rootScope.$broadcast 'event:narra-project-updated', $scope.project.name
         # API Methods
         # define methods
         $scope.api.add = ->
@@ -357,6 +357,9 @@ angular.module('narra.ui').controller 'MetadataCtrl', ($scope, $q, $rootScope, $
 
   $scope.isLink = (text) ->
     text.indexOf('http') == 0
+
+  $scope.date = (date) ->
+    moment(date).format('YYYY-mm-DD HH:MM:ss')
 
   # LISTENERS
   # item listener

@@ -21,12 +21,20 @@
 #
 -->
 
-<div ng-switch="layout.id">
+<div ng-switch="layout.id" style="position: fixed; top: 0; width: 100%; height: 100%;">
     <div ng-switch-when="visualization_only">
         <div narra-project="project" narra-layout="layout" layouts-visualization-only></div>
     </div>
 
-    <div ng-switch-when="player_only">
-        <div narra-project="project" narra-layout="layout" layouts-player-only></div>
+    <div ng-switch-when="sequence_player_only">
+        <div narra-project="project" narra-layout="layout" layouts-sequence-player-only></div>
+    </div>
+
+    <div ng-switch-when="sequence_player_with_metadata">
+        <div narra-project="project" narra-layout="layout" layouts-sequence-player-with-metadata></div>
+    </div>
+
+    <div ng-switch-when="sequence_player_with_context">
+        <div narra-project="project" narra-layout="layout" layouts-sequence-player-with-context></div>
     </div>
 </div>

@@ -36,23 +36,8 @@
                         </ui-select-choices>
                     </ui-select>
                 </div>
-                <div ng-switch-when="sequence_selector">
-                    <input type="checkbox" ng-model="layout.options[key]">
-                    <span class="text-muted" style="margin-left: 10px;">Enable sequence selector</span>
-                </div>
-                <div ng-switch-when="metadata_view">
-                    <input type="checkbox" ng-model="layout.options[key]">
-                    <span class="text-muted" style="margin-left: 10px;">Enable metadata view</span>
-                </div>
-                <div ng-switch-when="metadata_fields">
-                    <input name="name" ng-model="layout.options[key]" class="form-control" ng-trim="false" type="text" ng-disabled="!layout.options['metadata_view']"/>
-                </div>
-                <div ng-switch-when="contextual_view">
-                    <input type="checkbox" ng-model="layout.options[key]">
-                    <span class="text-muted" style="margin-left: 10px;">Enable contextual view</span>
-                </div>
                 <div ng-switch-when="contextual_synthesizers">
-                    <input name="name" ng-model="layout.options[key]" class="form-control" ng-trim="false" type="text" ng-disabled="!layout.options['contextual_view']"/>
+                    <input name="name" ng-model="layout.options[key]" class="form-control" ng-trim="false" type="text"/>
                 </div>
             </div>
         </div>

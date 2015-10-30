@@ -38,8 +38,4 @@ angular.module('narra.ui').controller 'MetadataDescriptionCtrl', ($scope, $modal
 
   $scope.edit = ->
     # update meta
-    $modalInstance.close({action: 'update', meta: $scope.meta})
-
-  $scope.delete = ->
-    # delete meta
-    $modalInstance.close({action: 'delete', meta: $scope.meta})
+    $modalInstance.close($scope.meta)

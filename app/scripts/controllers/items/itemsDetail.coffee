@@ -29,7 +29,7 @@ angular.module('narra.ui').controller 'ItemsDetailCtrl', ($scope, $rootScope, $r
     api: undefined
     ready: false
     preload: true
-    autoHide: false
+    autoHide: true
     autoHideTime: 2000
     autoPlay: false
     sources: []

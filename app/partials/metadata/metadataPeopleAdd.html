@@ -28,7 +28,7 @@
             <label class="col-sm-2 control-label">People</label>
 
             <div class="col-sm-10">
-                <ui-select multiple tagging tagging-label="false" ng-model="meta.value" sortable="true" style="width: 100%;" ui-validate=" '$value.length' ">
+                <ui-select multiple tagging tagging-label="false" ng-model="meta.value" sortable="true" style="width: 100%;">
                     <ui-select-match placeholder="Select or type people...">{{$item}}</ui-select-match>
                     <ui-select-choices repeat="person in people | filter:$select.search">
                       {{person}}

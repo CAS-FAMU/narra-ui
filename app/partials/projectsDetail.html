@@ -144,7 +144,7 @@
                                 <li class="list-group-item pointer-hand well-hover"
                                     ng-repeat="visualization in visualizations | orderBy:'name'">
                                     <div class="input-item-overlay">
-                                        <div ng-click="preview(visualization)" class="small-item-overlay"
+                                        <div ng-click="preview('visualization', visualization)" class="small-item-overlay"
                                              style="margin-left: 10px;">
                                             <img src="{{visualization.thumbnails[0]}}" height="50">
                                             <span style="margin-left: 15px; font-weight: bold; font-size: 12px;">{{visualization.name|uppercase}}</span>
@@ -184,7 +184,7 @@
                                 <li class="list-group-item pointer-hand well-hover"
                                     ng-repeat="layout in project.layouts | orderBy:'name'">
                                     <div class="input-item-overlay">
-                                        <div ng-click="previewLayout(layout)" class="small-item-overlay"
+                                        <div ng-click="preview('layout', layout)" class="small-item-overlay"
                                              style="margin-left: 10px;">
                                             <span style="font-size: 20px;">{{layout.name|uppercase}}</span>
                                             <span ng-show="layout.main" style="font-size: 20px; position: absolute; right: 0px; opacity: 0.5;">MAIN</span>

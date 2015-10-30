@@ -36,17 +36,13 @@ angular.module('narra.ui').controller 'MetadataPeopleCtrl', ($scope, $modalInsta
     $scope.people = data.values
 
   $scope.close = ->
-# cancel dialog
+    # cancel dialog
     $modalInstance.dismiss('canceled')
 
   $scope.add = ->
-# add meta
+    # add meta
     $modalInstance.close($scope.meta)
 
   $scope.edit = ->
-# update meta
-    $modalInstance.close({action: 'update', meta: $scope.meta})
-
-  $scope.delete = ->
-# delete meta
-    $modalInstance.close({action: 'delete', meta: $scope.meta})
+    # update meta
+    $modalInstance.close($scope.meta)

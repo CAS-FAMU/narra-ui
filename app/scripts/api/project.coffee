@@ -56,6 +56,14 @@ angular.module('narra.ui').factory "apiProject", ($resource, serviceServer, serv
       params:
         action1: 'items'
 
+    item:
+      method: 'POST'
+      params:
+        name: '@name'
+        action1: 'items'
+        param: '@id'
+        action2: 'metadata'
+
     junctions:
       method: 'GET'
       params:

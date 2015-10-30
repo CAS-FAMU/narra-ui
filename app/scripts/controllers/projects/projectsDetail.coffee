@@ -136,8 +136,11 @@ angular.module('narra.ui').controller 'ProjectsDetailCtrl', ($scope, $rootScope,
         # refresh
         $scope.refresh()
 
-    $scope.preview = (visualization) ->
-      $window.open('/viewer/' + $scope.project.name + '?visualization=' + visualization.id, visualization.id, '_blank')
+    $scope.preview = (type, object) ->
+      if type == 'visualization'
+        $window.open('/viewer/' + $scope.project.name + '?visualization=' + object.id, object.id, '_blank')
+      else if type == 'layout'
+        $window.open('/viewer/' + $scope.project.name + '?layout=' + object.id, object.id, '_blank')
 
     # refresh when new library is added
     $scope.$on 'event:narra-library-created', (event) ->
