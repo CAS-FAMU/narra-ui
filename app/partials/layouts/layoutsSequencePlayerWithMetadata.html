@@ -46,11 +46,21 @@
     </videogular>
 </div>
 
-<div style="position:fixed; bottom: 0; width: 100%; height: 25%;">
-    <div class="row" style="width: 100%; height: 100%;">
-        <div ng-repeat="field in metadata.fields" class="col-sm-2" style="margin-left: 20px;">
-            <h4>{{field}}</h4>
-            <p ng-repeat="item in metadata.values[player.current][field].split(',')">{{item}}</p>
+<div style="position:fixed; left: 20px; bottom: 0; width: 100%; height: 33%; overflow: hidden;">
+    <div class="row" style="width: 100%; height: 100%; overflow: auto;">
+        <div ng-repeat="field in metadata.fields" class="col-sm-2" style="margin-bottom: 20px;" ng-if="metadata.values[player.current][field]">
+            <span class="context">
+                <div class="metadata-caption"><span>{{field | uppercase}}</span></div>
+                <div ng-switch="field">
+                    <div ng-switch-default>
+                        <div ng-repeat="item in metadata.values[player.current][field].split(',')">{{item}}</div>
+                    </div>
+                    <div ng-switch-when="location">
+                        <div id="map_canvas" ui-map="map" class="map-canvas" ui-event="{'map-tilesloaded': 'mapTilesLoaded(map, field)'}"
+                             ui-options="mapOptions" style="height: 200px;">
+                    </div>
+                </div>
+            </span>
         </div>
     </div>
 </div>

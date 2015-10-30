@@ -23,7 +23,7 @@
 
 <div ng-if="player.ready" class="videogular-container-player-only videogular-container-player-only-metadata">
     <videogular vg-player-ready="onPlayerReady($API)" vg-responsive="true"
-                vg-cue-points="player.cuePoints" vg-update-time="playlistHandler($currentTime)">
+                vg-cue-points="player.cuePoints" vg-update-time="playlistHandler($currentTime)" vg-update-state="playerStateChanged($state)">
         <vg-media vg-src="player.sources"
                   vg-tracks="player.tracks" vg-preload="player.preload">
         </vg-media>
@@ -46,10 +46,21 @@
     </videogular>
 </div>
 
-<div style="position:fixed; bottom: 0; width: 100%; height: 25%;">
-    <div class="row" style="width: 100%; height: 100%;">
-        <div ng-repeat="item in context.values[player.current]" class="col-sm-2">
-            <img src="{{item.thumbnail}}" style="width: 100%;">
+<div style="position:fixed; left: 20px; bottom: 0; width: 100%; height: 33%; overflow: hidden;">
+    <div class="row" style="width: 100%; height: 100%; overflow: auto;">
+        <div ng-repeat="item in context.values[player.current]" class="col-sm-2" style="margin-bottom: 20px;">
+            <span class="context pointer-hand" ng-click="contextPlay(item, $index)">
+                <img ng-show="!contextPlayer[$index]" src="{{item.thumbnail}}" style="width: 100%; height: 56%;">
+                <div ng-if="contextPlayer[$index]">
+                    <videogular ng-if="contextPlayer[$index]" style="height: auto;" vg-auto-play="true">
+                        <vg-media vg-src="contextPlayer[$index]" vg-native-controls="true"></vg-media>
+                    </videogular>
+                    <span class="context-caption">
+                        <div>{{item.name | uppercase}}</div>
+                        <div>{{item.author}}</div>
+                    </span>
+                </div>
+            </span>
         </div>
     </div>
 </div>

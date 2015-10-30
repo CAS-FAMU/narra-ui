@@ -42,7 +42,7 @@
 <body>
 
 <!-- header -->
-<header class="navbar bs-docs-nav" ng-class="{'navbar-static-top': !viewer, 'navbar-fixed-top': viewer}" id="top"
+<header class="navbar bs-docs-nav" ng-class="{'navbar-static-top': !viewer, 'navbar-viewer': viewer}" id="top"
         role="banner">
     <div class="container">
         <div class="navbar-header">
@@ -75,7 +75,7 @@
             </div>
         </div>
 
-        <div ng-if="viewer" class="pull-right viewer-title">
+        <div ng-if="viewer" class="viewer-title">
             <h1>{{project.title}}</h1>
         </div>
     </div>

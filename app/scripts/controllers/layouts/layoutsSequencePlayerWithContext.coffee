@@ -155,4 +155,29 @@ angular.module('narra.ui').controller 'LayoutsSequencePlayerWithContextCtrl', ($
         $scope.player.api.seekTime($scope.player.playlist[$scope.player.current].in)
       , 0
 
+  $scope.playerStateChanged = (state) ->
+    if state == 'play'
+      # reset all context players
+      $scope.contextPlayer = {}
+
+  $scope.contextPlay = (item, index) ->
+    # check for actual
+    actual = !_.isUndefined($scope.contextPlayer) && !_.isUndefined($scope.contextPlayer[index])
+    # switch all others off
+    $scope.contextPlayer = {}
+    # get source item
+    if !actual
+      apiProject.items {name: $scope.project.name, param: item.id}, (data) ->
+        if data.item.type == 'video'
+          # assign video
+          $scope.contextPlayer[index] = [{ src: $sce.trustAsResourceUrl(data.item.video_proxy_hq), type: "video/mp4"}]
+          # save a few more things
+          author = _.find(data.item.metadata, {name: 'author'})
+          if !_.isUndefined(author)
+            item.author = author.value
+          # stop main player
+          $scope.player.api.pause()
+    else
+      $scope.player.api.play()
+
   $scope.refresh()
