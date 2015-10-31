@@ -167,7 +167,13 @@
                                                 <div class="small-item-overlay"
                                                      style="margin-left: 10px;">
                                                     <img ng-repeat="item in junction.items" src="{{item.thumbnail}}" height="50">
-                                                    <span style="margin-left: 20px;"><strong>{{getItem(junction.direction.from, junction.items).name}}</strong> => <strong>{{getItem(junction.direction.to, junction.items).name}}</strong></span><small class="pull-right">weight <strong>{{junction.weight}}</strong></small>
+                                                    <span ng-show="junction.direction" style="margin-left: 20px;">
+                                                        <strong>{{getItem(junction.direction.from, junction.items).name}}</strong> => <strong>{{getItem(junction.direction.to, junction.items).name}}</strong>
+                                                    </span>
+                                                    <span ng-hide="junction.direction" style="margin-left: 20px;">
+                                                        <strong>no direction</strong>
+                                                    </span>
+                                                    <small class="pull-right">weight <strong>{{junction.weight}}</strong></small>
                                                 </div>
                                             </div>
                                         </li>

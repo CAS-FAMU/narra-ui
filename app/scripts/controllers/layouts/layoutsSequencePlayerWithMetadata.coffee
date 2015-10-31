@@ -43,6 +43,7 @@ angular.module('narra.ui').controller 'LayoutsSequencePlayerWithMetadataCtrl', (
         marker.setPosition(map.center)
         # set map marker
         map.marker = true
+        console.log('a')
 
     $scope.refresh = ->
       # get deffered
@@ -84,7 +85,7 @@ angular.module('narra.ui').controller 'LayoutsSequencePlayerWithMetadataCtrl', (
           })
         # prepare metadata
         if !_.isUndefined($scope.layout.options['metadata_fields'])
-          $scope.metadata = { values: {}}
+          $scope.metadata = { values: {}, maps: {}}
           $scope.metadata.fields = _.map($scope.layout.options['metadata_fields'].split(','), (field) ->
             field.trim()
         )
@@ -127,26 +128,25 @@ angular.module('narra.ui').controller 'LayoutsSequencePlayerWithMetadataCtrl', (
         mark = $scope.sequence.marks[$scope.player.current]
         # check if we have item
         if !_.isUndefined(mark.clip.id)
-          if _.isUndefined($scope.metadata.values[$scope.player.current])
-            $scope.metadata.values[$scope.player.current] = {}
-            apiProject.item {name: $scope.project.name, id: mark.clip.id}, (data) ->
-              _.forEach($scope.metadata.fields, (field) ->
-                # get meta
-                meta = _.find(data.metadata, {name: field})
-                # save value
-                if !_.isUndefined(meta)
-                  # check for location
-                  if field == 'location'
-                    # default values
-                    coordinates = meta.value.split(',')
-                    # prepare
-                    $scope.mapOptions = {
-                      center: new google.maps.LatLng(coordinates[0], coordinates[1]),
-                      zoom: 15,
-                      mapTypeId: google.maps.MapTypeId.ROADMAP
-                    }
-                  # set value
-                  $scope.metadata.values[$scope.player.current][field] = meta.value
+          $scope.metadata.values[$scope.player.current] = {}
+          apiProject.item {name: $scope.project.name, id: mark.clip.id}, (data) ->
+            _.forEach($scope.metadata.fields, (field) ->
+              # get meta
+              meta = _.find(data.metadata, {name: field})
+              # save value
+              if !_.isUndefined(meta)
+                # check for location
+                if field == 'location'
+                  # default values
+                  coordinates = meta.value.split(',')
+                  # prepare
+                  $scope.metadata.maps[$scope.player.current] = {
+                    center: new google.maps.LatLng(coordinates[0], coordinates[1]),
+                    zoom: 15,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                  }
+                # set value
+                $scope.metadata.values[$scope.player.current][field] = meta.value
               )
 
     $scope.isActive = (index) ->

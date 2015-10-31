@@ -57,7 +57,7 @@
                     </div>
                     <div ng-switch-when="location">
                         <div id="map_canvas" ui-map="map" class="map-canvas" ui-event="{'map-tilesloaded': 'mapTilesLoaded(map, field)'}"
-                             ui-options="mapOptions" style="height: 200px;">
+                             ui-options="metadata.maps[player.current]" style="height: 200px;">
                     </div>
                 </div>
             </span>
